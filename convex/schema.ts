@@ -2,29 +2,18 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 
-const customUsersTable = defineTable({
-  // Auth fields (required by @convex-dev/auth)
-  name: v.optional(v.string()),
-  email: v.string(),
-  emailVerificationTime: v.optional(v.number()),
-  image: v.optional(v.string()),
-  isAnonymous: v.optional(v.boolean()),
+export default defineSchema({
+  ...authTables,
 
-  // Custom fields
-  uid: v.string(),
-  preferences: v.object({
+  // Separate table for user preferences
+  userPreferences: defineTable({
+    userId: v.id("users"),
     currency: v.string(), // e.g., "INR"
     language: v.string(), // e.g., "en"
     darkMode: v.boolean(),
     onboardingCompleted: v.boolean(),
-  }),
-})
-  .index("by_uid", ["uid"])
-  .index("by_email", ["email"]);
-
-export default defineSchema({
-  ...authTables,
-  users: customUsersTable,
+  })
+    .index("by_user", ["userId"]),
 
   outflowTypes: defineTable({
     name: v.string(),

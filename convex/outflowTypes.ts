@@ -71,7 +71,6 @@ export const getOutflowType = query({
 // Create custom outflow type
 export const createCustomOutflowType = mutation({
   args: {
-    userId: v.id("users"),
     name: v.string(),
     emoji: v.string(),
     colorHex: v.string(),
@@ -84,16 +83,21 @@ export const createCustomOutflowType = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthenticated");
+
+    const userId = identity.subject as Id<"users">;
+
     // Check if name already exists
     const existing = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_name", (q) => q.eq("userId", args.userId).eq("name", args.name))
+      .withIndex("by_name", (q) => q.eq("userId", userId).eq("name", args.name))
       .first();
     if (existing) {
       throw new ConvexError("Outflow type with this name already exists");
     }
 
-    return await ctx.db.insert("outflowTypes", { ...args, isCustom: true });
+    return await ctx.db.insert("outflowTypes", { ...args, userId, isCustom: true });
   },
 });
 
@@ -101,7 +105,6 @@ export const createCustomOutflowType = mutation({
 export const updateOutflowType = mutation({
   args: {
     id: v.id("outflowTypes"),
-    userId: v.id("users"),
     name: v.optional(v.string()),
     emoji: v.optional(v.string()),
     colorHex: v.optional(v.string()),
@@ -114,7 +117,12 @@ export const updateOutflowType = mutation({
     )),
   },
   handler: async (ctx, args) => {
-    const { id, userId, ...updates } = args;
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthenticated");
+
+    const userId = identity.subject as Id<"users">;
+    const { id, ...updates } = args;
+
     const outflowType = await ctx.db.get(id);
     if (!outflowType || outflowType.userId !== userId || !outflowType.isCustom) {
       throw new ConvexError("Outflow type not found or cannot be edited");
@@ -126,10 +134,15 @@ export const updateOutflowType = mutation({
 
 // Delete custom outflow type
 export const deleteOutflowType = mutation({
-  args: { id: v.id("outflowTypes"), userId: v.id("users") },
+  args: { id: v.id("outflowTypes") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthenticated");
+
+    const userId = identity.subject as Id<"users">;
+
     const outflowType = await ctx.db.get(args.id);
-    if (!outflowType || outflowType.userId !== args.userId || !outflowType.isCustom) {
+    if (!outflowType || outflowType.userId !== userId || !outflowType.isCustom) {
       throw new ConvexError("Outflow type not found or cannot be deleted");
     }
 
