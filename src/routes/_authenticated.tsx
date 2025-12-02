@@ -4,23 +4,28 @@ import { BottomTabBar } from "@/components/bottom-tab-bar";
 import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
-import { useEffect, createContext, useContext } from "react";
+import { useEffect, createContext, useContext, useRef } from "react";
 import { AuthPage } from "@/components/ui/auth-page";
 import type { Doc } from "@convex/_generated/dataModel";
 
 // Type for preferences - can be full Doc or default values
-type UserPreferences = Doc<"userPreferences"> | {
-  currency: string;
-  language: string;
-  darkMode: boolean;
-  onboardingCompleted: boolean;
-};
+type UserPreferences =
+  | Doc<"userPreferences">
+  | {
+      currency: string;
+      language: string;
+      darkMode: boolean;
+      onboardingCompleted: boolean;
+    };
 
 // Create context for shared data to avoid refetching on each page
 interface AppDataContextType {
   accounts: Doc<"accounts">[] | null | undefined;
   outflowTypes: Doc<"outflowTypes">[] | null | undefined;
-  currentUser: { clerkId: string; preferences: UserPreferences } | null | undefined;
+  currentUser:
+    | { clerkId: string; preferences: UserPreferences }
+    | null
+    | undefined;
   isLoading: boolean;
 }
 
@@ -41,16 +46,22 @@ function AuthenticatedLayout() {
   const { user } = useUser();
   const createUser = useMutation(api.users.createUser);
   const currentUser = useQuery(api.users.getCurrentUser);
-  
+
   // Prefetch common data at the layout level for instant access on all pages
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
 
+  // Use ref to track if we've already attempted initialization
+  const hasInitializedRef = useRef(false);
+
   useEffect(() => {
-    if (user && !currentUser) {
+    // Only initialize user data once per session when user is authenticated
+    const userId = user?.id;
+    if (userId && !hasInitializedRef.current) {
+      hasInitializedRef.current = true;
       createUser();
     }
-  }, [user, currentUser, createUser]);
+  }, [user?.id || ""]); // Use user?.id or empty string as stable dependency
 
   const isLoading = accounts === undefined || outflowTypes === undefined;
 
