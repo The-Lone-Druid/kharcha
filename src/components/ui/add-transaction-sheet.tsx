@@ -263,7 +263,7 @@ export function AddTransactionSheet({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto pb-6">
         <SheetHeader>
           <SheetTitle>
             {transaction ? "Edit Transaction" : "Add Transaction"}

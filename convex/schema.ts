@@ -48,7 +48,6 @@ export default defineSchema({
       v.literal("Other")
     ),
     colorHex: v.string(),
-    initialBalance: v.number(),
     userId: v.id("users"),
     isArchived: v.boolean(),
   })

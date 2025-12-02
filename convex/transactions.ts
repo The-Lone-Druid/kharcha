@@ -76,6 +76,7 @@ export const listTransactions = query({
                 _id: account._id,
                 name: account.name,
                 type: account.type,
+                colorHex: account.colorHex,
               }
             : null,
           outflowType: outflowType
@@ -83,6 +84,7 @@ export const listTransactions = query({
                 _id: outflowType._id,
                 name: outflowType.name,
                 emoji: outflowType.emoji,
+                colorHex: outflowType.colorHex,
               }
             : null,
         };

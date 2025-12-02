@@ -43,6 +43,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { Doc } from "@convex/_generated/dataModel";
 import { CurrencyInput } from "@/components/ui/currency-input";
+import { AddAccountDialog } from "@/components/ui/add-account-dialog";
 
 const subscriptionFormSchema = z.object({
   amount: z.number().positive("Amount must be greater than 0"),
@@ -88,6 +89,7 @@ export function AddSubscriptionDialog({
   onSuccess,
 }: AddSubscriptionDialogProps) {
   const [isOpen, setIsOpen] = React.useState(open || false);
+  const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false);
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
   const currentUser = useQuery(api.users.getCurrentUser);
@@ -127,6 +129,13 @@ export function AddSubscriptionDialog({
   const handleOpenChange = (newOpen: boolean) => {
     setIsOpen(newOpen);
     onOpenChange?.(newOpen);
+  };
+
+  const handleAccountCreated = (accountId?: string) => {
+    if (accountId) {
+      form.setValue("accountId", accountId);
+    }
+    setShowAddAccountDialog(false);
   };
 
   const onSubmit = async (data: SubscriptionFormData) => {
@@ -192,7 +201,7 @@ export function AddSubscriptionDialog({
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto pb-6">
         <SheetHeader className="space-y-2">
           <SheetTitle className="text-lg sm:text-xl flex items-center gap-2">
             <CreditCard className="h-5 w-5" />
@@ -263,7 +272,20 @@ export function AddSubscriptionDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Account</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={(value) => {
+                      if (value === "__add_new_account__") {
+                        setShowAddAccountDialog(true);
+                        // Reset the select value to prevent it from being selected
+                        setTimeout(() => {
+                          field.onChange("");
+                        }, 0);
+                      } else {
+                        field.onChange(value);
+                      }
+                    }}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="h-11">
                         <SelectValue placeholder="Select account" />
@@ -275,6 +297,12 @@ export function AddSubscriptionDialog({
                           {account.name} ({account.type})
                         </SelectItem>
                       ))}
+                      <SelectItem
+                        value="__add_new_account__"
+                        className="text-primary font-medium"
+                      >
+                        ➕ Add New Account
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -454,6 +482,13 @@ export function AddSubscriptionDialog({
           </form>
         </Form>
       </SheetContent>
+
+      {/* Add Account Dialog */}
+      <AddAccountDialog
+        open={showAddAccountDialog}
+        onOpenChange={setShowAddAccountDialog}
+        onSuccess={handleAccountCreated}
+      />
     </Sheet>
   );
 }

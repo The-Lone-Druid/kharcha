@@ -29,8 +29,7 @@ export interface Account {
   name: string;
   type: AccountType;
   colorHex: string;
-  initialBalance: number;
-  currentBalance: number;
+  totalSpent?: number;
   userId: string;
   isArchived: boolean;
 }

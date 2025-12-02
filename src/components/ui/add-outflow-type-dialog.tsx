@@ -196,7 +196,7 @@ export function AddOutflowTypeDialog({
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto pb-6">
         <SheetHeader className="space-y-2">
           <SheetTitle className="text-lg sm:text-xl">
             {outflowType ? "Edit Category" : "Add Custom Category"}

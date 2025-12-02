@@ -7,7 +7,23 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { shadcn } from "@clerk/themes";
 
-const queryClient = new QueryClient();
+// Configure QueryClient with aggressive caching for better performance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Keep data fresh for 5 minutes
+      staleTime: 1000 * 60 * 5,
+      // Cache data for 30 minutes
+      gcTime: 1000 * 60 * 30,
+      // Don't refetch on window focus for better UX
+      refetchOnWindowFocus: false,
+      // Retry failed requests up to 2 times
+      retry: 2,
+      // Don't refetch on mount if data is fresh
+      refetchOnMount: false,
+    },
+  },
+});
 
 export const Route = createRootRoute({
   component: () => (

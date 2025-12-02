@@ -15,6 +15,7 @@ import { useClerk, UserProfile } from "@clerk/clerk-react";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import * as XLSX from "xlsx";
+import { useAppData } from "../_authenticated";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: SettingsPage,
@@ -23,12 +24,11 @@ export const Route = createFileRoute("/_authenticated/settings")({
 function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { signOut } = useClerk();
+  const { accounts, outflowTypes } = useAppData();
 
   const transactions = useQuery(api.transactions.listTransactions, {
     limit: 10000,
   });
-  const accounts = useQuery(api.accounts.listAccounts);
-  const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
 
   console.log(theme);
 
@@ -55,7 +55,6 @@ function SettingsPage() {
     const accountsData = accounts.map((acc) => ({
       Name: acc.name,
       Type: acc.type,
-      "Initial Balance": acc.initialBalance || 0,
       Color: acc.colorHex,
     }));
 

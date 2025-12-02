@@ -46,12 +46,7 @@ export const getAccountWithBalance = query({
 
     const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
 
-    const currentBalance =
-      account.type === "Credit Card"
-        ? account.initialBalance + totalSpent
-        : account.initialBalance - totalSpent;
-
-    return { ...account, currentBalance };
+    return { ...account, totalSpent };
   },
 });
 
@@ -69,7 +64,6 @@ export const createAccount = mutation({
       v.literal("Other")
     ),
     colorHex: v.string(),
-    initialBalance: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -106,7 +100,6 @@ export const updateAccount = mutation({
       )
     ),
     colorHex: v.optional(v.string()),
-    initialBalance: v.optional(v.number()),
     isArchived: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {

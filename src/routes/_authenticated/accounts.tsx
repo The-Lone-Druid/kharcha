@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,14 @@ import { Plus, Edit, Trash2, Wallet } from "lucide-react";
 import { useState } from "react";
 import { AddAccountDialog } from "@/components/ui/add-account-dialog";
 import { type Doc, type Id } from "@convex/_generated/dataModel";
+import { useAppData } from "../_authenticated";
 
 export const Route = createFileRoute("/_authenticated/accounts")({
   component: AccountsPage,
 });
 
 function AccountsPage() {
-  const accounts = useQuery(api.accounts.listAccounts);
+  const { accounts } = useAppData();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Doc<"accounts"> | null>(
     null
@@ -94,10 +95,6 @@ function AccountsPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  ₹{account.initialBalance?.toLocaleString() || 0}
-                </div>
-                <p className="text-xs text-muted-foreground">{account.type}</p>
                 <Badge variant="outline" className="mt-2">
                   {account.type}
                 </Badge>

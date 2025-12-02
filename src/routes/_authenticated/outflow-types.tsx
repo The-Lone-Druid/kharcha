@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,14 @@ import { Plus, Edit, Trash2, Tag } from "lucide-react";
 import { useState } from "react";
 import { AddOutflowTypeDialog } from "@/components/ui/add-outflow-type-dialog";
 import { type Doc, type Id } from "@convex/_generated/dataModel";
+import { useAppData } from "../_authenticated";
 
 export const Route = createFileRoute("/_authenticated/outflow-types")({
   component: OutflowTypesPage,
 });
 
 function OutflowTypesPage() {
-  const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
+  const { outflowTypes } = useAppData();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingType, setEditingType] = useState<Doc<"outflowTypes"> | null>(
     null

@@ -36,7 +36,6 @@ const accountFormSchema = z.object({
   name: z.string().min(1, "Account name is required"),
   type: z.enum(["Cash", "Bank", "Credit Card", "UPI", "Loan", "Wallet", "Other"]),
   colorHex: z.string(),
-  initialBalance: z.number(),
 });
 
 type AccountFormData = z.infer<typeof accountFormSchema>;
@@ -96,7 +95,6 @@ export function AddAccountDialog({
       name: account?.name || "",
       type: (account?.type as AccountFormData["type"]) || "Bank",
       colorHex: account?.colorHex || colors[0],
-      initialBalance: account?.initialBalance || 0,
     },
   });
 
@@ -106,14 +104,12 @@ export function AddAccountDialog({
         name: account.name,
         type: account.type as AccountFormData["type"],
         colorHex: account.colorHex,
-        initialBalance: account.initialBalance,
       });
     } else {
       form.reset({
         name: "",
         type: "Bank",
         colorHex: colors[0],
-        initialBalance: 0,
       });
     }
   }, [account, form]);
@@ -158,7 +154,7 @@ export function AddAccountDialog({
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto pb-6">
         <SheetHeader className="space-y-2">
           <SheetTitle className="text-lg sm:text-xl">
             {account ? "Edit Account" : "Add New Account"}
@@ -210,27 +206,6 @@ export function AddAccountDialog({
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="initialBalance"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Initial Balance (₹)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                      className="h-11 text-base"
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
