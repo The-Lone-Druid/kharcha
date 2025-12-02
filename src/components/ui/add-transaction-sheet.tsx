@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -40,6 +39,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { TransactionFormData, OutflowType, ExtraField } from "@/types";
@@ -47,6 +47,7 @@ import { transactionFormSchema } from "@/types";
 import type { Doc } from "@convex/_generated/dataModel";
 import { AddAccountDialog } from "@/components/ui/add-account-dialog";
 import { AddOutflowTypeDialog } from "@/components/ui/add-outflow-type-dialog";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 interface AddTransactionSheetProps {
   trigger: React.ReactNode;
@@ -68,8 +69,11 @@ export function AddTransactionSheet({
 
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
+  const currentUser = useQuery(api.users.getCurrentUser);
   const createTransaction = useMutation(api.transactions.addTransaction);
   const updateTransaction = useMutation(api.transactions.updateTransaction);
+
+  const preferredCurrency = currentUser?.preferences?.currency || "INR";
 
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionFormSchema),
@@ -285,17 +289,12 @@ export function AddTransactionSheet({
                   name="amount"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Amount (₹)</FormLabel>
+                      <FormLabel>Amount ({preferredCurrency})</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          placeholder="0.00"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
-                          className="text-lg"
+                        <CurrencyInput
+                          value={field.value}
+                          onChange={field.onChange}
+                          preferredCurrency={preferredCurrency}
                         />
                       </FormControl>
                       <FormMessage />

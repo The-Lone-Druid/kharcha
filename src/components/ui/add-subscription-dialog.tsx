@@ -42,6 +42,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { Doc } from "@convex/_generated/dataModel";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 const subscriptionFormSchema = z.object({
   amount: z.number().positive("Amount must be greater than 0"),
@@ -89,9 +90,12 @@ export function AddSubscriptionDialog({
   const [isOpen, setIsOpen] = React.useState(open || false);
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
+  const currentUser = useQuery(api.users.getCurrentUser);
   const createTransaction = useMutation(api.transactions.addTransaction);
   const updateTransaction = useMutation(api.transactions.updateTransaction);
   const createOutflowType = useMutation(api.outflowTypes.createCustomOutflowType);
+
+  const preferredCurrency = currentUser?.preferences?.currency || "INR";
 
   // Find the subscription outflow type
   const subscriptionType = React.useMemo(() => {
@@ -238,16 +242,13 @@ export function AddSubscriptionDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      Amount (₹)
+                      Amount ({preferredCurrency})
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="99.00"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        className="h-11 text-base"
+                      <CurrencyInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        preferredCurrency={preferredCurrency}
                       />
                     </FormControl>
                     <FormMessage />
