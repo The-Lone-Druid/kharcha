@@ -4,6 +4,7 @@ import { api } from "../../../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit, Trash2, Tag } from "lucide-react";
 import { useState } from "react";
 import { AddOutflowTypeDialog } from "@/components/ui/add-outflow-type-dialog";
@@ -70,22 +71,39 @@ function OutflowTypesPage() {
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Built-in Categories</h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {builtInTypes.map((type) => (
-            <Card key={type._id}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <span className="text-lg">{type.emoji}</span>
-                  {type.name}
-                </CardTitle>
-                <Badge variant="secondary">Built-in</Badge>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground">
-                  {type.extraFields?.length || 0} additional fields
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+          {outflowTypes ? (
+            builtInTypes.map((type) => (
+              <Card key={type._id}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <span className="text-lg">{type.emoji}</span>
+                    {type.name}
+                  </CardTitle>
+                  <Badge variant="secondary">Built-in</Badge>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-muted-foreground">
+                    {type.extraFields?.length || 0} additional fields
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <Skeleton className="w-5 h-5" />
+                    <Skeleton className="h-4 w-20" />
+                  </CardTitle>
+                  <Skeleton className="h-6 w-16" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-3 w-24" />
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </div>
 
@@ -93,45 +111,65 @@ function OutflowTypesPage() {
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Custom Categories</h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {customTypes.map((type) => (
-            <Card key={type._id} className="relative">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <span className="text-lg">{type.emoji}</span>
-                  {type.name}
-                </CardTitle>
-                <div className="flex items-center space-x-1">
-                  <AddOutflowTypeDialog
-                    open={editingType?._id === type._id}
-                    onOpenChange={(open) => {
-                      if (!open) setEditingType(null);
-                    }}
-                    outflowType={type}
-                    onSuccess={() => setEditingType(null)}
-                    trigger={
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    }
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(type._id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground">
-                  {type.extraFields?.length || 0} additional fields
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+          {outflowTypes ? (
+            customTypes.map((type) => (
+              <Card key={type._id} className="relative">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <span className="text-lg">{type.emoji}</span>
+                    {type.name}
+                  </CardTitle>
+                  <div className="flex items-center space-x-1">
+                    <AddOutflowTypeDialog
+                      open={editingType?._id === type._id}
+                      onOpenChange={(open) => {
+                        if (!open) setEditingType(null);
+                      }}
+                      outflowType={type}
+                      onSuccess={() => setEditingType(null)}
+                      trigger={
+                        <Button variant="ghost" size="sm">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      }
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(type._id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-muted-foreground">
+                    {type.extraFields?.length || 0} additional fields
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            Array.from({ length: 3 }).map((_, i) => (
+              <Card key={i}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <Skeleton className="w-5 h-5" />
+                    <Skeleton className="h-4 w-20" />
+                  </CardTitle>
+                  <div className="flex items-center space-x-1">
+                    <Skeleton className="h-8 w-8" />
+                    <Skeleton className="h-8 w-8" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-3 w-24" />
+                </CardContent>
+              </Card>
+            ))
+          )}
 
-          {customTypes.length === 0 && (
+          {outflowTypes && customTypes.length === 0 && (
             <Card className="col-span-full">
               <CardContent className="flex flex-col items-center justify-center py-8">
                 <Tag className="h-12 w-12 text-muted-foreground mb-4" />

@@ -4,6 +4,7 @@ import { api } from "../../../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit, Trash2, Wallet } from "lucide-react";
 import { useState } from "react";
 import { AddAccountDialog } from "@/components/ui/add-account-dialog";
@@ -58,52 +59,74 @@ function AccountsPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {accounts?.map((account) => (
-          <Card key={account._id} className="relative">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: account.colorHex }}
-                />
-                {account.name}
-              </CardTitle>
-              <div className="flex items-center space-x-1">
-                <AddAccountDialog
-                  open={editingAccount?._id === account._id}
-                  onOpenChange={(open) => {
-                    if (!open) setEditingAccount(null);
-                  }}
-                  account={account}
-                  onSuccess={() => setEditingAccount(null)}
-                  trigger={
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  }
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDelete(account._id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                ₹{account.initialBalance?.toLocaleString() || 0}
-              </div>
-              <p className="text-xs text-muted-foreground">{account.type}</p>
-              <Badge variant="outline" className="mt-2">
-                {account.type}
-              </Badge>
-            </CardContent>
-          </Card>
-        ))}
+        {accounts ? (
+          accounts.map((account) => (
+            <Card key={account._id} className="relative">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: account.colorHex }}
+                  />
+                  {account.name}
+                </CardTitle>
+                <div className="flex items-center space-x-1">
+                  <AddAccountDialog
+                    open={editingAccount?._id === account._id}
+                    onOpenChange={(open) => {
+                      if (!open) setEditingAccount(null);
+                    }}
+                    account={account}
+                    onSuccess={() => setEditingAccount(null)}
+                    trigger={
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDelete(account._id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  ₹{account.initialBalance?.toLocaleString() || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">{account.type}</p>
+                <Badge variant="outline" className="mt-2">
+                  {account.type}
+                </Badge>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Skeleton className="w-3 h-3 rounded-full" />
+                  <Skeleton className="h-4 w-24" />
+                </CardTitle>
+                <div className="flex items-center space-x-1">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-20 mb-2" />
+                <Skeleton className="h-3 w-16 mb-2" />
+                <Skeleton className="h-6 w-12" />
+              </CardContent>
+            </Card>
+          ))
+        )}
 
-        {(!accounts || accounts.length === 0) && (
+        {accounts && accounts.length === 0 && (
           <Card className="col-span-full">
             <CardContent className="flex flex-col items-center justify-center py-8">
               <Wallet className="h-12 w-12 text-muted-foreground mb-4" />

@@ -1,6 +1,7 @@
 import { useQuery } from "convex/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   PieChart,
   Pie,
@@ -39,12 +40,21 @@ export function DashboardWidgets() {
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            ₹{monthlySummary?.totalSpent.toLocaleString() || 0}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            +20.1% from last month
-          </p>
+          {monthlySummary ? (
+            <>
+              <div className="text-2xl font-bold">
+                ₹{monthlySummary.totalSpent.toLocaleString() || 0}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </>
+          ) : (
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -55,8 +65,17 @@ export function DashboardWidgets() {
           <Target className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{trackingStreak || 0}</div>
-          <p className="text-xs text-muted-foreground">consecutive days</p>
+          {trackingStreak !== undefined ? (
+            <>
+              <div className="text-2xl font-bold">{trackingStreak}</div>
+              <p className="text-xs text-muted-foreground">consecutive days</p>
+            </>
+          ) : (
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -66,39 +85,43 @@ export function DashboardWidgets() {
           <CardTitle>Top 5 Categories This Month</CardTitle>
         </CardHeader>
         <CardContent>
-          {monthlySummary?.topTypes && monthlySummary.topTypes.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie
-                  data={monthlySummary.topTypes.map((item, index) => ({
-                    name: item.outflowTypeId,
-                    value: item.amount,
-                    fill: COLORS[index % COLORS.length],
-                  }))}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {monthlySummary.topTypes.map((_entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+          {monthlySummary?.topTypes ? (
+            monthlySummary.topTypes.length > 0 ? (
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={monthlySummary.topTypes.map((item, index) => ({
+                      name: item.outflowTypeId,
+                      value: item.amount,
+                      fill: COLORS[index % COLORS.length],
+                    }))}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) =>
+                      `${name} ${(percent * 100).toFixed(0)}%`
+                    }
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {monthlySummary.topTypes.map((_entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                No data available
+              </p>
+            )
           ) : (
-            <p className="text-center text-muted-foreground">
-              No data available
-            </p>
+            <Skeleton className="h-48 w-full" />
           )}
         </CardContent>
       </Card>
@@ -112,34 +135,46 @@ export function DashboardWidgets() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {upcomingEvents && upcomingEvents.length > 0 ? (
-            <div className="space-y-2">
-              {upcomingEvents.slice(0, 5).map((event) => (
-                <div
-                  key={event.id}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-2 border rounded space-y-2 sm:space-y-0"
-                >
-                  <div>
-                    <p className="font-medium">{event.description}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {format(new Date(event.date), "MMM dd, yyyy")}
-                    </p>
-                  </div>
-                  <Badge
-                    variant={
-                      event.type === "renewal" ? "default" : "destructive"
-                    }
-                    className="self-start sm:self-center"
+          {upcomingEvents ? (
+            upcomingEvents.length > 0 ? (
+              <div className="space-y-2">
+                {upcomingEvents.slice(0, 5).map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-2 border rounded space-y-2 sm:space-y-0"
                   >
-                    ₹{event.amount}
-                  </Badge>
+                    <div>
+                      <p className="font-medium">{event.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {format(new Date(event.date), "MMM dd, yyyy")}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={
+                        event.type === "renewal" ? "default" : "destructive"
+                      }
+                      className="self-start sm:self-center"
+                    >
+                      ₹{event.amount}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                No upcoming events
+              </p>
+            )
+          ) : (
+            <div className="space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="p-3 border rounded space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-6 w-16 self-end" />
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-center text-muted-foreground">
-              No upcoming events
-            </p>
           )}
         </CardContent>
       </Card>
@@ -150,26 +185,30 @@ export function DashboardWidgets() {
           <CardTitle>Monthly Spend (Last 12 Months)</CardTitle>
         </CardHeader>
         <CardContent>
-          {monthlySpend && monthlySpend.length > 0 ? (
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={monthlySpend} barCategoryGap="10%">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="month"
-                  angle={-45}
-                  textAnchor="end"
-                  height={60}
-                  fontSize={12}
-                />
-                <YAxis fontSize={12} />
-                <Tooltip formatter={(value) => [`₹${value}`, "Spent"]} />
-                <Bar dataKey="total" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
+          {monthlySpend ? (
+            monthlySpend.length > 0 ? (
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={monthlySpend} barCategoryGap="10%">
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="month"
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                    fontSize={12}
+                  />
+                  <YAxis fontSize={12} />
+                  <Tooltip formatter={(value) => [`₹${value}`, "Spent"]} />
+                  <Bar dataKey="total" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                No data available
+              </p>
+            )
           ) : (
-            <p className="text-center text-muted-foreground">
-              No data available
-            </p>
+            <Skeleton className="h-64 w-full" />
           )}
         </CardContent>
       </Card>

@@ -74,6 +74,13 @@ export const getOutflowTypeBreakdown = query({
       )
       .collect();
 
+    const outflowTypes = await ctx.db
+      .query("outflowTypes")
+      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .collect();
+
+    const typeMap = new Map(outflowTypes.map(t => [t._id.toString(), t]));
+
     const breakdown: Record<string, number> = {};
     for (const t of transactions) {
       const typeId = t.outflowTypeId;
@@ -83,10 +90,15 @@ export const getOutflowTypeBreakdown = query({
       breakdown[typeId] += t.amount;
     }
 
-    return Object.entries(breakdown).map(([typeId, total]) => ({
-      outflowTypeId: typeId,
-      total,
-    }));
+    return Object.entries(breakdown).map(([typeId, total]) => {
+      const type = typeMap.get(typeId);
+      return {
+        outflowTypeId: typeId,
+        name: type?.name || "Unknown",
+        emoji: type?.emoji || "",
+        total,
+      };
+    });
   },
 });
 

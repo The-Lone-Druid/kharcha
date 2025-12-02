@@ -361,11 +361,15 @@ export function AddTransactionSheet({
                         onValueChange={(value) => {
                           if (value === "__add_new_account__") {
                             setShowAddAccountDialog(true);
+                            // Reset the select value to prevent it from being selected
+                            setTimeout(() => {
+                              field.onChange("");
+                            }, 0);
                           } else {
                             field.onChange(value);
                           }
                         }}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger className="h-10">
@@ -407,11 +411,15 @@ export function AddTransactionSheet({
                         onValueChange={(value) => {
                           if (value === "__add_new_category__") {
                             setShowAddCategoryDialog(true);
+                            // Reset the select value to prevent it from being selected
+                            setTimeout(() => {
+                              field.onChange("");
+                            }, 0);
                           } else {
                             field.onChange(value);
                           }
                         }}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger className="h-10">
