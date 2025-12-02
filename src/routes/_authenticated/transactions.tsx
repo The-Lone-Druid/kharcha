@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Edit, CreditCard } from "lucide-react";
 import { format } from "date-fns";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { useMemo, useState } from "react";
 

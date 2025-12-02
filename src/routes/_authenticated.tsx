@@ -3,7 +3,7 @@ import { Authenticated, Unauthenticated } from "convex/react";
 import { BottomTabBar } from "@/components/bottom-tab-bar";
 import { SignIn, useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({

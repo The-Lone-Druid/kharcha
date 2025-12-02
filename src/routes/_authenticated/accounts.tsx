@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit, Trash2, Wallet } from "lucide-react";
 import { useState } from "react";
 import { AddAccountDialog } from "@/components/ui/add-account-dialog";
-import { type Doc, type Id } from "../../../convex/_generated/dataModel";
+import { type Doc, type Id } from "@convex/_generated/dataModel";
 
 export const Route = createFileRoute("/_authenticated/accounts")({
   component: AccountsPage,

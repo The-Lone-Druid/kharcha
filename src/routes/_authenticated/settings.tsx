@@ -13,7 +13,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { Trash2, Wallet, Tag, LogOut, Download } from "lucide-react";
 import { useClerk, UserProfile } from "@clerk/clerk-react";
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import * as XLSX from "xlsx";
 
 export const Route = createFileRoute("/_authenticated/settings")({

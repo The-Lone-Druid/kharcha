@@ -5,7 +5,7 @@ import { z } from "zod";
 import { format } from "date-fns";
 import { CalendarIcon, CreditCard } from "lucide-react";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -41,7 +41,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import type { Doc } from "../../../convex/_generated/dataModel";
+import type { Doc } from "@convex/_generated/dataModel";
 
 const subscriptionFormSchema = z.object({
   amount: z.number().positive("Amount must be greater than 0"),

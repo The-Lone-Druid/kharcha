@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -44,7 +44,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { TransactionFormData, OutflowType, ExtraField } from "@/types";
 import { transactionFormSchema } from "@/types";
-import type { Doc } from "../../../convex/_generated/dataModel";
+import type { Doc } from "@convex/_generated/dataModel";
 import { AddAccountDialog } from "@/components/ui/add-account-dialog";
 import { AddOutflowTypeDialog } from "@/components/ui/add-outflow-type-dialog";
 

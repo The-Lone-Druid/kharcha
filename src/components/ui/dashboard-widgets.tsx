@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import { TrendingUp, Calendar, Target } from "lucide-react";
 import { format } from "date-fns";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@convex/_generated/api";
 import { useTheme } from "@/hooks/use-theme";
 
 // Custom tooltip component that adapts to theme
