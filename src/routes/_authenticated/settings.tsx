@@ -30,8 +30,6 @@ function SettingsPage() {
     limit: 10000,
   });
 
-  console.log(theme);
-
   const handleExportData = () => {
     if (!transactions || !accounts || !outflowTypes) {
       alert("Data is still loading. Please try again.");
