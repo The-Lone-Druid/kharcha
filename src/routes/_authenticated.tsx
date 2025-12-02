@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { useEffect, createContext, useContext, useRef } from "react";
 import { AuthPage } from "@/components/ui/auth-page";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import type { Doc } from "@convex/_generated/dataModel";
 
 // Type for preferences - can be full Doc or default values
@@ -65,6 +66,11 @@ function AuthenticatedLayout() {
 
   const isLoading = accounts === undefined || outflowTypes === undefined;
 
+  // Show loading screen while data is being fetched
+  if (isLoading) {
+    return <LoadingScreen message="Loading your data..." />;
+  }
+
   return (
     <>
       <Authenticated>
@@ -73,7 +79,7 @@ function AuthenticatedLayout() {
             accounts,
             outflowTypes,
             currentUser,
-            isLoading,
+            isLoading: false,
           }}
         >
           <div className="min-h-screen bg-background">

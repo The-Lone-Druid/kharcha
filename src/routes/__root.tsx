@@ -5,6 +5,7 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 import convex from "@/lib/convex";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { shadcn } from "@clerk/themes";
 
 // Configure QueryClient with aggressive caching for better performance
@@ -26,7 +27,11 @@ const queryClient = new QueryClient({
 });
 
 export const Route = createRootRoute({
-  component: () => (
+  component: RootLayout,
+});
+
+function RootLayout() {
+  return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <ClerkProvider
         publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
@@ -38,13 +43,22 @@ export const Route = createRootRoute({
       >
         <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
           <QueryClientProvider client={queryClient}>
-            <Outlet />
-            {/* <TanStackRouterDevtools />
-            <ReactQueryDevtools /> */}
+            <AppWithAuth />
             <Toaster />
           </QueryClientProvider>
         </ConvexProviderWithClerk>
       </ClerkProvider>
     </ThemeProvider>
-  ),
-});
+  );
+}
+
+function AppWithAuth() {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  // Show loading while Clerk is initializing
+  if (!isLoaded) {
+    return <LoadingScreen message="Initializing app..." />;
+  }
+
+  return <Outlet />;
+}

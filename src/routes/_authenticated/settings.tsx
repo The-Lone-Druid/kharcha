@@ -101,8 +101,8 @@ function SettingsPage() {
         </h2>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
+      <div className="grid gap-4 grid-cols-12">
+        <Card className="col-span-12 md:col-span-6">
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
           </CardHeader>
@@ -123,7 +123,7 @@ function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="col-span-12 md:col-span-6">
           <CardHeader>
             <CardTitle>Preferences</CardTitle>
           </CardHeader>
@@ -156,7 +156,7 @@ function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="col-span-12 md:col-span-6">
           <CardHeader>
             <CardTitle>Management</CardTitle>
           </CardHeader>
@@ -207,7 +207,7 @@ function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card className="col-span-12 md:col-span-6">
           <CardHeader>
             <CardTitle className="text-red-600">Danger Zone</CardTitle>
           </CardHeader>
@@ -250,7 +250,16 @@ function SettingsPage() {
             </div>
           </CardContent>
         </Card>
-        <UserProfile />
+        <div className="col-span-12">
+          <UserProfile
+            appearance={{
+              elements: {
+                rootBox: "w-full",
+                cardBox: "w-full"
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   );
