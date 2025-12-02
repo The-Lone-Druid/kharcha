@@ -1,29 +1,57 @@
-import { Id } from "./_generated/dataModel";
+import { type Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 
 // Get default outflow types configuration
 const getDefaultOutflowTypes = () => [
   { name: "Expense", emoji: "💸", colorHex: "#ef4444", extraFields: [] },
-  { name: "Subscription", emoji: "🔄", colorHex: "#3b82f6", extraFields: [
-    { key: "provider", label: "Provider", type: "text" as const },
-    { key: "renewalDate", label: "Renewal Date", type: "date" as const },
-    { key: "remind", label: "Remind me", type: "toggle" as const }
-  ]},
-  { name: "EMI/Loan", emoji: "🏦", colorHex: "#10b981", extraFields: [
-    { key: "loanName", label: "Loan Name", type: "text" as const },
-    { key: "emiAmount", label: "EMI Amount", type: "number" as const },
-    { key: "interestRate", label: "Interest Rate (%)", type: "number" as const }
-  ]},
-  { name: "Credit Card Payment", emoji: "💳", colorHex: "#f59e0b", extraFields: [
-    { key: "statementDate", label: "Statement Date", type: "date" as const },
-    { key: "minDue", label: "Minimum Due", type: "number" as const }
-  ]},
-  { name: "Money Lent", emoji: "🤝", colorHex: "#8b5cf6", extraFields: [
-    { key: "borrowerName", label: "Borrower Name", type: "text" as const },
-    { key: "dueDate", label: "Due Date", type: "date" as const },
-    { key: "interestRate", label: "Interest Rate (%)", type: "number" as const }
-  ]},
+  {
+    name: "Subscription",
+    emoji: "🔄",
+    colorHex: "#3b82f6",
+    extraFields: [
+      { key: "provider", label: "Provider", type: "text" as const },
+      { key: "renewalDate", label: "Renewal Date", type: "date" as const },
+      { key: "remind", label: "Remind me", type: "toggle" as const },
+    ],
+  },
+  {
+    name: "EMI/Loan",
+    emoji: "🏦",
+    colorHex: "#10b981",
+    extraFields: [
+      { key: "loanName", label: "Loan Name", type: "text" as const },
+      { key: "emiAmount", label: "EMI Amount", type: "number" as const },
+      {
+        key: "interestRate",
+        label: "Interest Rate (%)",
+        type: "number" as const,
+      },
+    ],
+  },
+  {
+    name: "Credit Card Payment",
+    emoji: "💳",
+    colorHex: "#f59e0b",
+    extraFields: [
+      { key: "statementDate", label: "Statement Date", type: "date" as const },
+      { key: "minDue", label: "Minimum Due", type: "number" as const },
+    ],
+  },
+  {
+    name: "Money Lent",
+    emoji: "🤝",
+    colorHex: "#8b5cf6",
+    extraFields: [
+      { key: "borrowerName", label: "Borrower Name", type: "text" as const },
+      { key: "dueDate", label: "Due Date", type: "date" as const },
+      {
+        key: "interestRate",
+        label: "Interest Rate (%)",
+        type: "number" as const,
+      },
+    ],
+  },
   { name: "Bill Payment", emoji: "📄", colorHex: "#06b6d4", extraFields: [] },
   { name: "Investment/SIP", emoji: "📈", colorHex: "#84cc16", extraFields: [] },
   { name: "Transfer", emoji: "↔️", colorHex: "#f97316", extraFields: [] },
@@ -32,7 +60,12 @@ const getDefaultOutflowTypes = () => [
   { name: "Transportation", emoji: "🚗", colorHex: "#64748b", extraFields: [] },
   { name: "Shopping", emoji: "🛍️", colorHex: "#f97316", extraFields: [] },
   { name: "Entertainment", emoji: "🎬", colorHex: "#8b5cf6", extraFields: [] },
-  { name: "Health & Fitness", emoji: "🏥", colorHex: "#10b981", extraFields: [] },
+  {
+    name: "Health & Fitness",
+    emoji: "🏥",
+    colorHex: "#10b981",
+    extraFields: [],
+  },
   { name: "Education", emoji: "📚", colorHex: "#3b82f6", extraFields: [] },
   { name: "Travel", emoji: "✈️", colorHex: "#06b6d4", extraFields: [] },
   { name: "Insurance", emoji: "🛡️", colorHex: "#64748b", extraFields: [] },
@@ -279,7 +312,9 @@ export const seedOutflowTypes = mutation({
       // Otherwise, try to get current authenticated user
       const identity = await ctx.auth.getUserIdentity();
       if (!identity) {
-        throw new ConvexError("Unauthenticated - provide userId parameter for seeding");
+        throw new ConvexError(
+          "Unauthenticated - provide userId parameter for seeding"
+        );
       }
 
       const user = await ctx.db
@@ -303,7 +338,7 @@ export const seedOutflowTypes = mutation({
       .filter((q) => q.neq(q.field("isCustom"), true))
       .collect();
 
-    const existingNames = new Set(existingTypes.map(t => t.name));
+    const existingNames = new Set(existingTypes.map((t) => t.name));
 
     // Create missing default types
     for (const type of defaultTypes) {
@@ -338,7 +373,7 @@ export const seedOutflowTypesForAllUsers = mutation({
         .filter((q) => q.neq(q.field("isCustom"), true))
         .collect();
 
-      const existingNames = new Set(existingTypes.map(t => t.name));
+      const existingNames = new Set(existingTypes.map((t) => t.name));
 
       // Create missing default types
       for (const type of defaultTypes) {
@@ -353,6 +388,8 @@ export const seedOutflowTypesForAllUsers = mutation({
       }
     }
 
-    return { message: `Seeded ${totalSeeded} outflow types for ${users.length} users` };
+    return {
+      message: `Seeded ${totalSeeded} outflow types for ${users.length} users`,
+    };
   },
 });

@@ -1,7 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { ConvexError } from "convex/values";
-import { Id } from "./_generated/dataModel";
 
 // List outflow types
 export const listOutflowTypes = query({
@@ -40,7 +39,12 @@ export const createCustomOutflowType = mutation({
       v.object({
         key: v.string(),
         label: v.string(),
-        type: v.union(v.literal("text"), v.literal("number"), v.literal("date"), v.literal("toggle")),
+        type: v.union(
+          v.literal("text"),
+          v.literal("number"),
+          v.literal("date"),
+          v.literal("toggle")
+        ),
       })
     ),
   },
@@ -65,7 +69,11 @@ export const createCustomOutflowType = mutation({
       throw new ConvexError("Outflow type with this name already exists");
     }
 
-    return await ctx.db.insert("outflowTypes", { ...args, userId, isCustom: true });
+    return await ctx.db.insert("outflowTypes", {
+      ...args,
+      userId,
+      isCustom: true,
+    });
   },
 });
 
@@ -76,13 +84,20 @@ export const updateOutflowType = mutation({
     name: v.optional(v.string()),
     emoji: v.optional(v.string()),
     colorHex: v.optional(v.string()),
-    extraFields: v.optional(v.array(
-      v.object({
-        key: v.string(),
-        label: v.string(),
-        type: v.union(v.literal("text"), v.literal("number"), v.literal("date"), v.literal("toggle")),
-      })
-    )),
+    extraFields: v.optional(
+      v.array(
+        v.object({
+          key: v.string(),
+          label: v.string(),
+          type: v.union(
+            v.literal("text"),
+            v.literal("number"),
+            v.literal("date"),
+            v.literal("toggle")
+          ),
+        })
+      )
+    ),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -98,7 +113,11 @@ export const updateOutflowType = mutation({
     const { id, ...updates } = args;
 
     const outflowType = await ctx.db.get(id);
-    if (!outflowType || outflowType.userId !== userId || !outflowType.isCustom) {
+    if (
+      !outflowType ||
+      outflowType.userId !== userId ||
+      !outflowType.isCustom
+    ) {
       throw new ConvexError("Outflow type not found or cannot be edited");
     }
 
@@ -122,7 +141,11 @@ export const deleteOutflowType = mutation({
     const userId = user._id;
 
     const outflowType = await ctx.db.get(args.id);
-    if (!outflowType || outflowType.userId !== userId || !outflowType.isCustom) {
+    if (
+      !outflowType ||
+      outflowType.userId !== userId ||
+      !outflowType.isCustom
+    ) {
       throw new ConvexError("Outflow type not found or cannot be deleted");
     }
 

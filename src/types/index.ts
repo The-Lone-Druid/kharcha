@@ -57,6 +57,7 @@ export const subscriptionMetadataSchema = z.object({
   provider: z.string(),
   renewalDate: z.number(),
   remind: z.boolean(),
+  frequency: z.enum(["monthly", "weekly", "yearly"]).default("monthly"),
 });
 
 export const loanMetadataSchema = z.object({

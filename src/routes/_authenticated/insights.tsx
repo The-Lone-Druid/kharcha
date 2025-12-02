@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   BarChart,
@@ -10,9 +11,40 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  type TooltipProps,
 } from "recharts";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
+import { useTheme } from "@/hooks/use-theme";
+import { AddSubscriptionDialog } from "@/components/ui/add-subscription-dialog";
+import { CreditCard } from "lucide-react";
+
+// Custom tooltip component that adapts to theme
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const { theme } = useTheme();
+
+  if (active && payload && payload.length) {
+    const data = payload[0];
+
+    // Handle bar chart data (uses label for month)
+    return (
+      <div className={`rounded-lg border p-3 shadow-lg ${
+        theme === 'dark'
+          ? 'bg-gray-800 border-gray-700 text-white'
+          : 'bg-white border-gray-200 text-gray-900'
+      }`}>
+        <p className="font-medium">{label}</p>
+        <p className={`text-sm ${
+          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+        }`}>
+          Spent: <span className="font-semibold">₹{data.value}</span>
+        </p>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export const Route = createFileRoute("/_authenticated/insights")({
   component: InsightsPage,
@@ -49,7 +81,7 @@ function InsightsPage() {
                       fontSize={12}
                     />
                     <YAxis fontSize={12} />
-                    <Tooltip formatter={(value) => [`₹${value}`, "Spent"]} />
+                    <Tooltip content={<CustomTooltip />} />
                     <Bar dataKey="total" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
@@ -118,7 +150,7 @@ function InsightsPage() {
                       <div>
                         <p className="font-medium">{sub.provider || "Unknown Provider"}</p>
                         <p className="text-sm text-muted-foreground">
-                          ₹{sub.amount} • Renews {sub.renewalDate ? new Date(sub.renewalDate).toLocaleDateString() : "N/A"}
+                          ₹{sub.amount} • {sub.frequency || "monthly"} • Renews {sub.renewalDate ? new Date(sub.renewalDate).toLocaleDateString() : "N/A"}
                         </p>
                       </div>
                       {sub.remind && (
@@ -128,9 +160,20 @@ function InsightsPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-muted-foreground">
-                  No subscriptions found. Add subscription transactions to see them here.
-                </p>
+                <div className="text-center py-6">
+                  <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground mb-4">
+                    No subscriptions found. Track your recurring payments here.
+                  </p>
+                  <AddSubscriptionDialog
+                    trigger={
+                      <Button>
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Add Your First Subscription
+                      </Button>
+                    }
+                  />
+                </div>
               )
             ) : (
               <div className="space-y-3">

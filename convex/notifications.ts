@@ -1,7 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { ConvexError } from "convex/values";
-import { Id } from "./_generated/dataModel";
 
 // List notifications
 export const listNotifications = query({
@@ -44,7 +43,7 @@ export const createNotification = mutation({
       ...args,
       userId: user._id,
       isRead: false,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     });
   },
 });

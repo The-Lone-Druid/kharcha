@@ -1,7 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { ConvexError } from "convex/values";
-import { Id } from "./_generated/dataModel";
 
 // List budgets
 export const listBudgets = query({

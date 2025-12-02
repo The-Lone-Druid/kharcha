@@ -472,7 +472,7 @@ export function AddTransactionSheet({
                 name="note"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Note (Optional)</FormLabel>
+                    <FormLabel>Note</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}

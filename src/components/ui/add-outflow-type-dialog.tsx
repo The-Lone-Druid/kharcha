@@ -6,14 +6,13 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -195,31 +194,35 @@ export function AddOutflowTypeDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
+    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+      <SheetTrigger asChild>{trigger}</SheetTrigger>
+      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto">
+        <SheetHeader className="space-y-2">
+          <SheetTitle className="text-lg sm:text-xl">
             {outflowType ? "Edit Category" : "Add Custom Category"}
-          </DialogTitle>
-          <DialogDescription>
+          </SheetTitle>
+          <SheetDescription className="text-sm">
             {outflowType
               ? "Update your custom category details."
               : "Create a new category with custom fields for better transaction tracking."}
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category Name</FormLabel>
+                    <FormLabel className="text-sm font-medium">Category Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Groceries" {...field} />
+                      <Input
+                        placeholder="e.g., Groceries"
+                        {...field}
+                        className="h-11 text-base"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -231,10 +234,10 @@ export function AddOutflowTypeDialog({
                 name="emoji"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Emoji</FormLabel>
+                    <FormLabel className="text-sm font-medium">Emoji</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-11">
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
@@ -257,19 +260,20 @@ export function AddOutflowTypeDialog({
               name="colorHex"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <div className="flex flex-wrap gap-2">
+                  <FormLabel className="text-sm font-medium">Color</FormLabel>
+                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-3 py-2">
                     {colors.map((color) => (
                       <button
                         key={color}
                         type="button"
-                        className={`w-8 h-8 rounded-full border-2 ${
+                        className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full border-2 transition-all ${
                           field.value === color
-                            ? "border-foreground"
-                            : "border-muted"
+                            ? "border-foreground scale-110"
+                            : "border-muted hover:scale-105"
                         }`}
                         style={{ backgroundColor: color }}
                         onClick={() => field.onChange(color)}
+                        aria-label={`Select color ${color}`}
                       />
                     ))}
                   </div>
@@ -280,13 +284,14 @@ export function AddOutflowTypeDialog({
 
             {/* Extra Fields */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <FormLabel className="text-base">Additional Fields</FormLabel>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <FormLabel className="text-base font-medium">Additional Fields</FormLabel>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => append({ key: "", label: "", type: "text" })}
+                  className="w-full sm:w-auto h-9"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Field
@@ -297,92 +302,106 @@ export function AddOutflowTypeDialog({
                 {fields.map((field, index) => (
                   <div
                     key={field.id}
-                    className="flex items-end gap-2 p-3 border rounded"
+                    className="flex flex-col gap-3 p-4 border rounded-lg bg-muted/30"
                   >
-                    <FormField
-                      control={form.control}
-                      name={`extraFields.${index}.label`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormLabel>Field Label</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., Provider" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`extraFields.${index}.key`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormLabel>Field Key</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., provider" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`extraFields.${index}.type`}
-                      render={({ field }) => (
-                        <FormItem className="w-32">
-                          <FormLabel>Type</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <FormField
+                        control={form.control}
+                        name={`extraFields.${index}.label`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm">Field Label</FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
+                              <Input
+                                placeholder="e.g., Provider"
+                                {...field}
+                                className="h-10"
+                              />
                             </FormControl>
-                            <SelectContent>
-                              {fieldTypes.map((type) => (
-                                <SelectItem key={type.value} value={type.value}>
-                                  {type.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => remove(index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                      <FormField
+                        control={form.control}
+                        name={`extraFields.${index}.key`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm">Field Key</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="e.g., provider"
+                                {...field}
+                                className="h-10"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex items-end gap-2">
+                      <FormField
+                        control={form.control}
+                        name={`extraFields.${index}.type`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel className="text-sm">Type</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="h-10">
+                                  <SelectValue />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {fieldTypes.map((type) => (
+                                  <SelectItem key={type.value} value={type.value}>
+                                    {type.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => remove(index)}
+                        className="h-10 px-3 text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <DialogFooter>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
+                className="w-full sm:w-auto h-11"
               >
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button type="submit" className="w-full sm:w-auto h-11">
                 {outflowType ? "Update" : "Create"} Category
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

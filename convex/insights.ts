@@ -1,6 +1,6 @@
 import { query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
-import { Doc, Id } from "./_generated/dataModel";
+import { type Doc, type Id } from "./_generated/dataModel";
 
 // Monthly spend for last 12 months
 export const getMonthlySpend = query({
@@ -79,7 +79,7 @@ export const getOutflowTypeBreakdown = query({
       .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
       .collect();
 
-    const typeMap = new Map(outflowTypes.map(t => [t._id.toString(), t]));
+    const typeMap = new Map(outflowTypes.map((t) => [t._id.toString(), t]));
 
     const breakdown: Record<string, number> = {};
     for (const t of transactions) {
@@ -135,6 +135,7 @@ export const getSubscriptions = query({
       amount: t.amount,
       renewalDate: t.metadata?.renewalDate,
       remind: t.metadata?.remind,
+      frequency: t.metadata?.frequency,
     }));
   },
 });

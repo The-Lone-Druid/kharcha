@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { ConvexError } from "convex/values";
-import { Id } from "./_generated/dataModel";
+import { type Id } from "./_generated/dataModel";
 
 // List transactions with pagination and filters
 export const listTransactions = query({
@@ -26,15 +26,28 @@ export const listTransactions = query({
       .unique();
     if (!user) throw new ConvexError("User not found");
 
-    const { limit = 50, search, accountId, outflowTypeId, startDate, endDate, sortBy = "date", sortOrder = "desc" } = args;
+    const {
+      limit = 50,
+      search,
+      accountId,
+      outflowTypeId,
+      startDate,
+      endDate,
+      sortBy = "date",
+      sortOrder = "desc",
+    } = args;
 
-    let query = ctx.db.query("transactions").withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">));
+    let query = ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">));
 
     if (accountId) {
       query = query.filter((q) => q.eq(q.field("accountId"), accountId));
     }
     if (outflowTypeId) {
-      query = query.filter((q) => q.eq(q.field("outflowTypeId"), outflowTypeId));
+      query = query.filter((q) =>
+        q.eq(q.field("outflowTypeId"), outflowTypeId)
+      );
     }
     if (startDate) {
       query = query.filter((q) => q.gte(q.field("date"), startDate));
@@ -58,16 +71,20 @@ export const listTransactions = query({
 
         return {
           ...transaction,
-          account: account ? {
-            _id: account._id,
-            name: account.name,
-            type: account.type,
-          } : null,
-          outflowType: outflowType ? {
-            _id: outflowType._id,
-            name: outflowType.name,
-            emoji: outflowType.emoji,
-          } : null,
+          account: account
+            ? {
+                _id: account._id,
+                name: account.name,
+                type: account.type,
+              }
+            : null,
+          outflowType: outflowType
+            ? {
+                _id: outflowType._id,
+                name: outflowType.name,
+                emoji: outflowType.emoji,
+              }
+            : null,
         };
       })
     );
@@ -91,27 +108,50 @@ export const getMonthlySummary = query({
 
     const { month } = args;
     const now = new Date();
-    const currentMonth = month || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    const [year, mon] = currentMonth.split('-').map(Number);
+    const currentMonth =
+      month ||
+      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const [year, mon] = currentMonth.split("-").map(Number);
     const start = new Date(year, mon - 1, 1).getTime();
     const end = new Date(year, mon, 1).getTime();
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user_date", (q) => q.eq("userId", user._id as Id<"users">).gte("date", start).lt("date", end))
+      .withIndex("by_user_date", (q) =>
+        q
+          .eq("userId", user._id as Id<"users">)
+          .gte("date", start)
+          .lt("date", end)
+      )
       .collect();
 
     const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
 
     // Top 5 outflow types
     const typeCounts: Record<string, number> = {};
-    transactions.forEach(t => {
-      typeCounts[t.outflowTypeId] = (typeCounts[t.outflowTypeId] || 0) + t.amount;
+    transactions.forEach((t) => {
+      typeCounts[t.outflowTypeId] =
+        (typeCounts[t.outflowTypeId] || 0) + t.amount;
     });
-    const topTypes = Object.entries(typeCounts)
-      .sort(([,a], [,b]) => (b as number) - (a as number))
+
+    // Get outflow type details for the top types
+    const topTypeIds = Object.entries(typeCounts)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
       .slice(0, 5)
-      .map(([id, amount]) => ({ outflowTypeId: id, amount }));
+      .map(([id]) => id as Id<"outflowTypes">);
+
+    const outflowTypes = await Promise.all(
+      topTypeIds.map((id) => ctx.db.get(id))
+    );
+
+    const topTypes = topTypeIds.map((id, index) => {
+      const outflowType = outflowTypes[index];
+      return {
+        outflowTypeId: id,
+        name: outflowType?.name || "Unknown",
+        amount: typeCounts[id],
+      };
+    });
 
     return { totalSpent, topTypes };
   },

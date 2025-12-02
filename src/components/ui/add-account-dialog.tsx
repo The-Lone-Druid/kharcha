@@ -6,14 +6,13 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -157,30 +156,34 @@ export function AddAccountDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
+    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+      <SheetTrigger asChild>{trigger}</SheetTrigger>
+      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto">
+        <SheetHeader className="space-y-2">
+          <SheetTitle className="text-lg sm:text-xl">
             {account ? "Edit Account" : "Add New Account"}
-          </DialogTitle>
-          <DialogDescription>
+          </SheetTitle>
+          <SheetDescription className="text-sm">
             {account
               ? "Update your account details."
               : "Create a new account to track your finances."}
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Account Name</FormLabel>
+                  <FormLabel className="text-sm font-medium">Account Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., HDFC Savings" {...field} />
+                    <Input
+                      placeholder="e.g., HDFC Savings"
+                      {...field}
+                      className="h-11 text-base"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -192,10 +195,10 @@ export function AddAccountDialog({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Account Type</FormLabel>
+                  <FormLabel className="text-sm font-medium">Account Type</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-11">
                         <SelectValue placeholder="Select account type" />
                       </SelectTrigger>
                     </FormControl>
@@ -217,7 +220,7 @@ export function AddAccountDialog({
               name="initialBalance"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Initial Balance (₹)</FormLabel>
+                  <FormLabel className="text-sm font-medium">Initial Balance (₹)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -225,6 +228,7 @@ export function AddAccountDialog({
                       placeholder="0.00"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
+                      className="h-11 text-base"
                     />
                   </FormControl>
                   <FormMessage />
@@ -237,19 +241,20 @@ export function AddAccountDialog({
               name="colorHex"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <div className="flex flex-wrap gap-2">
+                  <FormLabel className="text-sm font-medium">Color</FormLabel>
+                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-3 py-2">
                     {colors.map((color) => (
                       <button
                         key={color}
                         type="button"
-                        className={`w-8 h-8 rounded-full border-2 ${
+                        className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full border-2 transition-all ${
                           field.value === color
-                            ? "border-foreground"
-                            : "border-muted"
+                            ? "border-foreground scale-110"
+                            : "border-muted hover:scale-105"
                         }`}
                         style={{ backgroundColor: color }}
                         onClick={() => field.onChange(color)}
+                        aria-label={`Select color ${color}`}
                       />
                     ))}
                   </div>
@@ -258,21 +263,22 @@ export function AddAccountDialog({
               )}
             />
 
-            <DialogFooter>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
+                className="w-full sm:w-auto h-11"
               >
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button type="submit" className="w-full sm:w-auto h-11">
                 {account ? "Update" : "Create"} Account
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

@@ -13,10 +13,57 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  type TooltipProps,
 } from "recharts";
 import { TrendingUp, Calendar, Target } from "lucide-react";
 import { format } from "date-fns";
 import { api } from "../../../convex/_generated/api";
+import { useTheme } from "@/hooks/use-theme";
+
+// Custom tooltip component that adapts to theme
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const { theme } = useTheme();
+
+  if (active && payload && payload.length) {
+    const data = payload[0];
+
+    // Handle pie chart data (has payload.name)
+    if (data.payload && data.payload.name) {
+      return (
+        <div className={`rounded-lg border p-3 shadow-lg ${
+          theme === 'dark'
+            ? 'bg-gray-800 border-gray-700 text-white'
+            : 'bg-white border-gray-200 text-gray-900'
+        }`}>
+          <p className="font-medium">{data.payload.name}</p>
+          <p className={`text-sm ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          }`}>
+            Amount: <span className="font-semibold">₹{data.value}</span>
+          </p>
+        </div>
+      );
+    }
+
+    // Handle bar chart data (uses label for month)
+    return (
+      <div className={`rounded-lg border p-3 shadow-lg ${
+        theme === 'dark'
+          ? 'bg-gray-800 border-gray-700 text-white'
+          : 'bg-white border-gray-200 text-gray-900'
+      }`}>
+        <p className="font-medium">{label}</p>
+        <p className={`text-sm ${
+          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+        }`}>
+          Spent: <span className="font-semibold">₹{data.value}</span>
+        </p>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export function DashboardWidgets() {
   const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
@@ -87,21 +134,22 @@ export function DashboardWidgets() {
         <CardContent>
           {monthlySummary?.topTypes ? (
             monthlySummary.topTypes.length > 0 ? (
-              <ResponsiveContainer width="100%" height={200}>
+              <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Pie
                     data={monthlySummary.topTypes.map((item, index) => ({
-                      name: item.outflowTypeId,
+                      name: item.name,
                       value: item.amount,
                       fill: COLORS[index % COLORS.length],
                     }))}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
+                    label={({ percent }) =>
+                      percent > 0.05 ? `${(percent * 100).toFixed(0)}%` : ""
                     }
-                    outerRadius={80}
+                    outerRadius={70}
+                    innerRadius={25}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -112,7 +160,7 @@ export function DashboardWidgets() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip content={<CustomTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -198,7 +246,7 @@ export function DashboardWidgets() {
                     fontSize={12}
                   />
                   <YAxis fontSize={12} />
-                  <Tooltip formatter={(value) => [`₹${value}`, "Spent"]} />
+                  <Tooltip content={<CustomTooltip />} />
                   <Bar dataKey="total" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>
