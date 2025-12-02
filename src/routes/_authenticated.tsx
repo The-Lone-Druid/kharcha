@@ -1,10 +1,11 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { BottomTabBar } from "@/components/bottom-tab-bar";
-import { SignIn, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { useEffect } from "react";
+import { AuthPage } from "@/components/ui/auth-page";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -37,9 +38,7 @@ function AuthenticatedLayout() {
         </div>
       </Authenticated>
       <Unauthenticated>
-        <div className="min-h-screen flex items-center justify-center">
-          <SignIn />
-        </div>
+        <AuthPage />
       </Unauthenticated>
     </>
   );
