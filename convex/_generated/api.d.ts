@@ -9,9 +9,7 @@
  */
 
 import type * as accounts from "../accounts.js";
-import type * as auth from "../auth.js";
 import type * as budgets from "../budgets.js";
-import type * as http from "../http.js";
 import type * as insights from "../insights.js";
 import type * as notifications from "../notifications.js";
 import type * as outflowTypes from "../outflowTypes.js";
@@ -27,9 +25,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   accounts: typeof accounts;
-  auth: typeof auth;
   budgets: typeof budgets;
-  http: typeof http;
   insights: typeof insights;
   notifications: typeof notifications;
   outflowTypes: typeof outflowTypes;

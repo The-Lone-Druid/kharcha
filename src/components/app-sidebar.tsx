@@ -1,5 +1,6 @@
 import { Home, Receipt, BarChart3, Settings, LogOut } from "lucide-react";
-import { useAuthActions } from "@convex-dev/auth/react";
+import { useClerk } from "@clerk/clerk-react";
+import { Link } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +18,7 @@ import { Button } from "@/components/ui/button";
 const menuItems = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
   },
   {
@@ -38,7 +39,7 @@ const menuItems = [
 ];
 
 export function AppSidebar() {
-  const { signOut } = useAuthActions();
+  const { signOut } = useClerk();
 
   return (
     <Sidebar>
@@ -58,10 +59,10 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -73,7 +74,7 @@ export function AppSidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start"
-          onClick={() => signOut()}
+          onClick={() => signOut({ redirectUrl: "/" })}
         >
           <LogOut className="mr-2 h-4 w-4" />
           Logout

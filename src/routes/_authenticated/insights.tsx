@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { api } from "convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 
 export const Route = createFileRoute("/_authenticated/insights")({
@@ -23,23 +23,29 @@ function InsightsPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Insights</h2>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Insights</h2>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-12 gap-4">
         {/* Monthly Spend Chart */}
-        <Card className="col-span-2">
+        <Card className="col-span-12">
           <CardHeader>
             <CardTitle>Monthly Spend (Last 12 Months)</CardTitle>
           </CardHeader>
           <CardContent>
             {monthlySpend && monthlySpend.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={monthlySpend}>
+                <BarChart data={monthlySpend} barCategoryGap="10%">
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
+                  <XAxis
+                    dataKey="month"
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                    fontSize={12}
+                  />
+                  <YAxis fontSize={12} />
                   <Tooltip formatter={(value) => [`₹${value}`, "Spent"]} />
                   <Bar dataKey="total" fill="#8884d8" />
                 </BarChart>
@@ -53,7 +59,7 @@ function InsightsPage() {
         </Card>
 
         {/* Outflow Type Breakdown */}
-        <Card>
+        <Card className="col-span-12 md:col-span-6">
           <CardHeader>
             <CardTitle>Outflow Type Breakdown</CardTitle>
           </CardHeader>
@@ -79,7 +85,7 @@ function InsightsPage() {
         </Card>
 
         {/* Subscriptions */}
-        <Card>
+        <Card className="col-span-12 md:col-span-6">
           <CardHeader>
             <CardTitle>Subscriptions</CardTitle>
           </CardHeader>

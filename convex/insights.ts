@@ -1,5 +1,5 @@
 import { query } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { Doc, Id } from "./_generated/dataModel";
 
 // Monthly spend for last 12 months
@@ -9,7 +9,10 @@ export const getMonthlySpend = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
     if (!user) throw new Error("User not found");
 
     const now = new Date();
@@ -52,8 +55,11 @@ export const getOutflowTypeBreakdown = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const start = args.startDate || 0;
     const end = args.endDate || Date.now();
@@ -91,8 +97,11 @@ export const getSubscriptions = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
@@ -125,8 +134,11 @@ export const getLoans = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
@@ -163,8 +175,11 @@ export const getMoneyLentAgeing = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
@@ -215,8 +230,11 @@ export const getProjectedRecurring = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const monthsAhead = args.months || 3;
     const projections = [];
@@ -295,8 +313,11 @@ export const getUpcomingEvents = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const now = Date.now();
     const weekFromNow = now + 7 * 24 * 60 * 60 * 1000;
@@ -332,8 +353,11 @@ export const getTrackingStreak = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
-    if (!user) throw new Error("User not found");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
 
     const transactions = await ctx.db
       .query("transactions")

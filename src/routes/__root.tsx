@@ -1,31 +1,32 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ConvexProvider } from "convex/react";
-import { ConvexAuthProvider } from "@convex-dev/auth/react";
+import { ClerkProvider, useAuth } from "@clerk/clerk-react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
 import convex from "@/lib/convex";
 import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "@/components/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { shadcn } from "@clerk/themes";
 
 const queryClient = new QueryClient();
 
 export const Route = createRootRoute({
   component: () => (
-    <ConvexProvider client={convex}>
-      <ConvexAuthProvider client={convex}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <AuthProvider>
-              <Outlet />
-              <TanStackRouterDevtools />
-              <ReactQueryDevtools />
-              <Toaster />
-            </AuthProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </ConvexAuthProvider>
-    </ConvexProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <ClerkProvider
+        publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+        appearance={{
+          baseTheme: shadcn,
+        }}
+      >
+        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+          <QueryClientProvider client={queryClient}>
+            <Outlet />
+            {/* <TanStackRouterDevtools />
+            <ReactQueryDevtools /> */}
+            <Toaster />
+          </QueryClientProvider>
+        </ConvexProviderWithClerk>
+      </ClerkProvider>
+    </ThemeProvider>
   ),
 });

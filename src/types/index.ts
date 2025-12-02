@@ -1,4 +1,4 @@
-import type { Id } from "convex/_generated/dataModel";
+import type { Id } from "../../convex/_generated/dataModel";
 import { z } from "zod";
 
 // User types
@@ -98,6 +98,16 @@ export interface Transaction {
   receiptImageId?: string;
   metadata: TransactionMetadata;
   userId: string;
+  account?: {
+    _id: string;
+    name: string;
+    type: AccountType;
+  } | null;
+  outflowType?: {
+    _id: string;
+    name: string;
+    emoji: string;
+  } | null;
 }
 
 // Budget

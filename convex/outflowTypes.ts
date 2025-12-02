@@ -3,59 +3,21 @@ import { v } from "convex/values";
 import { ConvexError } from "convex/values";
 import { Id } from "./_generated/dataModel";
 
-// Built-in outflow types
-const BUILT_IN_TYPES = [
-  { name: "Expense", emoji: "💸", colorHex: "#ef4444", extraFields: [] },
-  { name: "Subscription", emoji: "🔄", colorHex: "#3b82f6", extraFields: [
-    { key: "provider", label: "Provider", type: "text" as const },
-    { key: "renewalDate", label: "Renewal Date", type: "date" as const },
-    { key: "remind", label: "Remind me", type: "toggle" as const }
-  ]},
-  { name: "EMI/Loan", emoji: "🏦", colorHex: "#10b981", extraFields: [
-    { key: "loanName", label: "Loan Name", type: "text" as const },
-    { key: "emiAmount", label: "EMI Amount", type: "number" as const },
-    { key: "interestRate", label: "Interest Rate (%)", type: "number" as const }
-  ]},
-  { name: "Credit Card Payment", emoji: "💳", colorHex: "#f59e0b", extraFields: [
-    { key: "statementDate", label: "Statement Date", type: "date" as const },
-    { key: "minDue", label: "Minimum Due", type: "number" as const }
-  ]},
-  { name: "Money Lent", emoji: "🤝", colorHex: "#8b5cf6", extraFields: [
-    { key: "borrowerName", label: "Borrower Name", type: "text" as const },
-    { key: "dueDate", label: "Due Date", type: "date" as const },
-    { key: "interestRate", label: "Interest Rate (%)", type: "number" as const }
-  ]},
-  { name: "Bill Payment", emoji: "📄", colorHex: "#06b6d4", extraFields: [] },
-  { name: "Investment/SIP", emoji: "📈", colorHex: "#84cc16", extraFields: [] },
-  { name: "Transfer", emoji: "↔️", colorHex: "#f97316", extraFields: [] },
-];
-
-// Initialize built-in types for user
-export const initializeBuiltInTypes = mutation({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    for (const type of BUILT_IN_TYPES) {
-      await ctx.db.insert("outflowTypes", {
-        ...type,
-        isCustom: false,
-        userId: args.userId,
-      });
-    }
-  },
-});
-
 // List outflow types
 export const listOutflowTypes = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db.get(identity.subject as Id<"users">);
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
     if (!user) throw new ConvexError("User not found");
 
     return await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
       .collect();
   },
 });
@@ -86,7 +48,13 @@ export const createCustomOutflowType = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
+
+    const userId = user._id;
 
     // Check if name already exists
     const existing = await ctx.db
@@ -120,7 +88,13 @@ export const updateOutflowType = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
+
+    const userId = user._id;
     const { id, ...updates } = args;
 
     const outflowType = await ctx.db.get(id);
@@ -139,7 +113,13 @@ export const deleteOutflowType = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new ConvexError("User not found");
+
+    const userId = user._id;
 
     const outflowType = await ctx.db.get(args.id);
     if (!outflowType || outflowType.userId !== userId || !outflowType.isCustom) {

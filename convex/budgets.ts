@@ -10,11 +10,15 @@ export const listBudgets = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+    if (!user) throw new ConvexError("User not found");
 
     let query = ctx.db
       .query("budgets")
-      .withIndex("by_user", (q) => q.eq("userId", userId));
+      .withIndex("by_user", (q) => q.eq("userId", user._id));
 
     if (args.month) {
       query = query.filter((q) => q.eq(q.field("month"), args.month));
@@ -35,7 +39,11 @@ export const createBudget = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+    if (!user) throw new ConvexError("User not found");
 
     // Check if budget already exists
     const existing = await ctx.db
@@ -50,7 +58,7 @@ export const createBudget = mutation({
       );
     }
 
-    return await ctx.db.insert("budgets", { ...args, userId });
+    return await ctx.db.insert("budgets", { ...args, userId: user._id });
   },
 });
 
@@ -64,11 +72,16 @@ export const updateBudget = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+    if (!user) throw new ConvexError("User not found");
+
     const { id, ...updates } = args;
 
     const budget = await ctx.db.get(id);
-    if (!budget || budget.userId !== userId) {
+    if (!budget || budget.userId !== user._id) {
       throw new ConvexError("Budget not found or access denied");
     }
 
@@ -83,10 +96,14 @@ export const deleteBudget = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+    if (!user) throw new ConvexError("User not found");
 
     const budget = await ctx.db.get(args.id);
-    if (!budget || budget.userId !== userId) {
+    if (!budget || budget.userId !== user._id) {
       throw new ConvexError("Budget not found or access denied");
     }
 
@@ -101,11 +118,15 @@ export const getBudgetProgress = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const userId = identity.subject as Id<"users">;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+    if (!user) throw new ConvexError("User not found");
 
     const budgets = await ctx.db
       .query("budgets")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
       .filter((q) => q.eq(q.field("month"), args.month))
       .collect();
 

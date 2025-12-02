@@ -42,13 +42,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import type {
-  TransactionFormData,
-  OutflowType,
-  ExtraField,
-} from "@/types";
+import type { TransactionFormData, OutflowType, ExtraField } from "@/types";
 import { transactionFormSchema } from "@/types";
-import type { Doc } from "convex/_generated/dataModel";
+import type { Doc } from "../../../convex/_generated/dataModel";
+import { AddAccountDialog } from "@/components/ui/add-account-dialog";
+import { AddOutflowTypeDialog } from "@/components/ui/add-outflow-type-dialog";
 
 interface AddTransactionSheetProps {
   trigger: React.ReactNode;
@@ -62,12 +60,15 @@ export function AddTransactionSheet({
   transaction,
 }: AddTransactionSheetProps) {
   const [open, setOpen] = React.useState(false);
+  const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false);
+  const [showAddCategoryDialog, setShowAddCategoryDialog] =
+    React.useState(false);
   const [selectedOutflowType, setSelectedOutflowType] =
     React.useState<OutflowType | null>(null);
 
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
-  const createTransaction = useMutation(api.transactions.createTransaction);
+  const createTransaction = useMutation(api.transactions.addTransaction);
   const updateTransaction = useMutation(api.transactions.updateTransaction);
 
   const form = useForm<TransactionFormData>({
@@ -93,36 +94,18 @@ export function AddTransactionSheet({
     }
   }, [watchedOutflowTypeId, outflowTypes]);
 
-  const onSubmit = async (data: TransactionFormData) => {
-    try {
-      const payload = {
-        amount: data.amount,
-        date: data.date.getTime(),
-        accountId: data.accountId,
-        outflowTypeId: data.outflowTypeId,
-        note: data.note,
-        receiptImageId: data.receiptImageId,
-        metadata: data.metadata,
-      };
-
-      if (transaction) {
-        await updateTransaction({
-          id: transaction._id,
-          ...(payload as Doc<"transactions">),
-        });
-        toast.success("Transaction updated successfully");
-      } else {
-        await createTransaction(payload as Doc<"transactions">);
-        toast.success("Transaction added successfully");
-      }
-
-      setOpen(false);
-      form.reset();
-      onSuccess?.();
-    } catch (error) {
-      toast.error("Failed to save transaction");
-      console.error(error);
+  const handleAccountCreated = (accountId?: string) => {
+    if (accountId) {
+      form.setValue("accountId", accountId);
     }
+    setShowAddAccountDialog(false);
+  };
+
+  const handleCategoryCreated = (categoryId?: string) => {
+    if (categoryId) {
+      form.setValue("outflowTypeId", categoryId);
+    }
+    setShowAddCategoryDialog(false);
   };
 
   const renderExtraField = (field: ExtraField) => {
@@ -239,10 +222,44 @@ export function AddTransactionSheet({
     }
   };
 
+  const onSubmit = async (data: TransactionFormData) => {
+    try {
+      // Transform form data to match mutation expectations
+      const transformedData = {
+        amount: data.amount,
+        date: data.date.getTime(), // Convert Date to timestamp
+        accountId: data.accountId as any, // Cast to Convex ID type
+        outflowTypeId: data.outflowTypeId as any, // Cast to Convex ID type
+        note: data.note,
+        receiptImageId: data.receiptImageId as any, // Cast to Convex storage ID type
+        metadata: data.metadata,
+      };
+
+      if (transaction) {
+        // Update existing transaction
+        await updateTransaction({
+          id: transaction._id,
+          ...transformedData,
+        });
+        toast.success("Transaction updated successfully!");
+      } else {
+        // Create new transaction
+        await createTransaction(transformedData);
+        toast.success("Transaction added successfully!");
+      }
+
+      setOpen(false);
+      onSuccess?.();
+    } catch (error) {
+      console.error("Error saving transaction:", error);
+      toast.error("Failed to save transaction. Please try again.");
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>
             {transaction ? "Edit Transaction" : "Add Transaction"}
@@ -257,166 +274,250 @@ export function AddTransactionSheet({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className="space-y-4 p-4"
           >
-            <div className="grid grid-cols-2 gap-4">
+            {/* Basic Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Basic Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="amount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Amount (₹)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="0.00"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                          className="text-lg"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal h-10",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Account & Type */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Account & Category</h3>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="accountId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Account</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          if (value === "__add_new_account__") {
+                            setShowAddAccountDialog(true);
+                          } else {
+                            field.onChange(value);
+                          }
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-10">
+                            <SelectValue placeholder="Select an account" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {accounts?.map(
+                            (account: {
+                              _id: string;
+                              name: string;
+                              type: string;
+                            }) => (
+                              <SelectItem key={account._id} value={account._id}>
+                                {account.name} ({account.type})
+                              </SelectItem>
+                            )
+                          )}
+                          <SelectItem
+                            value="__add_new_account__"
+                            className="text-primary font-medium"
+                          >
+                            ➕ Add New Account
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="outflowTypeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          if (value === "__add_new_category__") {
+                            setShowAddCategoryDialog(true);
+                          } else {
+                            field.onChange(value);
+                          }
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-10">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {outflowTypes?.map(
+                            (type: {
+                              _id: string;
+                              name: string;
+                              emoji: string;
+                            }) => (
+                              <SelectItem key={type._id} value={type._id}>
+                                {type.emoji} {type.name}
+                              </SelectItem>
+                            )
+                          )}
+                          <SelectItem
+                            value="__add_new_category__"
+                            className="text-primary font-medium"
+                          >
+                            ➕ Add New Category
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Extra Fields */}
+            {selectedOutflowType?.extraFields &&
+              selectedOutflowType.extraFields.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Additional Details</h3>
+                  <div className="space-y-4">
+                    {selectedOutflowType.extraFields.map(renderExtraField)}
+                  </div>
+                </div>
+              )}
+
+            {/* Note */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Notes</h3>
               <FormField
                 control={form.control}
-                name="amount"
+                name="note"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Amount</FormLabel>
+                    <FormLabel>Note (Optional)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
+                      <Textarea
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        placeholder="Add any additional notes..."
+                        className="min-h-[80px]"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
-            <FormField
-              control={form.control}
-              name="accountId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Account</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an account" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {accounts?.map(
-                        (account: { _id: string; name: string }) => (
-                          <SelectItem key={account._id} value={account._id}>
-                            {account.name}
-                          </SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="outflowTypeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Outflow Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select outflow type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {outflowTypes?.map(
-                        (type: {
-                          _id: string;
-                          name: string;
-                          emoji: string;
-                        }) => (
-                          <SelectItem key={type._id} value={type._id}>
-                            {type.emoji} {type.name}
-                          </SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {selectedOutflowType?.extraFields.map(renderExtraField)}
-
-            <FormField
-              control={form.control}
-              name="note"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Note</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex justify-end space-x-2">
+            {/* Actions */}
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
+                className="w-full sm:w-auto"
               >
                 Cancel
               </Button>
-              <Button type="submit">
-                {transaction ? "Update" : "Add"} Transaction
+              <Button
+                type="submit"
+                className="w-full sm:w-auto"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting
+                  ? "Saving..."
+                  : transaction
+                    ? "Update"
+                    : "Add"}{" "}
+                Transaction
               </Button>
             </div>
           </form>
         </Form>
       </SheetContent>
+
+      {/* Add Account Dialog */}
+      <AddAccountDialog
+        open={showAddAccountDialog}
+        onOpenChange={setShowAddAccountDialog}
+        onSuccess={handleAccountCreated}
+      />
+
+      {/* Add Category Dialog */}
+      <AddOutflowTypeDialog
+        open={showAddCategoryDialog}
+        onOpenChange={setShowAddCategoryDialog}
+        onSuccess={handleCategoryCreated}
+      />
     </Sheet>
   );
 }

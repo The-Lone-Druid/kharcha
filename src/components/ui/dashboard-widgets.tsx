@@ -18,8 +18,10 @@ import { format } from "date-fns";
 import { api } from "../../../convex/_generated/api";
 
 export function DashboardWidgets() {
-  const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-  const monthlySummary = useQuery(api.transactions.getMonthlySummary, { month: currentMonth });
+  const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
+  const monthlySummary = useQuery(api.transactions.getMonthlySummary, {
+    month: currentMonth,
+  });
   const upcomingEvents = useQuery(api.insights.getUpcomingEvents);
   const trackingStreak = useQuery(api.insights.getTrackingStreak);
   const monthlySpend = useQuery(api.insights.getMonthlySpend);
@@ -27,9 +29,9 @@ export function DashboardWidgets() {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-12 gap-4">
       {/* Total Spent This Month */}
-      <Card>
+      <Card className="col-span-12 md:col-span-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total Spent This Month
@@ -47,7 +49,7 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Tracking Streak */}
-      <Card>
+      <Card className="col-span-12 md:col-span-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Tracking Streak</CardTitle>
           <Target className="h-4 w-4 text-muted-foreground" />
@@ -59,7 +61,7 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Top 5 Categories Pie Chart */}
-      <Card className="col-span-2">
+      <Card className="col-span-12 md:col-span-4">
         <CardHeader>
           <CardTitle>Top 5 Categories This Month</CardTitle>
         </CardHeader>
@@ -69,7 +71,7 @@ export function DashboardWidgets() {
               <PieChart>
                 <Pie
                   data={monthlySummary.topTypes.map((item, index) => ({
-                    name: `Category ${index + 1}`,
+                    name: item.outflowTypeId,
                     value: item.amount,
                     fill: COLORS[index % COLORS.length],
                   }))}
@@ -102,7 +104,7 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Upcoming Events */}
-      <Card className="col-span-4">
+      <Card className="col-span-12 md:col-span-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
@@ -115,7 +117,7 @@ export function DashboardWidgets() {
               {upcomingEvents.slice(0, 5).map((event) => (
                 <div
                   key={event.id}
-                  className="flex items-center justify-between p-2 border rounded"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-2 border rounded space-y-2 sm:space-y-0"
                 >
                   <div>
                     <p className="font-medium">{event.description}</p>
@@ -127,6 +129,7 @@ export function DashboardWidgets() {
                     variant={
                       event.type === "renewal" ? "default" : "destructive"
                     }
+                    className="self-start sm:self-center"
                   >
                     ₹{event.amount}
                   </Badge>
@@ -142,17 +145,23 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Monthly Spend Chart */}
-      <Card className="col-span-4">
+      <Card className="col-span-12 md:col-span-6">
         <CardHeader>
           <CardTitle>Monthly Spend (Last 12 Months)</CardTitle>
         </CardHeader>
         <CardContent>
           {monthlySpend && monthlySpend.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlySpend}>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={monthlySpend} barCategoryGap="10%">
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+                <XAxis
+                  dataKey="month"
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                  fontSize={12}
+                />
+                <YAxis fontSize={12} />
                 <Tooltip formatter={(value) => [`₹${value}`, "Spent"]} />
                 <Bar dataKey="total" fill="#8884d8" />
               </BarChart>
