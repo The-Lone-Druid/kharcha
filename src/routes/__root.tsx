@@ -53,7 +53,7 @@ function RootLayout() {
 }
 
 function AppWithAuth() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded } = useAuth();
 
   // Show loading while Clerk is initializing
   if (!isLoaded) {
