@@ -16,10 +16,10 @@ function DashboardPage() {
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
           Dashboard
         </h2>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div className="flex gap-2">
           <AddSubscriptionDialog
             trigger={
-              <Button variant="outline" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-auto">
                 <CreditCard className="mr-2 h-4 w-4" />
                 Add Subscription
               </Button>
@@ -27,7 +27,7 @@ function DashboardPage() {
           />
           <AddTransactionSheet
             trigger={
-              <Button className="w-full sm:w-auto">
+              <Button className="w-auto">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Transaction
               </Button>

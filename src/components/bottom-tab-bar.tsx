@@ -29,7 +29,7 @@ export function BottomTabBar() {
   const location = useLocation();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border">
+    <div className="fixed bottom-5 left-5 right-5 bg-background rounded-full border border-primary shadow-lg px-4">
       <div className="flex justify-around items-center h-16">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.url;

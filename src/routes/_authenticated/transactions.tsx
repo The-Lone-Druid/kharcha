@@ -275,7 +275,7 @@ function TransactionsPage() {
                     </span>
 
                     {/* Actions - pushed to right */}
-                    <div className="ml-auto flex items-center gap-1">
+                    <div className="ml-auto flex items-center gap-2">
                       <AddTransactionSheet
                         transaction={transaction}
                         trigger={
