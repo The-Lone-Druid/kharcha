@@ -2,22 +2,15 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  users: defineTable({
-    clerkId: v.optional(v.string()),
-    name: v.optional(v.string()),
-    email: v.string(),
-    imageUrl: v.optional(v.string()),
-  }).index("by_clerk_id", ["clerkId"]),
-
   // Separate table for user preferences
   userPreferences: defineTable({
-    userId: v.id("users"),
+    clerkId: v.string(),
     currency: v.string(), // e.g., "INR"
     language: v.string(), // e.g., "en"
     darkMode: v.boolean(),
     onboardingCompleted: v.boolean(),
   })
-    .index("by_user", ["userId"]),
+    .index("by_clerk_id", ["clerkId"]),
 
   outflowTypes: defineTable({
     name: v.string(),
@@ -31,10 +24,10 @@ export default defineSchema({
         type: v.union(v.literal("text"), v.literal("number"), v.literal("date"), v.literal("toggle")),
       })
     ),
-    userId: v.id("users"),
+    clerkId: v.string(),
   })
-    .index("by_user", ["userId"])
-    .index("by_name", ["userId", "name"]),
+    .index("by_clerk_id", ["clerkId"])
+    .index("by_name", ["clerkId", "name"]),
 
   accounts: defineTable({
     name: v.string(),
@@ -48,11 +41,11 @@ export default defineSchema({
       v.literal("Other")
     ),
     colorHex: v.string(),
-    userId: v.id("users"),
+    clerkId: v.string(),
     isArchived: v.boolean(),
   })
-    .index("by_user", ["userId"])
-    .index("by_name", ["userId", "name"]),
+    .index("by_clerk_id", ["clerkId"])
+    .index("by_name", ["clerkId", "name"]),
 
   transactions: defineTable({
     amount: v.number(),
@@ -62,30 +55,30 @@ export default defineSchema({
     note: v.string(),
     receiptImageId: v.optional(v.id("_storage")),
     metadata: v.any(), // JSON object based on outflowType
-    userId: v.id("users"),
+    clerkId: v.string(),
   })
-    .index("by_user", ["userId"])
+    .index("by_clerk_id", ["clerkId"])
     .index("by_account", ["accountId"])
     .index("by_outflow_type", ["outflowTypeId"])
-    .index("by_user_date", ["userId", "date"]),
+    .index("by_clerk_id_date", ["clerkId", "date"]),
 
   budgets: defineTable({
     outflowTypeId: v.id("outflowTypes"),
     amount: v.number(),
     month: v.string(), // YYYY-MM
-    userId: v.id("users"),
+    clerkId: v.string(),
   })
-    .index("by_user", ["userId"])
+    .index("by_clerk_id", ["clerkId"])
     .index("by_outflow_type_month", ["outflowTypeId", "month"]),
 
   notifications: defineTable({
-    userId: v.id("users"),
+    clerkId: v.string(),
     type: v.union(v.literal("renewal"), v.literal("due")),
     transactionId: v.id("transactions"),
     message: v.string(),
     isRead: v.boolean(),
     createdAt: v.number(),
   })
-    .index("by_user", ["userId"])
-    .index("by_user_unread", ["userId", "isRead"]),
+    .index("by_clerk_id", ["clerkId"])
+    .index("by_clerk_id_unread", ["clerkId", "isRead"]),
 });

@@ -30,7 +30,7 @@ export interface Account {
   type: AccountType;
   colorHex: string;
   totalSpent?: number;
-  userId: string;
+  clerkId: string;
   isArchived: boolean;
 }
 
@@ -48,7 +48,7 @@ export interface OutflowType {
   colorHex: string;
   isCustom: boolean;
   extraFields: ExtraField[];
-  userId: string;
+  clerkId: string;
 }
 
 // Transaction metadata schemas
@@ -97,7 +97,7 @@ export interface Transaction {
   note: string;
   receiptImageId?: string;
   metadata: TransactionMetadata;
-  userId: string;
+  clerkId: string;
   account?: {
     _id: string;
     name: string;
@@ -116,7 +116,7 @@ export interface Budget {
   outflowTypeId: string;
   amount: number;
   month: string; // YYYY-MM
-  userId: string;
+  clerkId: string;
 }
 
 // Notification
@@ -124,7 +124,7 @@ export type NotificationType = "renewal" | "due";
 
 export interface Notification {
   _id: string;
-  userId: string;
+  clerkId: string;
   type: NotificationType;
   transactionId: string;
   message: string;

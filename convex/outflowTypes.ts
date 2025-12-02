@@ -6,17 +6,13 @@ import { ConvexError } from "convex/values";
 export const listOutflowTypes = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError("Unauthenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     return await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
   },
 });
@@ -52,18 +48,12 @@ export const createCustomOutflowType = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
-
-    const userId = user._id;
+    const clerkId = identity.subject;
 
     // Check if name already exists
     const existing = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_name", (q) => q.eq("userId", userId).eq("name", args.name))
+      .withIndex("by_name", (q) => q.eq("clerkId", clerkId).eq("name", args.name))
       .first();
     if (existing) {
       throw new ConvexError("Outflow type with this name already exists");
@@ -71,7 +61,7 @@ export const createCustomOutflowType = mutation({
 
     return await ctx.db.insert("outflowTypes", {
       ...args,
-      userId,
+      clerkId,
       isCustom: true,
     });
   },
@@ -103,19 +93,13 @@ export const updateOutflowType = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
-
-    const userId = user._id;
+    const clerkId = identity.subject;
     const { id, ...updates } = args;
 
     const outflowType = await ctx.db.get(id);
     if (
       !outflowType ||
-      outflowType.userId !== userId ||
+      outflowType.clerkId !== clerkId ||
       !outflowType.isCustom
     ) {
       throw new ConvexError("Outflow type not found or cannot be edited");
@@ -132,18 +116,12 @@ export const deleteOutflowType = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
-
-    const userId = user._id;
+    const clerkId = identity.subject;
 
     const outflowType = await ctx.db.get(args.id);
     if (
       !outflowType ||
-      outflowType.userId !== userId ||
+      outflowType.clerkId !== clerkId ||
       !outflowType.isCustom
     ) {
       throw new ConvexError("Outflow type not found or cannot be deleted");

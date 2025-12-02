@@ -1,19 +1,15 @@
 import { query } from "./_generated/server";
-import { ConvexError, v } from "convex/values";
-import { type Doc, type Id } from "./_generated/dataModel";
+import { v } from "convex/values";
+import { type Doc } from "./_generated/dataModel";
 
 // Monthly spend for last 12 months
 export const getMonthlySpend = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new Error("User not found");
+    const clerkId = identity.subject;
 
     const now = new Date();
     const months = [];
@@ -30,9 +26,9 @@ export const getMonthlySpend = query({
       months.map(async ({ month, start, end }) => {
         const transactions = await ctx.db
           .query("transactions")
-          .withIndex("by_user_date", (q) =>
+          .withIndex("by_clerk_id_date", (q) =>
             q
-              .eq("userId", user._id as Id<"users">)
+              .eq("clerkId", clerkId)
               .gte("date", start)
               .lt("date", end)
           )
@@ -53,22 +49,18 @@ export const getOutflowTypeBreakdown = query({
   args: { startDate: v.optional(v.number()), endDate: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const start = args.startDate || 0;
     const end = args.endDate || Date.now();
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user_date", (q) =>
+      .withIndex("by_clerk_id_date", (q) =>
         q
-          .eq("userId", user._id as Id<"users">)
+          .eq("clerkId", clerkId)
           .gte("date", start)
           .lt("date", end)
       )
@@ -76,7 +68,7 @@ export const getOutflowTypeBreakdown = query({
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
 
     const typeMap = new Map(outflowTypes.map((t) => [t._id.toString(), t]));
@@ -107,17 +99,13 @@ export const getSubscriptions = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.eq(q.field("name"), "Subscription"))
       .collect();
 
@@ -145,17 +133,13 @@ export const getLoans = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.eq(q.field("name"), "EMI/Loan"))
       .collect();
 
@@ -186,17 +170,13 @@ export const getMoneyLentAgeing = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const outflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.eq(q.field("name"), "Money Lent"))
       .collect();
 
@@ -241,13 +221,9 @@ export const getProjectedRecurring = query({
   args: { months: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const monthsAhead = args.months || 3;
     const projections = [];
@@ -255,7 +231,7 @@ export const getProjectedRecurring = query({
     // Subscriptions
     const outflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.eq(q.field("name"), "Subscription"))
       .collect();
 
@@ -292,7 +268,7 @@ export const getProjectedRecurring = query({
     // Loans/EMI
     const loanOutflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.eq(q.field("name"), "EMI/Loan"))
       .collect();
 
@@ -324,20 +300,16 @@ export const getUpcomingEvents = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const now = Date.now();
     const weekFromNow = now + 7 * 24 * 60 * 60 * 1000;
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
 
     const upcoming = [];
@@ -364,17 +336,13 @@ export const getTrackingStreak = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .order("desc")
       .take(100); // Last 100 transactions
 

@@ -9,13 +9,14 @@ export const sendReminders = mutation({
     const tomorrowStart = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()).getTime();
     const tomorrowEnd = tomorrowStart + 24 * 60 * 60 * 1000;
 
-    // Get all users
-    const users = await ctx.db.query("users").collect();
+    // Get all user preferences to get clerkIds
+    const userPreferences = await ctx.db.query("userPreferences").collect();
+    const clerkIds = [...new Set(userPreferences.map(up => up.clerkId))];
 
-    for (const user of users) {
+    for (const clerkId of clerkIds) {
       const transactions = await ctx.db
         .query("transactions")
-        .withIndex("by_user_date", (q) => q.eq("userId", user._id))
+        .withIndex("by_clerk_id_date", (q) => q.eq("clerkId", clerkId))
         .filter((q) => q.gte(q.field("date"), tomorrowStart) && q.lt(q.field("date"), tomorrowEnd))
         .collect();
 
@@ -23,7 +24,7 @@ export const sendReminders = mutation({
         const outflowType = await ctx.db.get(t.outflowTypeId);
         if (outflowType?.name === "Subscription" && t.metadata?.remind) {
           await ctx.db.insert("notifications", {
-            userId: user._id,
+            clerkId,
             type: "renewal",
             transactionId: t._id,
             message: `Reminder: ${t.metadata.provider} subscription renewal tomorrow for ₹${t.amount}`,
@@ -32,7 +33,7 @@ export const sendReminders = mutation({
           });
         } else if (outflowType?.name === "Money Lent") {
           await ctx.db.insert("notifications", {
-            userId: user._id,
+            clerkId,
             type: "due",
             transactionId: t._id,
             message: `Reminder: ₹${t.amount} due from ${t.metadata.borrowerName} tomorrow`,
@@ -54,13 +55,14 @@ export const scheduledReminders = mutation({
     const tomorrowStart = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate()).getTime();
     const tomorrowEnd = tomorrowStart + 24 * 60 * 60 * 1000;
 
-    // Get all users
-    const users = await ctx.db.query("users").collect();
+    // Get all user preferences to get clerkIds
+    const userPreferences = await ctx.db.query("userPreferences").collect();
+    const clerkIds = [...new Set(userPreferences.map(up => up.clerkId))];
 
-    for (const user of users) {
+    for (const clerkId of clerkIds) {
       const transactions = await ctx.db
         .query("transactions")
-        .withIndex("by_user_date", (q) => q.eq("userId", user._id))
+        .withIndex("by_clerk_id_date", (q) => q.eq("clerkId", clerkId))
         .filter((q) => q.gte(q.field("date"), tomorrowStart) && q.lt(q.field("date"), tomorrowEnd))
         .collect();
 
@@ -68,7 +70,7 @@ export const scheduledReminders = mutation({
         const outflowType = await ctx.db.get(t.outflowTypeId);
         if (outflowType?.name === "Subscription" && t.metadata?.remind) {
           await ctx.db.insert("notifications", {
-            userId: user._id,
+            clerkId,
             type: "renewal",
             transactionId: t._id,
             message: `Reminder: ${t.metadata.provider} subscription renewal tomorrow for ₹${t.amount}`,
@@ -77,7 +79,7 @@ export const scheduledReminders = mutation({
           });
         } else if (outflowType?.name === "Money Lent") {
           await ctx.db.insert("notifications", {
-            userId: user._id,
+            clerkId,
             type: "due",
             transactionId: t._id,
             message: `Reminder: ₹${t.amount} due from ${t.metadata.borrowerName} tomorrow`,

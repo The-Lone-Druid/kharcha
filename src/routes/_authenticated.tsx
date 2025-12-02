@@ -18,9 +18,9 @@ type UserPreferences = Doc<"userPreferences"> | {
 
 // Create context for shared data to avoid refetching on each page
 interface AppDataContextType {
-  accounts: Doc<"accounts">[] | undefined;
-  outflowTypes: Doc<"outflowTypes">[] | undefined;
-  currentUser: (Doc<"users"> & { preferences: UserPreferences }) | null | undefined;
+  accounts: Doc<"accounts">[] | null | undefined;
+  outflowTypes: Doc<"outflowTypes">[] | null | undefined;
+  currentUser: { clerkId: string; preferences: UserPreferences } | null | undefined;
   isLoading: boolean;
 }
 
@@ -48,12 +48,7 @@ function AuthenticatedLayout() {
 
   useEffect(() => {
     if (user && !currentUser) {
-      createUser({
-        clerkId: user.id,
-        name: user.fullName || undefined,
-        email: user.primaryEmailAddress?.emailAddress || "",
-        imageUrl: user.imageUrl || undefined,
-      });
+      createUser();
     }
   }, [user, currentUser, createUser]);
 

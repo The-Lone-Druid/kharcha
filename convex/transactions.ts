@@ -18,13 +18,9 @@ export const listTransactions = query({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const {
       limit = 50,
@@ -39,7 +35,7 @@ export const listTransactions = query({
 
     let query = ctx.db
       .query("transactions")
-      .withIndex("by_user", (q) => q.eq("userId", user._id as Id<"users">));
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId));
 
     if (accountId) {
       query = query.filter((q) => q.eq(q.field("accountId"), accountId));
@@ -100,13 +96,9 @@ export const getMonthlySummary = query({
   args: { month: v.optional(v.string()) }, // YYYY-MM
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const { month } = args;
     const now = new Date();
@@ -119,9 +111,9 @@ export const getMonthlySummary = query({
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user_date", (q) =>
+      .withIndex("by_clerk_id_date", (q) =>
         q
-          .eq("userId", user._id as Id<"users">)
+          .eq("clerkId", clerkId)
           .gte("date", start)
           .lt("date", end)
       )
@@ -174,28 +166,24 @@ export const addTransaction = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     // Validate account belongs to user
     const account = await ctx.db.get(args.accountId);
-    if (!account || account.userId !== user._id) {
+    if (!account || account.clerkId !== clerkId) {
       throw new ConvexError("Invalid account");
     }
 
     // Validate outflow type belongs to user
     const outflowType = await ctx.db.get(args.outflowTypeId);
-    if (!outflowType || outflowType.userId !== user._id) {
+    if (!outflowType || outflowType.clerkId !== clerkId) {
       throw new ConvexError("Invalid outflow type");
     }
 
     // Additional validation based on outflowType
     // For now, basic validation
 
-    return await ctx.db.insert("transactions", { ...args, userId: user._id });
+    return await ctx.db.insert("transactions", { ...args, clerkId });
   },
 });
 
@@ -215,15 +203,11 @@ export const updateTransaction = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const { id, ...updates } = args;
     const transaction = await ctx.db.get(id);
-    if (!transaction || transaction.userId !== user._id) {
+    if (!transaction || transaction.clerkId !== clerkId) {
       throw new ConvexError("Transaction not found or access denied");
     }
 
@@ -238,14 +222,10 @@ export const deleteTransaction = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const transaction = await ctx.db.get(args.id);
-    if (!transaction || transaction.userId !== user._id) {
+    if (!transaction || transaction.clerkId !== clerkId) {
       throw new ConvexError("Transaction not found or access denied");
     }
 

@@ -6,17 +6,13 @@ import { ConvexError } from "convex/values";
 export const listAccounts = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError("Unauthenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     return await ctx.db
       .query("accounts")
-      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.neq(q.field("isArchived"), true))
       .collect();
   },
@@ -27,17 +23,13 @@ export const getAccountWithBalance = query({
   args: { id: v.id("accounts") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError("Unauthenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const account = await ctx.db.get(args.id);
-    if (!account) throw new ConvexError("Account not found");
-    if (account.userId !== user._id) throw new ConvexError("Forbidden");
+    if (!account) return null;
+    if (account.clerkId !== clerkId) return null;
 
     const transactions = await ctx.db
       .query("transactions")
@@ -69,15 +61,11 @@ export const createAccount = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     return await ctx.db.insert("accounts", {
       ...args,
-      userId: user._id,
+      clerkId,
       isArchived: false,
     });
   },
@@ -106,15 +94,11 @@ export const updateAccount = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const { id, ...updates } = args;
     const account = await ctx.db.get(id);
-    if (!account || account.userId !== user._id) {
+    if (!account || account.clerkId !== clerkId) {
       throw new ConvexError("Account not found or access denied");
     }
 
@@ -129,14 +113,10 @@ export const archiveAccount = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const account = await ctx.db.get(args.id);
-    if (!account || account.userId !== user._id) {
+    if (!account || account.clerkId !== clerkId) {
       throw new ConvexError("Account not found or access denied");
     }
 

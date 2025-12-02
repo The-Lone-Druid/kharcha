@@ -1,6 +1,5 @@
-import { type Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 
 // Get default outflow types configuration
 const getDefaultOutflowTypes = () => [
@@ -77,7 +76,7 @@ const getDefaultOutflowTypes = () => [
   { name: "Miscellaneous", emoji: "📦", colorHex: "#6b7280", extraFields: [] },
 ];
 
-// Get current user (authenticated)
+// Get current user preferences (authenticated)
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
@@ -86,50 +85,14 @@ export const getCurrentUser = query({
       return null;
     }
 
-    const user = await ctx.db
-      .query("users")
+    // Get user preferences
+    const preferences = await ctx.db
+      .query("userPreferences")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
       .first();
 
-    if (!user) {
-      return null;
-    }
-
-    // Get user preferences
-    const preferences = await ctx.db
-      .query("userPreferences")
-      .withIndex("by_user", (q) => q.eq("userId", user._id))
-      .first();
-
     return {
-      ...user,
-      preferences: preferences || {
-        currency: "INR",
-        language: "en",
-        darkMode: false,
-        onboardingCompleted: false,
-      },
-    };
-  },
-});
-
-// Get user by ID
-export const getUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    const user = await ctx.db.get(args.userId);
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Get user preferences
-    const preferences = await ctx.db
-      .query("userPreferences")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .first();
-
-    return {
-      ...user,
+      clerkId: identity.subject,
       preferences: preferences || {
         currency: "INR",
         language: "en",
@@ -156,48 +119,43 @@ export const updateUserPreferences = mutation({
       throw new Error("Not authenticated");
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
-
-    const userId = user._id;
+    const clerkId = identity.subject;
 
     // Check if preferences already exist
     const existing = await ctx.db
       .query("userPreferences")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .first();
 
     if (existing) {
       await ctx.db.patch(existing._id, args.preferences);
     } else {
       await ctx.db.insert("userPreferences", {
-        userId,
+        clerkId,
         ...args.preferences,
       });
     }
   },
 });
 
-// Create user if not exists
+// Initialize user data (create default outflow types)
 export const createUser = mutation({
-  args: {
-    clerkId: v.string(),
-    name: v.optional(v.string()),
-    email: v.string(),
-    imageUrl: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const clerkId = identity.subject;
+
+    // Check if user already has outflow types
+    const existingTypes = await ctx.db
+      .query("outflowTypes")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .first();
 
-    if (existing) return existing;
-
-    const newUser = await ctx.db.insert("users", args);
+    if (existingTypes) return; // Already initialized
 
     // Initialize built-in outflow types for the new user
     const BUILT_IN_TYPES = getDefaultOutflowTypes();
@@ -206,11 +164,18 @@ export const createUser = mutation({
       await ctx.db.insert("outflowTypes", {
         ...type,
         isCustom: false,
-        userId: newUser,
+        clerkId,
       });
     }
 
-    return newUser;
+    // Initialize default user preferences
+    await ctx.db.insert("userPreferences", {
+      clerkId,
+      currency: "INR",
+      language: "en",
+      darkMode: false,
+      onboardingCompleted: false,
+    });
   },
 });
 
@@ -218,7 +183,9 @@ export const createUser = mutation({
 export const getAllUsers = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("users").collect();
+    // Get all unique clerkIds from userPreferences
+    const preferences = await ctx.db.query("userPreferences").collect();
+    return preferences.map(p => ({ clerkId: p.clerkId }));
   },
 });
 
@@ -231,18 +198,12 @@ export const deleteAllUserData = mutation({
       throw new Error("Not authenticated");
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
-
-    const userId = user._id;
+    const clerkId = identity.subject;
 
     // Delete user preferences first
     const preferences = await ctx.db
       .query("userPreferences")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .first();
     if (preferences) {
       await ctx.db.delete(preferences._id);
@@ -251,7 +212,7 @@ export const deleteAllUserData = mutation({
     // Delete transactions
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
     for (const t of transactions) {
       await ctx.db.delete(t._id);
@@ -260,7 +221,7 @@ export const deleteAllUserData = mutation({
     // Delete accounts
     const accounts = await ctx.db
       .query("accounts")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
     for (const a of accounts) {
       await ctx.db.delete(a._id);
@@ -269,7 +230,7 @@ export const deleteAllUserData = mutation({
     // Delete outflow types (custom only)
     const outflowTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.eq(q.field("isCustom"), true))
       .collect();
     for (const ot of outflowTypes) {
@@ -279,7 +240,7 @@ export const deleteAllUserData = mutation({
     // Delete budgets
     const budgets = await ctx.db
       .query("budgets")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
     for (const b of budgets) {
       await ctx.db.delete(b._id);
@@ -288,53 +249,31 @@ export const deleteAllUserData = mutation({
     // Delete notifications
     const notifications = await ctx.db
       .query("notifications")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .collect();
     for (const n of notifications) {
       await ctx.db.delete(n._id);
     }
-
-    // Finally delete user (this will be handled by auth system)
-    // await ctx.db.delete(userId);
   },
 });
 
-// Seed default outflow types for existing user
+// Seed default outflow types for current user
 export const seedOutflowTypes = mutation({
-  args: { userId: v.optional(v.id("users")) },
-  handler: async (ctx, args) => {
-    let userId: Id<"users">;
-
-    if (args.userId) {
-      // If userId is provided, use it (for admin/development purposes)
-      userId = args.userId;
-    } else {
-      // Otherwise, try to get current authenticated user
-      const identity = await ctx.auth.getUserIdentity();
-      if (!identity) {
-        throw new ConvexError(
-          "Unauthenticated - provide userId parameter for seeding"
-        );
-      }
-
-      const user = await ctx.db
-        .query("users")
-        .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-        .first();
-
-      if (!user) {
-        throw new ConvexError("User not found");
-      }
-
-      userId = user._id;
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
     }
+
+    const clerkId = identity.subject;
 
     const defaultTypes = getDefaultOutflowTypes();
 
     // Check which default types are already created
     const existingTypes = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .filter((q) => q.neq(q.field("isCustom"), true))
       .collect();
 
@@ -346,7 +285,7 @@ export const seedOutflowTypes = mutation({
         await ctx.db.insert("outflowTypes", {
           ...type,
           isCustom: false,
-          userId: userId,
+          clerkId,
         });
       }
     }
@@ -355,41 +294,4 @@ export const seedOutflowTypes = mutation({
   },
 });
 
-// Admin function to seed outflow types for all users (development only)
-export const seedOutflowTypesForAllUsers = mutation({
-  args: {},
-  handler: async (ctx) => {
-    // Get all users
-    const users = await ctx.db.query("users").collect();
 
-    const defaultTypes = getDefaultOutflowTypes();
-    let totalSeeded = 0;
-
-    for (const user of users) {
-      // Check which default types are already created for this user
-      const existingTypes = await ctx.db
-        .query("outflowTypes")
-        .withIndex("by_user", (q) => q.eq("userId", user._id))
-        .filter((q) => q.neq(q.field("isCustom"), true))
-        .collect();
-
-      const existingNames = new Set(existingTypes.map((t) => t.name));
-
-      // Create missing default types
-      for (const type of defaultTypes) {
-        if (!existingNames.has(type.name)) {
-          await ctx.db.insert("outflowTypes", {
-            ...type,
-            isCustom: false,
-            userId: user._id,
-          });
-          totalSeeded++;
-        }
-      }
-    }
-
-    return {
-      message: `Seeded ${totalSeeded} outflow types for ${users.length} users`,
-    };
-  },
-});

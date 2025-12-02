@@ -6,17 +6,13 @@ import { ConvexError } from "convex/values";
 export const listNotifications = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError("Unauthenticated");
+    if (!identity) return null;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     return await ctx.db
       .query("notifications")
-      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .order("desc")
       .take(50);
   },
@@ -33,15 +29,11 @@ export const createNotification = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     return await ctx.db.insert("notifications", {
       ...args,
-      userId: user._id,
+      clerkId,
       isRead: false,
       createdAt: Date.now(),
     });
@@ -55,14 +47,10 @@ export const markAsRead = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const notification = await ctx.db.get(args.id);
-    if (!notification || notification.userId !== user._id) {
+    if (!notification || notification.clerkId !== clerkId) {
       throw new ConvexError("Notification not found");
     }
 
@@ -77,14 +65,10 @@ export const deleteNotification = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Unauthenticated");
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-    if (!user) throw new ConvexError("User not found");
+    const clerkId = identity.subject;
 
     const notification = await ctx.db.get(args.id);
-    if (!notification || notification.userId !== user._id) {
+    if (!notification || notification.clerkId !== clerkId) {
       throw new ConvexError("Notification not found");
     }
 
