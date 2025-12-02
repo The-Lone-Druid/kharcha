@@ -8,11 +8,19 @@ import { useEffect, createContext, useContext } from "react";
 import { AuthPage } from "@/components/ui/auth-page";
 import type { Doc } from "@convex/_generated/dataModel";
 
+// Type for preferences - can be full Doc or default values
+type UserPreferences = Doc<"userPreferences"> | {
+  currency: string;
+  language: string;
+  darkMode: boolean;
+  onboardingCompleted: boolean;
+};
+
 // Create context for shared data to avoid refetching on each page
 interface AppDataContextType {
   accounts: Doc<"accounts">[] | undefined;
   outflowTypes: Doc<"outflowTypes">[] | undefined;
-  currentUser: (Doc<"users"> & { preferences?: Doc<"userPreferences"> }) | null | undefined;
+  currentUser: (Doc<"users"> & { preferences: UserPreferences }) | null | undefined;
   isLoading: boolean;
 }
 
