@@ -1,6 +1,6 @@
-import { query } from "./_generated/server";
 import { v } from "convex/values";
 import { type Doc } from "./_generated/dataModel";
+import { query } from "./_generated/server";
 
 // Monthly spend for last 12 months
 export const getMonthlySpend = query({
@@ -56,7 +56,7 @@ export const getOutflowTypeBreakdown = query({
     const transactions = await ctx.db
       .query("transactions")
       .withIndex("by_clerk_id_date", (q) =>
-        q.eq("clerkId", clerkId).gte("date", start).lt("date", end)
+        q.eq("clerkId", clerkId).gte("date", start).lte("date", end)
       )
       .collect();
 
