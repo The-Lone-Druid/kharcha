@@ -27,7 +27,6 @@ import { Plus, Edit, CreditCard, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { api } from "@convex/_generated/api";
 import { useMemo, useState } from "react";
-import { useAppData } from "../_authenticated";
 import { toast } from "sonner";
 import type { Id } from "@convex/_generated/dataModel";
 
@@ -36,7 +35,8 @@ export const Route = createFileRoute("/_authenticated/transactions")({
 });
 
 function TransactionsPage() {
-  const { accounts, outflowTypes } = useAppData();
+  const accounts = useQuery(api.accounts.listAccounts);
+  const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
   const transactions = useQuery(api.transactions.listTransactions, {
     limit: 50,
   });

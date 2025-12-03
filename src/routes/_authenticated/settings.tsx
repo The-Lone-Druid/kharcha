@@ -21,12 +21,16 @@ import {
   Check,
   X,
   ArrowRight,
+  Settings,
+  Palette,
+  Globe,
+  Shield,
+  Sparkles,
 } from "lucide-react";
 import { useClerk, UserProfile } from "@clerk/clerk-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import * as XLSX from "xlsx";
-import { useAppData } from "../_authenticated";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useNotifications } from "@/hooks/use-notifications";
@@ -40,7 +44,8 @@ export const Route = createFileRoute("/_authenticated/settings")({
 function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { signOut } = useClerk();
-  const { accounts, outflowTypes } = useAppData();
+  const accounts = useQuery(api.accounts.listAccounts);
+  const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
   const currentUser = useQuery(api.users.getCurrentUser);
   const updateNotificationPrefs = useMutation(
     api.users.updateNotificationPreferences
@@ -62,7 +67,11 @@ function SettingsPage() {
 
   // Load preferences when user data is available
   useEffect(() => {
-    if (currentUser?.preferences && 'notificationPreferences' in currentUser.preferences && currentUser.preferences.notificationPreferences) {
+    if (
+      currentUser?.preferences &&
+      "notificationPreferences" in currentUser.preferences &&
+      currentUser.preferences.notificationPreferences
+    ) {
       setNotifPrefs(currentUser.preferences.notificationPreferences);
     }
   }, [currentUser]);
@@ -147,87 +156,123 @@ function SettingsPage() {
   };
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Settings
-          </h2>
-          <p className="text-muted-foreground mt-1">
-            Customize your app preferences
-          </p>
+    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-fade-in">
+      {/* Gradient Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-600 via-slate-700 to-slate-800 p-6 md:p-8 text-white shadow-xl">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAtMTZjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bS0xNiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMC0xNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />
+        <div className="relative">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                <Settings className="h-8 w-8" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold">Settings</h1>
+                <p className="text-white/80 text-sm mt-1">
+                  Customize your app preferences and manage your data
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="grid gap-4 grid-cols-12">
-        <Card className="col-span-12 md:col-span-6">
-          <CardHeader>
-            <CardTitle>Appearance</CardTitle>
+        <Card
+          className="col-span-12 md:col-span-6 animate-slide-up"
+          style={{ animationDelay: "0ms" }}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <div className="p-1.5 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                <Palette className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              </div>
+              Appearance
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="theme">Theme</Label>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+              <Label htmlFor="theme" className="font-medium">
+                Theme
+              </Label>
               <Select value={theme} onValueChange={setTheme}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  <SelectItem value="light">☀️ Light</SelectItem>
+                  <SelectItem value="dark">🌙 Dark</SelectItem>
+                  <SelectItem value="system">💻 System</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="col-span-12 md:col-span-6">
-          <CardHeader>
-            <CardTitle>Preferences</CardTitle>
+        <Card
+          className="col-span-12 md:col-span-6 animate-slide-up"
+          style={{ animationDelay: "50ms" }}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Globe className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              Preferences
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="currency">Currency</Label>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+              <Label htmlFor="currency" className="font-medium">
+                Currency
+              </Label>
               <Select defaultValue="INR">
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="INR">INR</SelectItem>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="INR">🇮🇳 INR</SelectItem>
+                  <SelectItem value="USD">🇺🇸 USD</SelectItem>
+                  <SelectItem value="EUR">🇪🇺 EUR</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="language">Language</Label>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+              <Label htmlFor="language" className="font-medium">
+                Language
+              </Label>
               <Select defaultValue="en">
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="hi">Hindi</SelectItem>
+                  <SelectItem value="hi">हिंदी</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="col-span-12 md:col-span-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5" />
+        <Card
+          className="col-span-12 md:col-span-6 animate-slide-up"
+          style={{ animationDelay: "100ms" }}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Bell className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              </div>
               Notifications
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
               <div className="space-y-0.5">
-                <Label htmlFor="global-notifications">
+                <Label htmlFor="global-notifications" className="font-medium">
                   Enable Notifications
                 </Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   Master toggle for all notifications
                 </p>
               </div>
@@ -239,12 +284,12 @@ function SettingsPage() {
                 }
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
               <div className="space-y-0.5">
-                <Label htmlFor="subscription-reminders">
+                <Label htmlFor="subscription-reminders" className="font-medium">
                   Subscription Reminders
                 </Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   Get notified before subscriptions renew
                 </p>
               </div>
@@ -257,10 +302,12 @@ function SettingsPage() {
                 disabled={!notifPrefs.globalNotifications}
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
               <div className="space-y-0.5">
-                <Label htmlFor="due-date-reminders">Due Date Reminders</Label>
-                <p className="text-sm text-muted-foreground">
+                <Label htmlFor="due-date-reminders" className="font-medium">
+                  Due Date Reminders
+                </Label>
+                <p className="text-xs text-muted-foreground">
                   Get notified when money lent is due
                 </p>
               </div>
@@ -276,13 +323,15 @@ function SettingsPage() {
 
             {/* Browser Notification Permission Status */}
             {isSupported && (
-              <Alert>
+              <Alert className="border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
                 <AlertDescription className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Bell className="h-4 w-4" />
-                    <span className="text-sm">Browser Notifications:</span>
+                    <Bell className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                    <span className="text-sm font-medium">
+                      Browser Notifications:
+                    </span>
                     {permission === "granted" ? (
-                      <Badge variant="default" className="gap-1">
+                      <Badge variant="default" className="gap-1 bg-green-500">
                         <Check className="h-3 w-3" /> Enabled
                       </Badge>
                     ) : permission === "denied" ? (
@@ -320,11 +369,16 @@ function SettingsPage() {
               </Alert>
             )}
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors opacity-60">
               <div className="space-y-0.5">
-                <Label htmlFor="email-notifications">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications via email (coming soon)
+                <Label htmlFor="email-notifications" className="font-medium">
+                  Email Notifications
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Receive notifications via email
+                  <Badge variant="outline" className="ml-2 text-[10px] py-0">
+                    Coming Soon
+                  </Badge>
                 </p>
               </div>
               <Switch
@@ -339,34 +393,48 @@ function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-12 md:col-span-6">
-          <CardHeader>
-            <CardTitle>Management</CardTitle>
+        <Card
+          className="col-span-12 md:col-span-6 animate-slide-up"
+          style={{ animationDelay: "150ms" }}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <div className="p-1.5 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
+                <Sparkles className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+              </div>
+              Management
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between">
+          <CardContent className="space-y-3">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
-                <Download className="h-5 w-5 text-muted-foreground" />
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <Download className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
                 <div>
-                  <Label>Export Data</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Download all your data as Excel file
+                  <Label className="font-medium">Export Data</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Download all your data as Excel
                   </p>
                 </div>
               </div>
-              <Button variant="outline" onClick={handleExportData}>
-                <Download className="mr-2 h-4 w-4" />
+              <Button
+                variant="outline"
+                onClick={handleExportData}
+                className="group"
+              >
+                <Download className="mr-2 h-4 w-4 group-hover:animate-bounce" />
                 Export
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
                   <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
                   <Label className="font-medium">Accounts</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Manage your financial accounts
                   </p>
                 </div>
@@ -378,19 +446,23 @@ function SettingsPage() {
                 </Link>
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-violet-100 dark:bg-violet-900/30 rounded-lg">
                   <Tag className="h-5 w-5 text-violet-600 dark:text-violet-400" />
                 </div>
                 <div>
                   <Label className="font-medium">Categories</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Manage transaction categories
                   </p>
                 </div>
               </div>
-              <Button variant="outline" asChild className="w-full md:w-auto group">
+              <Button
+                variant="outline"
+                asChild
+                className="w-full md:w-auto group"
+              >
                 <Link to="/outflow-types">
                   Manage
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -400,17 +472,27 @@ function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-12 md:col-span-6">
-          <CardHeader>
-            <CardTitle className="text-red-600">Danger Zone</CardTitle>
+        <Card
+          className="col-span-12 md:col-span-6 border-red-200 dark:border-red-900/50 animate-slide-up"
+          style={{ animationDelay: "200ms" }}
+        >
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base text-red-600 dark:text-red-400">
+              <div className="p-1.5 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                <Shield className="h-4 w-4 text-red-600 dark:text-red-400" />
+              </div>
+              Danger Zone
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between">
+          <CardContent className="space-y-3">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">
               <div className="flex items-center gap-3">
-                <LogOut className="h-5 w-5 text-muted-foreground" />
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                  <LogOut className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                </div>
                 <div>
-                  <Label>Logout</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="font-medium">Logout</Label>
+                  <p className="text-xs text-muted-foreground">
                     Sign out of your account
                   </p>
                 </div>
@@ -418,19 +500,25 @@ function SettingsPage() {
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="w-full md:w-auto"
+                className="w-full md:w-auto hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300 dark:hover:bg-orange-950/30"
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h3 className="font-medium">Delete All Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  Permanently delete all your transactions, accounts, and
-                  settings. This action cannot be undone.
-                </p>
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-red-50/50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                  <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-red-700 dark:text-red-400">
+                    Delete All Data
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Permanently delete everything. Cannot be undone.
+                  </p>
+                </div>
               </div>
               <Button
                 variant="destructive"
@@ -438,17 +526,21 @@ function SettingsPage() {
                 className="w-full md:w-auto"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete All Data
+                Delete All
               </Button>
             </div>
           </CardContent>
         </Card>
-        <div className="col-span-12">
+        <div
+          className="col-span-12 animate-slide-up"
+          style={{ animationDelay: "250ms" }}
+        >
           <UserProfile
             appearance={{
               elements: {
                 rootBox: "w-full",
-                cardBox: "w-full",
+                cardBox: "w-full !h-auto shadow-none border-0",
+                card: "shadow-none border-0",
               },
             }}
           />

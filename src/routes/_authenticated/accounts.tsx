@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,14 +9,13 @@ import { Plus, Edit, Trash2, Wallet, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { AddAccountDialog } from "@/components/ui/add-account-dialog";
 import { type Doc, type Id } from "@convex/_generated/dataModel";
-import { useAppData } from "../_authenticated";
 
 export const Route = createFileRoute("/_authenticated/accounts")({
   component: AccountsPage,
 });
 
 function AccountsPage() {
-  const { accounts } = useAppData();
+  const accounts = useQuery(api.accounts.listAccounts);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Doc<"accounts"> | null>(
     null
@@ -74,9 +73,7 @@ function AccountsPage() {
                 setEditingAccount(null);
               }}
               trigger={
-                <Button 
-                  className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg"
-                >
+                <Button className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Account
                 </Button>
@@ -88,13 +85,13 @@ function AccountsPage() {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-white/80" />
               <span className="text-white/90 text-sm">
-                {accounts?.length || 0} accounts
+                {accounts?.length ?? 0} accounts
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-300" />
               <span className="text-white/90 text-sm">
-                {accounts?.filter(a => a.type === "Bank").length || 0} bank accounts
+                {accounts?.filter((a) => a.type === "Bank").length ?? 0} bank accounts
               </span>
             </div>
           </div>
@@ -103,15 +100,53 @@ function AccountsPage() {
 
       {/* Account Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {accounts ? (
+        {!accounts ? (
+          // Loading skeletons
+          Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="w-4 h-4 rounded-full" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-6 w-16 mt-2" />
+              </CardContent>
+            </Card>
+          ))
+        ) : accounts.length === 0 ? (
+          <Card className="col-span-full border-dashed animate-fade-in">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-4">
+                <Wallet className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">No accounts yet</h3>
+              <p className="text-muted-foreground text-center mb-6 max-w-sm">
+                Create your first account to start tracking your finances
+                across different payment methods.
+              </p>
+              <AddAccountDialog
+                open={showAddDialog}
+                onOpenChange={setShowAddDialog}
+                onSuccess={() => setShowAddDialog(false)}
+                trigger={
+                  <Button className="bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Your First Account
+                  </Button>
+                }
+              />
+            </CardContent>
+          </Card>
+        ) : (
           accounts.map((account, index) => (
-            <Card 
-              key={account._id} 
+            <Card
+              key={account._id}
               className="relative group animate-slide-up overflow-hidden"
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              {/* Color accent bar */}
-              <div 
+              <div
                 className="absolute top-0 left-0 right-0 h-1"
                 style={{ backgroundColor: account.colorHex }}
               />
@@ -119,9 +154,9 @@ function AccountsPage() {
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
                   <div
                     className="w-4 h-4 rounded-full shadow-sm"
-                    style={{ 
+                    style={{
                       backgroundColor: account.colorHex,
-                      boxShadow: `0 0 0 2px var(--background), 0 0 0 4px ${account.colorHex}`
+                      boxShadow: `0 0 0 2px var(--background), 0 0 0 4px ${account.colorHex}`,
                     }}
                   />
                   <span className="font-semibold">{account.name}</span>
@@ -135,8 +170,8 @@ function AccountsPage() {
                     account={account}
                     onSuccess={() => setEditingAccount(null)}
                     trigger={
-                      <Button 
-                        variant="ghost" 
+                      <Button
+                        variant="ghost"
                         size="sm"
                         onClick={() => setEditingAccount(account)}
                         className="h-8 w-8 p-0 hover:bg-muted"
@@ -156,13 +191,13 @@ function AccountsPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className="mt-2"
-                  style={{ 
+                  style={{
                     backgroundColor: `${account.colorHex}15`,
                     color: account.colorHex,
-                    borderColor: `${account.colorHex}30`
+                    borderColor: `${account.colorHex}30`,
                   }}
                 >
                   {account.type}
@@ -170,51 +205,6 @@ function AccountsPage() {
               </CardContent>
             </Card>
           ))
-        ) : (
-          Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Skeleton className="w-3 h-3 rounded-full" />
-                  <Skeleton className="h-4 w-24" />
-                </CardTitle>
-                <div className="flex items-center space-x-1">
-                  <Skeleton className="h-8 w-8" />
-                  <Skeleton className="h-8 w-8" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-20 mb-2" />
-                <Skeleton className="h-3 w-16 mb-2" />
-                <Skeleton className="h-6 w-12" />
-              </CardContent>
-            </Card>
-          ))
-        )}
-
-        {accounts && accounts.length === 0 && (
-          <Card className="col-span-full border-dashed animate-fade-in">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-4">
-                <Wallet className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">No accounts yet</h3>
-              <p className="text-muted-foreground text-center mb-6 max-w-sm">
-                Create your first account to start tracking your finances across different payment methods.
-              </p>
-              <AddAccountDialog
-                open={showAddDialog}
-                onOpenChange={setShowAddDialog}
-                onSuccess={() => setShowAddDialog(false)}
-                trigger={
-                  <Button className="bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Your First Account
-                  </Button>
-                }
-              />
-            </CardContent>
-          </Card>
         )}
       </div>
     </div>
