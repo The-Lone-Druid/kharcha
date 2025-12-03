@@ -1,8 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AddSubscriptionDialog } from "@/components/custom/add-subscription-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -10,25 +9,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTheme } from "@/hooks/use-theme";
+import { api } from "@convex/_generated/api";
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "convex/react";
+import { Calendar, CreditCard, TrendingUp } from "lucide-react";
+import { useMemo, useState } from "react";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
   type TooltipProps,
 } from "recharts";
-import { api } from "@convex/_generated/api";
-import { useQuery } from "convex/react";
-import { useTheme } from "@/hooks/use-theme";
-import { AddSubscriptionDialog } from "@/components/ui/add-subscription-dialog";
-import { CreditCard, TrendingUp, Calendar } from "lucide-react";
-import { useState, useMemo } from "react";
 
 // Custom tooltip component that adapts to theme
 const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {

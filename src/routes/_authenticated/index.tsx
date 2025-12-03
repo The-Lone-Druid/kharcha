@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { DashboardWidgets } from "@/components/ui/dashboard-widgets";
-import { AddTransactionSheet } from "@/components/ui/add-transaction-sheet";
-import { AddSubscriptionDialog } from "@/components/ui/add-subscription-dialog";
+import { AddSubscriptionDialog } from "@/components/custom/add-subscription-dialog";
+import { AddTransactionSheet } from "@/components/custom/add-transaction-sheet";
+import { DashboardWidgets } from "@/components/custom/dashboard-widgets";
 import { Button } from "@/components/ui/button";
-import { Plus, CreditCard } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { CreditCard, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/")({
   component: DashboardPage,

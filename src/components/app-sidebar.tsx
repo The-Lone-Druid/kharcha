@@ -1,6 +1,5 @@
-import { Home, Receipt, BarChart3, Settings, LogOut, Wallet } from "lucide-react";
-import { useClerk } from "@clerk/clerk-react";
-import { Link, useLocation } from "@tanstack/react-router";
+import { NotificationBell } from "@/components/custom/notification-bell";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -13,9 +12,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { NotificationBell } from "@/components/ui/notification-bell";
 import { cn } from "@/lib/utils";
+import { useClerk } from "@clerk/clerk-react";
+import { Link, useLocation } from "@tanstack/react-router";
+import { BarChart3, Home, LogOut, Receipt, Settings, Wallet } from "lucide-react";
 
 const menuItems = [
   {

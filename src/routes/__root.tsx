@@ -1,12 +1,12 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ClerkProvider, useAuth } from "@clerk/clerk-react";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
-import convex from "@/lib/convex";
+import { LoadingScreen } from "@/components/custom/loading-screen";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { LoadingScreen } from "@/components/ui/loading-screen";
+import convex from "@/lib/convex";
+import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 import { shadcn } from "@clerk/themes";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 // Configure QueryClient with aggressive caching for better performance
 const queryClient = new QueryClient({

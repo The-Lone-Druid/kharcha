@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for routes/_authenticated/index.tsx</title>
+    <title>Code coverage report for components/custom/hover-card.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">routes/_authenticated</a> index.tsx</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/custom</a> hover-card.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -30,16 +30,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -107,18 +107,7 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,54 +148,53 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AddSubscriptionDialog } from "@/components/custom/add-subscription-dialog";
-import { AddTransactionSheet } from "@/components/custom/add-transaction-sheet";
-import { DashboardWidgets } from "@/components/custom/dashboard-widgets";
-import { Button } from "@/components/ui/button";
-import { createFileRoute } from "@tanstack/react-router";
-import { CreditCard, Plus } from "lucide-react";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >"use client"</span>
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >Route = createFileRoute("/_authenticated/")({</span>
-  component: DashboardPage,
-});
+import * as React from "react"
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 &nbsp;
-function <span class="fstat-no" title="function not covered" >DashboardPage() {</span>
-  return (
-    &lt;div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500"&gt;
-      &lt;div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0"&gt;
-        &lt;div&gt;
-          &lt;h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent"&gt;
-            Dashboard
-          &lt;/h2&gt;
-          &lt;p className="text-muted-foreground mt-1"&gt;
-            Track your expenses and manage your finances
-          &lt;/p&gt;
-        &lt;/div&gt;
-        &lt;div className="flex gap-3"&gt;
-          &lt;AddSubscriptionDialog
-            trigger={
-              &lt;Button variant="outline" className="gap-2 shadow-sm hover:shadow-md transition-all"&gt;
-                &lt;CreditCard className="h-4 w-4" /&gt;
-                &lt;span className="hidden sm:inline"&gt;Add Subscription&lt;/span&gt;
-                &lt;span className="sm:hidden"&gt;Subscription&lt;/span&gt;
-              &lt;/Button&gt;
-            }
-          /&gt;
-          &lt;AddTransactionSheet
-            trigger={
-              &lt;Button className="gap-2 bg-linear-to-r from-primary to-orange-600 hover:from-primary/90 hover:to-orange-600/90 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"&gt;
-                &lt;Plus className="h-4 w-4" /&gt;
-                &lt;span className="hidden sm:inline"&gt;Add Transaction&lt;/span&gt;
-                &lt;span className="sm:hidden"&gt;Add&lt;/span&gt;
-              &lt;/Button&gt;
-            }
-          /&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;DashboardWidgets /&gt;
-    &lt;/div&gt;
-  );
+import { cn } from "@/lib/utils"
+&nbsp;
+function <span class="fstat-no" title="function not covered" >HoverCard({</span>
+  ...props
+}: React.ComponentProps&lt;typeof HoverCardPrimitive.Root&gt;) {
+  return &lt;HoverCardPrimitive.Root data-slot="hover-card" {...props} /&gt;
 }
+&nbsp;
+function <span class="fstat-no" title="function not covered" >HoverCardTrigger({</span>
+  ...props
+}: React.ComponentProps&lt;typeof HoverCardPrimitive.Trigger&gt;) {
+  return (
+    &lt;HoverCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} /&gt;
+  )
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >HoverCardContent({</span>
+  className,
+  align = <span class="branch-0 cbranch-no" title="branch not covered" >"center",</span>
+  sideOffset = <span class="branch-0 cbranch-no" title="branch not covered" >4,</span>
+  ...props
+}: React.ComponentProps&lt;typeof HoverCardPrimitive.Content&gt;) {
+  return (
+    &lt;HoverCardPrimitive.Portal data-slot="hover-card-portal"&gt;
+      &lt;HoverCardPrimitive.Content
+        data-slot="hover-card-content"
+        align={align}
+        sideOffset={sideOffset}
+        className={cn(
+          "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden",
+          className
+        )}
+        {...props}
+      /&gt;
+    &lt;/HoverCardPrimitive.Portal&gt;
+  )
+}
+&nbsp;
+export { HoverCard, HoverCardTrigger, HoverCardContent }
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
@@ -15,13 +15,19 @@ export default defineConfig({
     // Include test files
     include: ["src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     // Exclude patterns
-    exclude: ["node_modules", "dist", ".idea", ".git", ".cache"],
+    exclude: [
+      "node_modules",
+      "dist",
+      ".idea",
+      ".git",
+      ".cache",
+      "src/components/ui/**",
+    ],
     // Coverage configuration
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
       // Include all source files in coverage report
-      all: true,
       include: ["src/**/*.{ts,tsx}"],
       exclude: [
         "node_modules/",
@@ -32,6 +38,7 @@ export default defineConfig({
         "**/*.config.*",
         "**/routeTree.gen.ts",
         "convex/_generated/",
+        "src/components/ui/**",
       ],
     },
     // CSS handling

@@ -1,17 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useMutation } from "convex/react";
-import { AddTransactionSheet } from "@/components/ui/add-transaction-sheet";
-import { AddSubscriptionDialog } from "@/components/ui/add-subscription-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AddSubscriptionDialog } from "@/components/custom/add-subscription-dialog";
+import { AddTransactionSheet } from "@/components/custom/add-transaction-sheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,12 +11,24 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Edit, CreditCard, Trash2 } from "lucide-react";
-import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@convex/_generated/api";
+import type { Id } from "@convex/_generated/dataModel";
+import { createFileRoute } from "@tanstack/react-router";
+import { useMutation, useQuery } from "convex/react";
+import { format } from "date-fns";
+import { CreditCard, Edit, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import type { Id } from "@convex/_generated/dataModel";
 
 export const Route = createFileRoute("/_authenticated/transactions")({
   component: TransactionsPage,
