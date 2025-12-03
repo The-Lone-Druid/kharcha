@@ -17,7 +17,7 @@ export function LoadingScreen({
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-background to-muted/20 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating circles */}
@@ -40,7 +40,7 @@ export function LoadingScreen({
           style={{ animationDelay: "0.5s", animationDuration: "2s" }}
         />
         <div
-          className="absolute bottom-1/3 right-1/2 w-6 h-6 bg-gradient-to-r from-primary/10 to-secondary/10 rounded animate-ping"
+          className="absolute bottom-1/3 right-1/2 w-6 h-6 bg-linear-to-r from-primary/10 to-secondary/10 rounded animate-ping"
           style={{ animationDelay: "1.5s", animationDuration: "3s" }}
         />
         <div
@@ -61,7 +61,7 @@ export function LoadingScreen({
 
           {/* Inner pulsing circle */}
           <div
-            className="absolute inset-2 bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse"
+            className="absolute inset-2 bg-linear-to-r from-primary to-secondary rounded-full animate-pulse"
             style={{ animationDuration: "2s" }}
           />
 
@@ -76,7 +76,7 @@ export function LoadingScreen({
 
         {/* Loading text with animated dots */}
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-pulse">
+          <h2 className="text-2xl font-semibold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent animate-pulse">
             Kharcha
           </h2>
           <p className="text-muted-foreground text-sm font-medium">
@@ -88,7 +88,7 @@ export function LoadingScreen({
         {/* Progress indicator */}
         <div className="w-48 h-1 bg-muted rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse"
+            className="h-full bg-linear-to-r from-primary to-secondary rounded-full animate-pulse"
             style={{ animationDuration: "1.5s" }}
           />
         </div>

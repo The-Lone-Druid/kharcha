@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
@@ -17,6 +18,11 @@ import { Route as AuthenticatedOutflowTypesRouteImport } from './routes/_authent
 import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
 import { Route as AuthenticatedAccountsRouteImport } from './routes/_authenticated/accounts'
 
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -55,6 +61,7 @@ const AuthenticatedAccountsRoute = AuthenticatedAccountsRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/features': typeof FeaturesRoute
   '/accounts': typeof AuthenticatedAccountsRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/outflow-types': typeof AuthenticatedOutflowTypesRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
+  '/features': typeof FeaturesRoute
   '/accounts': typeof AuthenticatedAccountsRoute
   '/insights': typeof AuthenticatedInsightsRoute
   '/outflow-types': typeof AuthenticatedOutflowTypesRoute
@@ -73,6 +81,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/features': typeof FeaturesRoute
   '/_authenticated/accounts': typeof AuthenticatedAccountsRoute
   '/_authenticated/insights': typeof AuthenticatedInsightsRoute
   '/_authenticated/outflow-types': typeof AuthenticatedOutflowTypesRoute
@@ -83,6 +92,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/features'
     | '/accounts'
     | '/insights'
     | '/outflow-types'
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
     | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/features'
     | '/accounts'
     | '/insights'
     | '/outflow-types'
@@ -100,6 +111,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated'
+    | '/features'
     | '/_authenticated/accounts'
     | '/_authenticated/insights'
     | '/_authenticated/outflow-types'
@@ -110,10 +122,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  FeaturesRoute: typeof FeaturesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -190,6 +210,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  FeaturesRoute: FeaturesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
