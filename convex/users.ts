@@ -107,10 +107,16 @@ export const getCurrentUser = query({
 export const updateUserPreferences = mutation({
   args: {
     preferences: v.object({
-      currency: v.string(),
-      language: v.string(),
-      darkMode: v.boolean(),
-      onboardingCompleted: v.boolean(),
+      currency: v.optional(v.string()),
+      language: v.optional(v.string()),
+      darkMode: v.optional(v.boolean()),
+      onboardingCompleted: v.optional(v.boolean()),
+      notificationPreferences: v.optional(v.object({
+        globalNotifications: v.boolean(),
+        subscriptionReminders: v.boolean(),
+        dueDateReminders: v.boolean(),
+        emailNotifications: v.boolean(),
+      })),
     }),
   },
   handler: async (ctx, args) => {
@@ -128,11 +134,88 @@ export const updateUserPreferences = mutation({
       .first();
 
     if (existing) {
-      await ctx.db.patch(existing._id, args.preferences);
+      // Merge preferences, preserving existing values if not provided
+      const updates: Record<string, unknown> = {};
+      if (args.preferences.currency !== undefined) updates.currency = args.preferences.currency;
+      if (args.preferences.language !== undefined) updates.language = args.preferences.language;
+      if (args.preferences.darkMode !== undefined) updates.darkMode = args.preferences.darkMode;
+      if (args.preferences.onboardingCompleted !== undefined) updates.onboardingCompleted = args.preferences.onboardingCompleted;
+      if (args.preferences.notificationPreferences !== undefined) {
+        updates.notificationPreferences = args.preferences.notificationPreferences;
+      }
+      
+      await ctx.db.patch(existing._id, updates);
     } else {
+      // Create new preferences with defaults
       await ctx.db.insert("userPreferences", {
         clerkId,
-        ...args.preferences,
+        currency: args.preferences.currency || "INR",
+        language: args.preferences.language || "en",
+        darkMode: args.preferences.darkMode ?? false,
+        onboardingCompleted: args.preferences.onboardingCompleted ?? false,
+        notificationPreferences: args.preferences.notificationPreferences || {
+          globalNotifications: true,
+          subscriptionReminders: true,
+          dueDateReminders: true,
+          emailNotifications: false,
+        },
+      });
+    }
+  },
+});
+
+// Update only notification preferences
+export const updateNotificationPreferences = mutation({
+  args: {
+    globalNotifications: v.optional(v.boolean()),
+    subscriptionReminders: v.optional(v.boolean()),
+    dueDateReminders: v.optional(v.boolean()),
+    emailNotifications: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const clerkId = identity.subject;
+
+    const existing = await ctx.db
+      .query("userPreferences")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .first();
+
+    if (!existing) {
+      // Create with defaults
+      await ctx.db.insert("userPreferences", {
+        clerkId,
+        currency: "INR",
+        language: "en",
+        darkMode: false,
+        onboardingCompleted: false,
+        notificationPreferences: {
+          globalNotifications: args.globalNotifications ?? true,
+          subscriptionReminders: args.subscriptionReminders ?? true,
+          dueDateReminders: args.dueDateReminders ?? true,
+          emailNotifications: args.emailNotifications ?? false,
+        },
+      });
+    } else {
+      // Merge with existing preferences
+      const currentPrefs = existing.notificationPreferences || {
+        globalNotifications: true,
+        subscriptionReminders: true,
+        dueDateReminders: true,
+        emailNotifications: false,
+      };
+
+      await ctx.db.patch(existing._id, {
+        notificationPreferences: {
+          globalNotifications: args.globalNotifications ?? currentPrefs.globalNotifications,
+          subscriptionReminders: args.subscriptionReminders ?? currentPrefs.subscriptionReminders,
+          dueDateReminders: args.dueDateReminders ?? currentPrefs.dueDateReminders,
+          emailNotifications: args.emailNotifications ?? currentPrefs.emailNotifications,
+        },
       });
     }
   },
@@ -175,6 +258,12 @@ export const createUser = mutation({
       language: "en",
       darkMode: false,
       onboardingCompleted: false,
+      notificationPreferences: {
+        globalNotifications: true,
+        subscriptionReminders: true,
+        dueDateReminders: true,
+        emailNotifications: false,
+      },
     });
   },
 });

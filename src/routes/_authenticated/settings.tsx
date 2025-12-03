@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -10,12 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTheme } from "@/hooks/use-theme";
-import { Trash2, Wallet, Tag, LogOut, Download } from "lucide-react";
+import { Trash2, Wallet, Tag, LogOut, Download, Bell } from "lucide-react";
 import { useClerk, UserProfile } from "@clerk/clerk-react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import * as XLSX from "xlsx";
 import { useAppData } from "../_authenticated";
+import { toast } from "sonner";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: SettingsPage,
@@ -25,10 +28,40 @@ function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { signOut } = useClerk();
   const { accounts, outflowTypes } = useAppData();
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const updateNotificationPrefs = useMutation(api.users.updateNotificationPreferences);
 
   const transactions = useQuery(api.transactions.listTransactions, {
     limit: 10000,
   });
+
+  // Notification preferences state
+  const [notifPrefs, setNotifPrefs] = useState({
+    globalNotifications: true,
+    subscriptionReminders: true,
+    dueDateReminders: true,
+    emailNotifications: false,
+  });
+
+  // Load preferences when user data is available
+  useEffect(() => {
+    if (currentUser?.preferences?.notificationPreferences) {
+      setNotifPrefs(currentUser.preferences.notificationPreferences);
+    }
+  }, [currentUser]);
+
+  const handleNotificationPrefChange = async (key: keyof typeof notifPrefs, value: boolean) => {
+    try {
+      setNotifPrefs(prev => ({ ...prev, [key]: value }));
+      await updateNotificationPrefs({ [key]: value });
+      toast.success("Notification preferences updated");
+    } catch (error) {
+      toast.error("Failed to update preferences");
+      console.error(error);
+      // Revert on error
+      setNotifPrefs(prev => ({ ...prev, [key]: !value }));
+    }
+  };
 
   const handleExportData = () => {
     if (!transactions || !accounts || !outflowTypes) {
@@ -152,6 +185,80 @@ function SettingsPage() {
                   <SelectItem value="hi">Hindi</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-12 md:col-span-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="h-5 w-5" />
+              Notifications
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="global-notifications">Enable Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Master toggle for all notifications
+                </p>
+              </div>
+              <Switch
+                id="global-notifications"
+                checked={notifPrefs.globalNotifications}
+                onCheckedChange={(checked) => 
+                  handleNotificationPrefChange('globalNotifications', checked)
+                }
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="subscription-reminders">Subscription Reminders</Label>
+                <p className="text-sm text-muted-foreground">
+                  Get notified before subscriptions renew
+                </p>
+              </div>
+              <Switch
+                id="subscription-reminders"
+                checked={notifPrefs.subscriptionReminders}
+                onCheckedChange={(checked) => 
+                  handleNotificationPrefChange('subscriptionReminders', checked)
+                }
+                disabled={!notifPrefs.globalNotifications}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="due-date-reminders">Due Date Reminders</Label>
+                <p className="text-sm text-muted-foreground">
+                  Get notified when money lent is due
+                </p>
+              </div>
+              <Switch
+                id="due-date-reminders"
+                checked={notifPrefs.dueDateReminders}
+                onCheckedChange={(checked) => 
+                  handleNotificationPrefChange('dueDateReminders', checked)
+                }
+                disabled={!notifPrefs.globalNotifications}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="email-notifications">Email Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive notifications via email (coming soon)
+                </p>
+              </div>
+              <Switch
+                id="email-notifications"
+                checked={notifPrefs.emailNotifications}
+                onCheckedChange={(checked) => 
+                  handleNotificationPrefChange('emailNotifications', checked)
+                }
+                disabled
+              />
             </div>
           </CardContent>
         </Card>

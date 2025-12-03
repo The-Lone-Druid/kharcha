@@ -9,6 +9,13 @@ export default defineSchema({
     language: v.string(), // e.g., "en"
     darkMode: v.boolean(),
     onboardingCompleted: v.boolean(),
+    // Notification preferences
+    notificationPreferences: v.optional(v.object({
+      globalNotifications: v.boolean(), // Master toggle for all notifications
+      subscriptionReminders: v.boolean(), // Notifications for subscription renewals
+      dueDateReminders: v.boolean(), // Notifications for money lent due dates
+      emailNotifications: v.boolean(), // Enable email notifications (future feature)
+    })),
   })
     .index("by_clerk_id", ["clerkId"]),
 

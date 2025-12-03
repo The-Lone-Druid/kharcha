@@ -367,3 +367,183 @@ export const getTrackingStreak = query({
     return streak;
   },
 });
+
+// Enhanced subscription breakdown with date filtering
+export const getSubscriptionBreakdown = query({
+  args: {
+    startDate: v.optional(v.number()),
+    endDate: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const clerkId = identity.subject;
+
+    const outflowTypes = await ctx.db
+      .query("outflowTypes")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .filter((q) => q.eq(q.field("name"), "Subscription"))
+      .collect();
+
+    if (outflowTypes.length === 0) return { breakdown: [], total: 0 };
+
+    const typeId = outflowTypes[0]._id;
+    let query = ctx.db
+      .query("transactions")
+      .withIndex("by_outflow_type", (q) => q.eq("outflowTypeId", typeId));
+
+    // Apply date filters if provided
+    if (args.startDate || args.endDate) {
+      const transactions = await query.collect();
+      const filtered = transactions.filter((t) => {
+        if (args.startDate && t.date < args.startDate) return false;
+        if (args.endDate && t.date > args.endDate) return false;
+        return true;
+      });
+
+      const breakdown = filtered.reduce((acc, t) => {
+        const provider = t.metadata?.provider || "Unknown";
+        if (!acc[provider]) {
+          acc[provider] = { provider, amount: 0, count: 0 };
+        }
+        acc[provider].amount += t.amount;
+        acc[provider].count += 1;
+        return acc;
+      }, {} as Record<string, { provider: string; amount: number; count: number }>);
+
+      const total = filtered.reduce((sum, t) => sum + t.amount, 0);
+      return { breakdown: Object.values(breakdown), total };
+    }
+
+    const transactions = await query.collect();
+    const breakdown = transactions.reduce((acc, t) => {
+      const provider = t.metadata?.provider || "Unknown";
+      if (!acc[provider]) {
+        acc[provider] = { provider, amount: 0, count: 0 };
+      }
+      acc[provider].amount += t.amount;
+      acc[provider].count += 1;
+      return acc;
+    }, {} as Record<string, { provider: string; amount: number; count: number }>);
+
+    const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+    return { breakdown: Object.values(breakdown), total };
+  },
+});
+
+// Projected subscription spend
+export const getProjectedSubscriptionSpend = query({
+  args: {
+    monthsAhead: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const clerkId = identity.subject;
+    const monthsAhead = args.monthsAhead || 12;
+
+    const outflowTypes = await ctx.db
+      .query("outflowTypes")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .filter((q) => q.eq(q.field("name"), "Subscription"))
+      .collect();
+
+    if (outflowTypes.length === 0) return [];
+
+    const typeId = outflowTypes[0]._id;
+    const subscriptions = await ctx.db
+      .query("transactions")
+      .withIndex("by_outflow_type", (q) => q.eq("outflowTypeId", typeId))
+      .collect();
+
+    const projections = [];
+    const now = new Date();
+
+    for (let i = 0; i < monthsAhead; i++) {
+      const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      
+      let monthlyTotal = 0;
+      for (const sub of subscriptions) {
+        const frequency = sub.metadata?.frequency || "monthly";
+        
+        if (frequency === "monthly") {
+          monthlyTotal += sub.amount;
+        } else if (frequency === "yearly") {
+          // Only count in the renewal month
+          const renewalDate = new Date(sub.metadata?.renewalDate);
+          if (renewalDate.getMonth() === date.getMonth()) {
+            monthlyTotal += sub.amount;
+          }
+        } else if (frequency === "weekly") {
+          // Approximate: 4 weeks per month
+          monthlyTotal += sub.amount * 4;
+        }
+      }
+
+      projections.push({
+        month: monthStr,
+        monthLabel: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        amount: monthlyTotal,
+        count: subscriptions.length,
+      });
+    }
+
+    return projections;
+  },
+});
+
+// Subscription spend over time (historical)
+export const getSubscriptionSpendOverTime = query({
+  args: {
+    months: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const clerkId = identity.subject;
+    const monthsBack = args.months || 12;
+
+    const outflowTypes = await ctx.db
+      .query("outflowTypes")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .filter((q) => q.eq(q.field("name"), "Subscription"))
+      .collect();
+
+    if (outflowTypes.length === 0) return [];
+
+    const typeId = outflowTypes[0]._id;
+    
+    const now = new Date();
+    const months = [];
+    
+    for (let i = monthsBack - 1; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const start = date.getTime();
+      const end = new Date(date.getFullYear(), date.getMonth() + 1, 1).getTime();
+      
+      const transactions = await ctx.db
+        .query("transactions")
+        .withIndex("by_clerk_id_date", (q) =>
+          q
+            .eq("clerkId", clerkId)
+            .gte("date", start)
+            .lt("date", end)
+        )
+        .filter((q) => q.eq(q.field("outflowTypeId"), typeId))
+        .collect();
+
+      months.push({
+        month: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`,
+        monthLabel: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        amount: transactions.reduce((sum, t) => sum + t.amount, 0),
+        count: transactions.length,
+      });
+    }
+
+    return months;
+  },
+});

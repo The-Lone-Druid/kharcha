@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/components/ui/notification-bell";
 
 const menuItems = [
   {
@@ -44,11 +45,14 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            💰
+        <div className="flex items-center justify-between gap-2 px-4 py-2">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              💰
+            </div>
+            <span className="font-semibold">Kharcha</span>
           </div>
-          <span className="font-semibold">Kharcha</span>
+          <NotificationBell />
         </div>
       </SidebarHeader>
       <SidebarContent>
