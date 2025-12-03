@@ -8,8 +8,8 @@ export default defineConfig({
   test: {
     name: "convex",
     environment: "edge-runtime",
-    include: ["**/*.test.ts"],
-    exclude: ["node_modules", "_generated"],
+    include: ["convex/**/*.test.ts"],
+    exclude: ["node_modules", "_generated", "src/**"],
     server: {
       deps: {
         inline: ["convex-test"],
