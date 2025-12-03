@@ -20,6 +20,7 @@ import {
   Bell,
   Check,
   X,
+  ArrowRight,
 } from "lucide-react";
 import { useClerk, UserProfile } from "@clerk/clerk-react";
 import { useQuery, useMutation } from "convex/react";
@@ -358,32 +359,42 @@ function SettingsPage() {
                 Export
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
-                <Wallet className="h-5 w-5 text-muted-foreground" />
+                <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                  <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
                 <div>
-                  <Label>Accounts</Label>
+                  <Label className="font-medium">Accounts</Label>
                   <p className="text-sm text-muted-foreground">
-                    Manage your accounts
+                    Manage your financial accounts
                   </p>
                 </div>
               </div>
-              <Button variant="outline" asChild>
-                <Link to="/accounts">Manage</Link>
+              <Button variant="outline" asChild className="group">
+                <Link to="/accounts">
+                  Manage
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
-                <Tag className="h-5 w-5 text-muted-foreground" />
+                <div className="p-2 bg-violet-100 dark:bg-violet-900/30 rounded-lg">
+                  <Tag className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                </div>
                 <div>
-                  <Label>Categories</Label>
+                  <Label className="font-medium">Categories</Label>
                   <p className="text-sm text-muted-foreground">
                     Manage transaction categories
                   </p>
                 </div>
               </div>
-              <Button variant="outline" asChild className="w-full md:w-auto">
-                <Link to="/outflow-types">Manage</Link>
+              <Button variant="outline" asChild className="w-full md:w-auto group">
+                <Link to="/outflow-types">
+                  Manage
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
             </div>
           </CardContent>

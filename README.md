@@ -1,7 +1,7 @@
 # Kharcha - Personal Finance Tracker
 
 <p align="center">
-  <img src="public/logo.svg" alt="Kharcha Logo" width="120" />
+  <img src="public/favicon.svg" alt="Kharcha Logo" width="120" />
 </p>
 
 **Kharcha** (Hindi for "expense") is a modern, full-featured personal finance management application built with React, TypeScript, and Convex. Track your expenses, manage multiple accounts, set budgets, and gain insights into your spending habits.
