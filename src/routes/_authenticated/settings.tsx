@@ -11,7 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTheme } from "@/hooks/use-theme";
-import { Trash2, Wallet, Tag, LogOut, Download, Bell, Check, X } from "lucide-react";
+import {
+  Trash2,
+  Wallet,
+  Tag,
+  LogOut,
+  Download,
+  Bell,
+  Check,
+  X,
+} from "lucide-react";
 import { useClerk, UserProfile } from "@clerk/clerk-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
@@ -32,13 +41,11 @@ function SettingsPage() {
   const { signOut } = useClerk();
   const { accounts, outflowTypes } = useAppData();
   const currentUser = useQuery(api.users.getCurrentUser);
-  const updateNotificationPrefs = useMutation(api.users.updateNotificationPreferences);
-  
-  const { 
-    permission, 
-    isSupported, 
-    requestPermission 
-  } = useNotifications();
+  const updateNotificationPrefs = useMutation(
+    api.users.updateNotificationPreferences
+  );
+
+  const { permission, isSupported, requestPermission } = useNotifications();
 
   const transactions = useQuery(api.transactions.listTransactions, {
     limit: 10000,
@@ -54,21 +61,24 @@ function SettingsPage() {
 
   // Load preferences when user data is available
   useEffect(() => {
-    if (currentUser?.preferences?.notificationPreferences) {
+    if (currentUser?.preferences && 'notificationPreferences' in currentUser.preferences && currentUser.preferences.notificationPreferences) {
       setNotifPrefs(currentUser.preferences.notificationPreferences);
     }
   }, [currentUser]);
 
-  const handleNotificationPrefChange = async (key: keyof typeof notifPrefs, value: boolean) => {
+  const handleNotificationPrefChange = async (
+    key: keyof typeof notifPrefs,
+    value: boolean
+  ) => {
     try {
-      setNotifPrefs(prev => ({ ...prev, [key]: value }));
+      setNotifPrefs((prev) => ({ ...prev, [key]: value }));
       await updateNotificationPrefs({ [key]: value });
       toast.success("Notification preferences updated");
     } catch (error) {
       toast.error("Failed to update preferences");
       console.error(error);
       // Revert on error
-      setNotifPrefs(prev => ({ ...prev, [key]: !value }));
+      setNotifPrefs((prev) => ({ ...prev, [key]: !value }));
     }
   };
 
@@ -208,7 +218,9 @@ function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="global-notifications">Enable Notifications</Label>
+                <Label htmlFor="global-notifications">
+                  Enable Notifications
+                </Label>
                 <p className="text-sm text-muted-foreground">
                   Master toggle for all notifications
                 </p>
@@ -216,14 +228,16 @@ function SettingsPage() {
               <Switch
                 id="global-notifications"
                 checked={notifPrefs.globalNotifications}
-                onCheckedChange={(checked) => 
-                  handleNotificationPrefChange('globalNotifications', checked)
+                onCheckedChange={(checked) =>
+                  handleNotificationPrefChange("globalNotifications", checked)
                 }
               />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="subscription-reminders">Subscription Reminders</Label>
+                <Label htmlFor="subscription-reminders">
+                  Subscription Reminders
+                </Label>
                 <p className="text-sm text-muted-foreground">
                   Get notified before subscriptions renew
                 </p>
@@ -231,8 +245,8 @@ function SettingsPage() {
               <Switch
                 id="subscription-reminders"
                 checked={notifPrefs.subscriptionReminders}
-                onCheckedChange={(checked) => 
-                  handleNotificationPrefChange('subscriptionReminders', checked)
+                onCheckedChange={(checked) =>
+                  handleNotificationPrefChange("subscriptionReminders", checked)
                 }
                 disabled={!notifPrefs.globalNotifications}
               />
@@ -247,22 +261,20 @@ function SettingsPage() {
               <Switch
                 id="due-date-reminders"
                 checked={notifPrefs.dueDateReminders}
-                onCheckedChange={(checked) => 
-                  handleNotificationPrefChange('dueDateReminders', checked)
+                onCheckedChange={(checked) =>
+                  handleNotificationPrefChange("dueDateReminders", checked)
                 }
                 disabled={!notifPrefs.globalNotifications}
               />
             </div>
-            
+
             {/* Browser Notification Permission Status */}
             {isSupported && (
               <Alert>
                 <AlertDescription className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bell className="h-4 w-4" />
-                    <span className="text-sm">
-                      Browser Notifications:
-                    </span>
+                    <span className="text-sm">Browser Notifications:</span>
                     {permission === "granted" ? (
                       <Badge variant="default" className="gap-1">
                         <Check className="h-3 w-3" /> Enabled
@@ -276,15 +288,17 @@ function SettingsPage() {
                     )}
                   </div>
                   {permission === "default" && (
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="outline"
                       onClick={async () => {
                         const result = await requestPermission();
                         if (result === "granted") {
                           toast.success("Browser notifications enabled!");
                         } else if (result === "denied") {
-                          toast.error("Permission denied. Enable in browser settings.");
+                          toast.error(
+                            "Permission denied. Enable in browser settings."
+                          );
                         }
                       }}
                     >
@@ -299,7 +313,7 @@ function SettingsPage() {
                 </AlertDescription>
               </Alert>
             )}
-            
+
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="email-notifications">Email Notifications</Label>
@@ -310,8 +324,8 @@ function SettingsPage() {
               <Switch
                 id="email-notifications"
                 checked={notifPrefs.emailNotifications}
-                onCheckedChange={(checked) => 
-                  handleNotificationPrefChange('emailNotifications', checked)
+                onCheckedChange={(checked) =>
+                  handleNotificationPrefChange("emailNotifications", checked)
                 }
                 disabled
               />
@@ -418,7 +432,7 @@ function SettingsPage() {
             appearance={{
               elements: {
                 rootBox: "w-full",
-                cardBox: "w-full"
+                cardBox: "w-full",
               },
             }}
           />
