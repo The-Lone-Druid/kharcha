@@ -5,14 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite --host 0.0.0.0\" \"convex dev\"",
-    "build": "tsc -b && vite build",
+    "build": "npm run test:all && tsc -b && vite build",
+    "build:only": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "seed": "convex run users:seedOutflowTypesForAllUsers",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:convex": "vitest run --config convex/vitest.config.ts",
+    "test:all": "npm run test:run && npm run test:convex",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:all": "npm run test:coverage && vitest run --config convex/vitest.config.ts --coverage",
+    "predeploy": "npm run test:all"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
@@ -78,6 +83,7 @@
   },
   "devDependencies": {
     "@convex-dev/eslint-plugin": "^1.0.0",
+    "@edge-runtime/vm": "^5.0.0",
     "@tanstack/react-query-devtools": "^5.91.1",
     "@tanstack/router-devtools": "^1.139.12",
     "@tanstack/router-plugin": "^1.139.12",
@@ -91,6 +97,7 @@
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
     "concurrently": "^9.2.1",
+    "convex-test": "^0.0.41",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
