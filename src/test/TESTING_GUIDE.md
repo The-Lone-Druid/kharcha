@@ -46,10 +46,10 @@ describe("Feature or Component Name", () => {
     it("should do something specific", () => {
       // Arrange - set up
       const input = "test";
-      
+
       // Act - do the thing
       const result = myFunction(input);
-      
+
       // Assert - check results
       expect(result).toBe("expected");
     });
@@ -63,9 +63,9 @@ describe("Feature or Component Name", () => {
 
 ```typescript
 // Equality
-expect(value).toBe(expected);           // Strict equality (===)
-expect(value).toEqual(expected);        // Deep equality for objects
-expect(value).not.toBe(unexpected);     // Negation
+expect(value).toBe(expected); // Strict equality (===)
+expect(value).toEqual(expected); // Deep equality for objects
+expect(value).not.toBe(unexpected); // Negation
 
 // Truthiness
 expect(value).toBeTruthy();
@@ -77,7 +77,7 @@ expect(value).toBeDefined();
 // Numbers
 expect(value).toBeGreaterThan(3);
 expect(value).toBeLessThan(5);
-expect(value).toBeCloseTo(0.3, 5);      // For floating point
+expect(value).toBeCloseTo(0.3, 5); // For floating point
 
 // Strings
 expect(string).toContain("substring");
@@ -105,7 +105,7 @@ import { MyComponent } from "./my-component";
 
 it("renders correctly", () => {
   render(<MyComponent />);
-  
+
   expect(screen.getByText("Hello")).toBeInTheDocument();
 });
 ```
@@ -120,7 +120,7 @@ screen.getByRole("heading", { level: 1 });
 
 // By text
 screen.getByText("Exact Text");
-screen.getByText(/partial/i);  // regex, case-insensitive
+screen.getByText(/partial/i); // regex, case-insensitive
 
 // By label (for form fields)
 screen.getByLabelText("Email");
@@ -244,28 +244,31 @@ it("handles loading states", async () => {
 ### Do ✅
 
 1. **Test behavior, not implementation**
+
    ```typescript
    // Good: Tests what user sees
    expect(screen.getByText("Success")).toBeInTheDocument();
-   
+
    // Bad: Tests internal state
    expect(component.state.isSuccess).toBe(true);
    ```
 
 2. **Use accessible queries**
+
    ```typescript
    // Good
    screen.getByRole("button", { name: /submit/i });
-   
+
    // Avoid
    screen.getByTestId("submit-btn");
    ```
 
 3. **Test user interactions realistically**
+
    ```typescript
    // Good: Simulates real user
    await user.click(button);
-   
+
    // Less ideal
    fireEvent.click(button);
    ```
@@ -286,17 +289,20 @@ it("handles loading states", async () => {
 ## What to Test
 
 ### Components
+
 - Does it render correctly?
 - Does it handle user interactions?
 - Does it show correct states (loading, error, empty)?
 - Is it accessible?
 
 ### Utility Functions
+
 - Does it return correct output for given input?
 - How does it handle edge cases?
 - How does it handle errors?
 
 ### Hooks
+
 - Does it return correct initial state?
 - Does it update state correctly?
 - Does it handle cleanup?
@@ -312,6 +318,7 @@ npm run test:coverage
 ```
 
 Aim for:
+
 - **Statements:** 80%+
 - **Branches:** 75%+
 - **Functions:** 80%+

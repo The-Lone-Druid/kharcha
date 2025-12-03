@@ -55,9 +55,10 @@ This guide covers real-world scenarios and how to handle them effectively in Kha
 ### Setup
 
 1. **Create Separate Accounts**
+
    ```
    💳 HDFC Salary Account - Bank - Blue
-   💳 SBI Savings - Bank - Green  
+   💳 SBI Savings - Bank - Green
    💳 ICICI Fixed Deposit - Bank - Orange
    ```
 
@@ -84,6 +85,7 @@ This guide covers real-world scenarios and how to handle them effectively in Kha
 ### Setup
 
 1. **Create Credit Card Accounts**
+
    ```
    💳 HDFC Credit Card - Credit Card - Red
    💳 ICICI Amazon Card - Credit Card - Orange
@@ -172,7 +174,7 @@ Note: "Dinner with college friends, split 4 ways, total was ₹2,000"
 ```
 Dinner at Restaurant - ₹2,000 (full bill)
 Account: Credit Card
-Category: Food & Dining  
+Category: Food & Dining
 Note: "Paid full bill, to be split with 3 friends (₹500 each)"
 ```
 
@@ -191,6 +193,7 @@ Log only your share for accurate personal expense tracking.
 ### Setup
 
 1. **Create Business-Specific Categories**
+
    ```
    💼 Office Supplies
    💻 Software & Tools
@@ -262,12 +265,14 @@ While Kharcha doesn't have dedicated savings goals (yet), here's how to track:
    - Track how much you're saving monthly
 
 2. **Create a Savings Account**
+
    ```
    💰 Emergency Fund - Bank - Green
    ✈️ Vacation Fund - Bank - Blue
    ```
 
 3. **Monthly Savings Transaction**
+
    ```
    Amount: ₹10,000
    Account: Emergency Fund
@@ -317,7 +322,6 @@ Local transport - ₹500
 1. Filter Transactions by:
    - Category: Travel
    - Date range: Trip dates
-   
 2. Review total trip cost
 3. Compare to budget
 4. Learn for future trip planning
@@ -331,6 +335,7 @@ Local transport - ₹500
 ### Setup for Household
 
 1. **Create Household Categories**
+
    ```
    🏠 Rent/Mortgage
    💡 Utilities (Electricity, Water, Gas)
@@ -367,6 +372,7 @@ Local transport - ₹500
 ## Quick Reference: Category Suggestions by Lifestyle
 
 ### Student
+
 - 🍔 Food (canteen, outside)
 - 📚 Education (books, courses)
 - 🚌 Transportation (bus, metro)
@@ -374,6 +380,7 @@ Local transport - ₹500
 - 📱 Mobile & Data
 
 ### Young Professional
+
 - 🏠 Rent
 - 🍔 Food & Dining
 - 🚗 Transportation
@@ -382,6 +389,7 @@ Local transport - ₹500
 - 💼 Professional Development
 
 ### Family
+
 - 🏠 Housing
 - 🍽️ Groceries
 - 👶 Children (education, activities)
@@ -390,6 +398,7 @@ Local transport - ₹500
 - 🎮 Entertainment
 
 ### Freelancer
+
 - 💼 Business Expenses
 - 💻 Software & Tools
 - 🏠 Home Office

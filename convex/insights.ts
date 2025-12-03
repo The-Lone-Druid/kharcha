@@ -27,10 +27,7 @@ export const getMonthlySpend = query({
         const transactions = await ctx.db
           .query("transactions")
           .withIndex("by_clerk_id_date", (q) =>
-            q
-              .eq("clerkId", clerkId)
-              .gte("date", start)
-              .lt("date", end)
+            q.eq("clerkId", clerkId).gte("date", start).lt("date", end)
           )
           .collect();
         return {
@@ -59,10 +56,7 @@ export const getOutflowTypeBreakdown = query({
     const transactions = await ctx.db
       .query("transactions")
       .withIndex("by_clerk_id_date", (q) =>
-        q
-          .eq("clerkId", clerkId)
-          .gte("date", start)
-          .lt("date", end)
+        q.eq("clerkId", clerkId).gte("date", start).lt("date", end)
       )
       .collect();
 
@@ -402,7 +396,29 @@ export const getSubscriptionBreakdown = query({
         return true;
       });
 
-      const breakdown = filtered.reduce((acc, t) => {
+      const breakdown = filtered.reduce(
+        (acc, t) => {
+          const provider = t.metadata?.provider || "Unknown";
+          if (!acc[provider]) {
+            acc[provider] = { provider, amount: 0, count: 0 };
+          }
+          acc[provider].amount += t.amount;
+          acc[provider].count += 1;
+          return acc;
+        },
+        {} as Record<
+          string,
+          { provider: string; amount: number; count: number }
+        >
+      );
+
+      const total = filtered.reduce((sum, t) => sum + t.amount, 0);
+      return { breakdown: Object.values(breakdown), total };
+    }
+
+    const transactions = await query.collect();
+    const breakdown = transactions.reduce(
+      (acc, t) => {
         const provider = t.metadata?.provider || "Unknown";
         if (!acc[provider]) {
           acc[provider] = { provider, amount: 0, count: 0 };
@@ -410,22 +426,9 @@ export const getSubscriptionBreakdown = query({
         acc[provider].amount += t.amount;
         acc[provider].count += 1;
         return acc;
-      }, {} as Record<string, { provider: string; amount: number; count: number }>);
-
-      const total = filtered.reduce((sum, t) => sum + t.amount, 0);
-      return { breakdown: Object.values(breakdown), total };
-    }
-
-    const transactions = await query.collect();
-    const breakdown = transactions.reduce((acc, t) => {
-      const provider = t.metadata?.provider || "Unknown";
-      if (!acc[provider]) {
-        acc[provider] = { provider, amount: 0, count: 0 };
-      }
-      acc[provider].amount += t.amount;
-      acc[provider].count += 1;
-      return acc;
-    }, {} as Record<string, { provider: string; amount: number; count: number }>);
+      },
+      {} as Record<string, { provider: string; amount: number; count: number }>
+    );
 
     const total = transactions.reduce((sum, t) => sum + t.amount, 0);
     return { breakdown: Object.values(breakdown), total };
@@ -464,11 +467,11 @@ export const getProjectedSubscriptionSpend = query({
     for (let i = 0; i < monthsAhead; i++) {
       const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
       const monthStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      
+
       let monthlyTotal = 0;
       for (const sub of subscriptions) {
         const frequency = sub.metadata?.frequency || "monthly";
-        
+
         if (frequency === "monthly") {
           monthlyTotal += sub.amount;
         } else if (frequency === "yearly") {
@@ -485,7 +488,10 @@ export const getProjectedSubscriptionSpend = query({
 
       projections.push({
         month: monthStr,
-        monthLabel: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        monthLabel: date.toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        }),
         amount: monthlyTotal,
         count: subscriptions.length,
       });
@@ -516,29 +522,33 @@ export const getSubscriptionSpendOverTime = query({
     if (outflowTypes.length === 0) return [];
 
     const typeId = outflowTypes[0]._id;
-    
+
     const now = new Date();
     const months = [];
-    
+
     for (let i = monthsBack - 1; i >= 0; i--) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const start = date.getTime();
-      const end = new Date(date.getFullYear(), date.getMonth() + 1, 1).getTime();
-      
+      const end = new Date(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        1
+      ).getTime();
+
       const transactions = await ctx.db
         .query("transactions")
         .withIndex("by_clerk_id_date", (q) =>
-          q
-            .eq("clerkId", clerkId)
-            .gte("date", start)
-            .lt("date", end)
+          q.eq("clerkId", clerkId).gte("date", start).lt("date", end)
         )
         .filter((q) => q.eq(q.field("outflowTypeId"), typeId))
         .collect();
 
       months.push({
         month: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`,
-        monthLabel: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        monthLabel: date.toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        }),
         amount: transactions.reduce((sum, t) => sum + t.amount, 0),
         count: transactions.length,
       });

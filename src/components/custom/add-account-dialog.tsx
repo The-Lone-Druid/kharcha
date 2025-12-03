@@ -34,7 +34,15 @@ import type { Doc } from "@convex/_generated/dataModel";
 
 const accountFormSchema = z.object({
   name: z.string().min(1, "Account name is required"),
-  type: z.enum(["Cash", "Bank", "Credit Card", "UPI", "Loan", "Wallet", "Other"]),
+  type: z.enum([
+    "Cash",
+    "Bank",
+    "Credit Card",
+    "UPI",
+    "Loan",
+    "Wallet",
+    "Other",
+  ]),
   colorHex: z.string(),
 });
 
@@ -128,7 +136,7 @@ export function AddAccountDialog({
   const onSubmit = async (data: AccountFormData) => {
     try {
       let accountId: string | undefined;
-      
+
       if (account) {
         await updateAccount({
           id: account._id,
@@ -141,7 +149,7 @@ export function AddAccountDialog({
         toast.success("Account created successfully");
         accountId = newAccount;
       }
-      
+
       handleOpenChange(false);
       form.reset();
       onSuccess?.(accountId);
@@ -154,7 +162,7 @@ export function AddAccountDialog({
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto pb-6">
+      <SheetContent className="w-full overflow-y-auto pb-6 sm:max-w-[500px]">
         <SheetHeader className="space-y-2">
           <SheetTitle className="text-lg sm:text-xl">
             {account ? "Edit Account" : "Add New Account"}
@@ -167,13 +175,18 @@ export function AddAccountDialog({
         </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 p-4"
+          >
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Account Name</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    Account Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g., HDFC Savings"
@@ -191,7 +204,9 @@ export function AddAccountDialog({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Account Type</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    Account Type
+                  </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-11">
@@ -217,12 +232,12 @@ export function AddAccountDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Color</FormLabel>
-                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-3 py-2">
+                  <div className="grid grid-cols-6 gap-3 py-2 sm:grid-cols-8">
                     {colors.map((color) => (
                       <button
                         key={color}
                         type="button"
-                        className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full border-2 transition-all ${
+                        className={`h-10 w-10 rounded-full border-2 transition-all sm:h-8 sm:w-8 ${
                           field.value === color
                             ? "border-foreground scale-110"
                             : "border-muted hover:scale-105"
@@ -238,16 +253,16 @@ export function AddAccountDialog({
               )}
             />
 
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
+            <div className="flex flex-col-reverse space-y-2 space-y-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
-                className="w-full sm:w-auto h-11"
+                className="h-11 w-full sm:w-auto"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="w-full sm:w-auto h-11">
+              <Button type="submit" className="h-11 w-full sm:w-auto">
                 {account ? "Update" : "Create"} Account
               </Button>
             </div>

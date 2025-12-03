@@ -79,11 +79,11 @@ describe("LoadingScreen", () => {
     const { container } = render(<LoadingScreen />);
 
     // Check for outer rotating ring
-    const rotatingRing = container.querySelector('.border-4.animate-spin');
+    const rotatingRing = container.querySelector(".border-4.animate-spin");
     expect(rotatingRing).toBeInTheDocument();
 
     // Check for pulsing elements
-    const pulsingElements = container.querySelectorAll('.animate-pulse');
+    const pulsingElements = container.querySelectorAll(".animate-pulse");
     expect(pulsingElements.length).toBeGreaterThan(0);
   });
 
@@ -91,7 +91,7 @@ describe("LoadingScreen", () => {
     const { container } = render(<LoadingScreen />);
 
     // Main content should have z-10
-    const mainContent = container.querySelector('.z-10');
+    const mainContent = container.querySelector(".z-10");
     expect(mainContent).toBeInTheDocument();
   });
 

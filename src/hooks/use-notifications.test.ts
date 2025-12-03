@@ -13,17 +13,19 @@ vi.mock("@/lib/notification-service", () => ({
 }));
 
 import {
-    getNotificationPermission,
-    initializeNotifications,
-    isNotificationSupported,
-    requestNotificationPermission,
-    shouldRequestPermission,
-    showReminderNotification,
+  getNotificationPermission,
+  initializeNotifications,
+  isNotificationSupported,
+  requestNotificationPermission,
+  shouldRequestPermission,
+  showReminderNotification,
 } from "@/lib/notification-service";
 
 const mockIsSupported = isNotificationSupported as ReturnType<typeof vi.fn>;
 const mockGetPermission = getNotificationPermission as ReturnType<typeof vi.fn>;
-const mockRequestPermission = requestNotificationPermission as ReturnType<typeof vi.fn>;
+const mockRequestPermission = requestNotificationPermission as ReturnType<
+  typeof vi.fn
+>;
 const mockShowReminder = showReminderNotification as ReturnType<typeof vi.fn>;
 const mockInitialize = initializeNotifications as ReturnType<typeof vi.fn>;
 const mockShouldRequest = shouldRequestPermission as ReturnType<typeof vi.fn>;
@@ -136,7 +138,9 @@ describe("useNotifications", () => {
 
       let success = false;
       await act(async () => {
-        success = (await result.current.showNotification("Test message")) as boolean;
+        success = (await result.current.showNotification(
+          "Test message"
+        )) as boolean;
       });
 
       expect(mockShowReminder).toHaveBeenCalledWith("Test message", "renewal");
@@ -164,7 +168,9 @@ describe("useNotifications", () => {
 
       let success: boolean | undefined;
       await act(async () => {
-        success = (await result.current.showNotification("Test message")) as boolean;
+        success = (await result.current.showNotification(
+          "Test message"
+        )) as boolean;
       });
 
       expect(mockShowReminder).not.toHaveBeenCalled();
@@ -181,7 +187,9 @@ describe("useNotifications", () => {
 
       let success: boolean | undefined;
       await act(async () => {
-        success = (await result.current.showNotification("Test message")) as boolean;
+        success = (await result.current.showNotification(
+          "Test message"
+        )) as boolean;
       });
 
       expect(success).toBe(false);

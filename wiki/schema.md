@@ -8,15 +8,15 @@ This document describes the database schema used by Kharcha. The database is man
 
 Kharcha uses the following tables:
 
-| Table | Purpose |
-|-------|---------|
-| `users` | User accounts |
-| `userPreferences` | User settings and preferences |
-| `accounts` | Financial accounts (bank, cash, etc.) |
-| `outflowTypes` | Expense categories |
-| `transactions` | Individual transactions |
-| `budgets` | Monthly budget limits |
-| `notifications` | User notifications |
+| Table             | Purpose                               |
+| ----------------- | ------------------------------------- |
+| `users`           | User accounts                         |
+| `userPreferences` | User settings and preferences         |
+| `accounts`        | Financial accounts (bank, cash, etc.) |
+| `outflowTypes`    | Expense categories                    |
+| `transactions`    | Individual transactions               |
+| `budgets`         | Monthly budget limits                 |
+| `notifications`   | User notifications                    |
 
 ---
 
@@ -51,15 +51,16 @@ Kharcha uses the following tables:
 
 Stores user account information synced from Clerk.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"users">` | Auto | Unique identifier |
-| `clerkId` | `string` | No | Clerk user ID |
-| `name` | `string` | No | User's display name |
-| `email` | `string` | Yes | User's email address |
-| `imageUrl` | `string` | No | Profile picture URL |
+| Field      | Type          | Required | Description          |
+| ---------- | ------------- | -------- | -------------------- |
+| `_id`      | `Id<"users">` | Auto     | Unique identifier    |
+| `clerkId`  | `string`      | No       | Clerk user ID        |
+| `name`     | `string`      | No       | User's display name  |
+| `email`    | `string`      | Yes      | User's email address |
+| `imageUrl` | `string`      | No       | Profile picture URL  |
 
 **Indexes:**
+
 - `by_clerk_id` - Lookup by Clerk ID
 
 ---
@@ -68,16 +69,17 @@ Stores user account information synced from Clerk.
 
 Stores user preferences and settings.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"userPreferences">` | Auto | Unique identifier |
-| `userId` | `Id<"users">` | Yes | Reference to user |
-| `currency` | `string` | Yes | Preferred currency (e.g., "INR") |
-| `language` | `string` | Yes | Language preference (e.g., "en") |
-| `darkMode` | `boolean` | Yes | Dark mode enabled |
-| `onboardingCompleted` | `boolean` | Yes | Has completed onboarding |
+| Field                 | Type                    | Required | Description                      |
+| --------------------- | ----------------------- | -------- | -------------------------------- |
+| `_id`                 | `Id<"userPreferences">` | Auto     | Unique identifier                |
+| `userId`              | `Id<"users">`           | Yes      | Reference to user                |
+| `currency`            | `string`                | Yes      | Preferred currency (e.g., "INR") |
+| `language`            | `string`                | Yes      | Language preference (e.g., "en") |
+| `darkMode`            | `boolean`               | Yes      | Dark mode enabled                |
+| `onboardingCompleted` | `boolean`               | Yes      | Has completed onboarding         |
 
 **Indexes:**
+
 - `by_user` - Lookup by user ID
 
 ---
@@ -86,16 +88,17 @@ Stores user preferences and settings.
 
 Financial accounts belonging to users.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"accounts">` | Auto | Unique identifier |
-| `name` | `string` | Yes | Account name |
-| `type` | `string` | Yes | Account type (see below) |
-| `colorHex` | `string` | Yes | Display color (e.g., "#3B82F6") |
-| `userId` | `Id<"users">` | Yes | Reference to owner |
-| `isArchived` | `boolean` | Yes | Whether account is archived |
+| Field        | Type             | Required | Description                     |
+| ------------ | ---------------- | -------- | ------------------------------- |
+| `_id`        | `Id<"accounts">` | Auto     | Unique identifier               |
+| `name`       | `string`         | Yes      | Account name                    |
+| `type`       | `string`         | Yes      | Account type (see below)        |
+| `colorHex`   | `string`         | Yes      | Display color (e.g., "#3B82F6") |
+| `userId`     | `Id<"users">`    | Yes      | Reference to owner              |
+| `isArchived` | `boolean`        | Yes      | Whether account is archived     |
 
 **Account Types:**
+
 - `"Cash"`
 - `"Bank"`
 - `"Credit Card"`
@@ -105,6 +108,7 @@ Financial accounts belonging to users.
 - `"Other"`
 
 **Indexes:**
+
 - `by_user` - All accounts for a user
 - `by_name` - Lookup by user and name
 
@@ -114,17 +118,18 @@ Financial accounts belonging to users.
 
 Expense categories (types of spending).
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"outflowTypes">` | Auto | Unique identifier |
-| `name` | `string` | Yes | Category name |
-| `emoji` | `string` | Yes | Display emoji |
-| `colorHex` | `string` | Yes | Display color |
-| `isCustom` | `boolean` | Yes | User-created vs default |
-| `extraFields` | `array` | Yes | Custom metadata fields |
-| `userId` | `Id<"users">` | Yes | Reference to owner |
+| Field         | Type                 | Required | Description             |
+| ------------- | -------------------- | -------- | ----------------------- |
+| `_id`         | `Id<"outflowTypes">` | Auto     | Unique identifier       |
+| `name`        | `string`             | Yes      | Category name           |
+| `emoji`       | `string`             | Yes      | Display emoji           |
+| `colorHex`    | `string`             | Yes      | Display color           |
+| `isCustom`    | `boolean`            | Yes      | User-created vs default |
+| `extraFields` | `array`              | Yes      | Custom metadata fields  |
+| `userId`      | `Id<"users">`        | Yes      | Reference to owner      |
 
 **Extra Fields Structure:**
+
 ```typescript
 {
   key: string,     // Field identifier
@@ -134,6 +139,7 @@ Expense categories (types of spending).
 ```
 
 **Indexes:**
+
 - `by_user` - All categories for a user
 - `by_name` - Lookup by user and name
 
@@ -143,19 +149,20 @@ Expense categories (types of spending).
 
 Individual financial transactions.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"transactions">` | Auto | Unique identifier |
-| `amount` | `number` | Yes | Transaction amount |
-| `date` | `number` | Yes | Timestamp of transaction |
-| `accountId` | `Id<"accounts">` | Yes | Account used |
-| `outflowTypeId` | `Id<"outflowTypes">` | Yes | Expense category |
-| `note` | `string` | Yes | Description/note |
-| `receiptImageId` | `Id<"_storage">` | No | Attached receipt image |
-| `metadata` | `any` | No | Extra field values (JSON) |
-| `userId` | `Id<"users">` | Yes | Reference to owner |
+| Field            | Type                 | Required | Description               |
+| ---------------- | -------------------- | -------- | ------------------------- |
+| `_id`            | `Id<"transactions">` | Auto     | Unique identifier         |
+| `amount`         | `number`             | Yes      | Transaction amount        |
+| `date`           | `number`             | Yes      | Timestamp of transaction  |
+| `accountId`      | `Id<"accounts">`     | Yes      | Account used              |
+| `outflowTypeId`  | `Id<"outflowTypes">` | Yes      | Expense category          |
+| `note`           | `string`             | Yes      | Description/note          |
+| `receiptImageId` | `Id<"_storage">`     | No       | Attached receipt image    |
+| `metadata`       | `any`                | No       | Extra field values (JSON) |
+| `userId`         | `Id<"users">`        | Yes      | Reference to owner        |
 
 **Indexes:**
+
 - `by_user` - All transactions for a user
 - `by_account` - Transactions for an account
 - `by_outflow_type` - Transactions by category
@@ -167,15 +174,16 @@ Individual financial transactions.
 
 Monthly spending budgets per category.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"budgets">` | Auto | Unique identifier |
-| `outflowTypeId` | `Id<"outflowTypes">` | Yes | Category being budgeted |
-| `amount` | `number` | Yes | Budget limit |
-| `month` | `string` | Yes | Month (format: "YYYY-MM") |
-| `userId` | `Id<"users">` | Yes | Reference to owner |
+| Field           | Type                 | Required | Description               |
+| --------------- | -------------------- | -------- | ------------------------- |
+| `_id`           | `Id<"budgets">`      | Auto     | Unique identifier         |
+| `outflowTypeId` | `Id<"outflowTypes">` | Yes      | Category being budgeted   |
+| `amount`        | `number`             | Yes      | Budget limit              |
+| `month`         | `string`             | Yes      | Month (format: "YYYY-MM") |
+| `userId`        | `Id<"users">`        | Yes      | Reference to owner        |
 
 **Indexes:**
+
 - `by_user` - All budgets for a user
 - `by_outflow_type_month` - Lookup by category and month
 
@@ -185,17 +193,18 @@ Monthly spending budgets per category.
 
 User notifications for reminders and alerts.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `_id` | `Id<"notifications">` | Auto | Unique identifier |
-| `userId` | `Id<"users">` | Yes | Reference to user |
-| `type` | `string` | Yes | "renewal" or "due" |
-| `transactionId` | `Id<"transactions">` | Yes | Related transaction |
-| `message` | `string` | Yes | Notification message |
-| `isRead` | `boolean` | Yes | Read status |
-| `createdAt` | `number` | Yes | Creation timestamp |
+| Field           | Type                  | Required | Description          |
+| --------------- | --------------------- | -------- | -------------------- |
+| `_id`           | `Id<"notifications">` | Auto     | Unique identifier    |
+| `userId`        | `Id<"users">`         | Yes      | Reference to user    |
+| `type`          | `string`              | Yes      | "renewal" or "due"   |
+| `transactionId` | `Id<"transactions">`  | Yes      | Related transaction  |
+| `message`       | `string`              | Yes      | Notification message |
+| `isRead`        | `boolean`             | Yes      | Read status          |
+| `createdAt`     | `number`              | Yes      | Creation timestamp   |
 
 **Indexes:**
+
 - `by_user` - All notifications for a user
 - `by_user_unread` - Unread notifications
 
@@ -215,7 +224,7 @@ type: v.union(
   v.literal("Loan"),
   v.literal("Wallet"),
   v.literal("Other")
-)
+);
 ```
 
 ---
@@ -224,11 +233,11 @@ type: v.union(
 
 Currently, cascading deletes are not automatic:
 
-| When Deleting | Fails If |
-|---------------|----------|
-| Account | Has transactions |
-| Outflow Type | Has transactions |
-| User | Has any related data |
+| When Deleting | Fails If             |
+| ------------- | -------------------- |
+| Account       | Has transactions     |
+| Outflow Type  | Has transactions     |
+| User          | Has any related data |
 
 This is intentional to prevent accidental data loss.
 

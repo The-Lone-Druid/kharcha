@@ -10,14 +10,15 @@ export default defineSchema({
     darkMode: v.boolean(),
     onboardingCompleted: v.boolean(),
     // Notification preferences
-    notificationPreferences: v.optional(v.object({
-      globalNotifications: v.boolean(), // Master toggle for all notifications
-      subscriptionReminders: v.boolean(), // Notifications for subscription renewals
-      dueDateReminders: v.boolean(), // Notifications for money lent due dates
-      emailNotifications: v.boolean(), // Enable email notifications (future feature)
-    })),
-  })
-    .index("by_clerk_id", ["clerkId"]),
+    notificationPreferences: v.optional(
+      v.object({
+        globalNotifications: v.boolean(), // Master toggle for all notifications
+        subscriptionReminders: v.boolean(), // Notifications for subscription renewals
+        dueDateReminders: v.boolean(), // Notifications for money lent due dates
+        emailNotifications: v.boolean(), // Enable email notifications (future feature)
+      })
+    ),
+  }).index("by_clerk_id", ["clerkId"]),
 
   outflowTypes: defineTable({
     name: v.string(),
@@ -28,7 +29,12 @@ export default defineSchema({
       v.object({
         key: v.string(),
         label: v.string(),
-        type: v.union(v.literal("text"), v.literal("number"), v.literal("date"), v.literal("toggle")),
+        type: v.union(
+          v.literal("text"),
+          v.literal("number"),
+          v.literal("date"),
+          v.literal("toggle")
+        ),
       })
     ),
     clerkId: v.string(),

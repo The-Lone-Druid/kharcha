@@ -7,6 +7,7 @@ Accounts in Kharcha represent where your money is stored or flows through. This 
 ## What is an Account?
 
 An account represents any financial container:
+
 - A physical wallet (Cash)
 - A bank account
 - A credit card
@@ -19,15 +20,15 @@ An account represents any financial container:
 
 Kharcha supports these account types:
 
-| Type | Icon | Best For |
-|------|------|----------|
-| **Cash** | 💵 | Physical money, petty cash |
-| **Bank** | 🏦 | Savings, checking, current accounts |
-| **Credit Card** | 💳 | Credit cards |
-| **UPI** | 📱 | Google Pay, PhonePe, Paytm, etc. |
-| **Wallet** | 👛 | Amazon Pay, Mobikwik, prepaid cards |
-| **Loan** | 📋 | EMIs, personal loans |
-| **Other** | 🏷️ | Anything else |
+| Type            | Icon | Best For                            |
+| --------------- | ---- | ----------------------------------- |
+| **Cash**        | 💵   | Physical money, petty cash          |
+| **Bank**        | 🏦   | Savings, checking, current accounts |
+| **Credit Card** | 💳   | Credit cards                        |
+| **UPI**         | 📱   | Google Pay, PhonePe, Paytm, etc.    |
+| **Wallet**      | 👛   | Amazon Pay, Mobikwik, prepaid cards |
+| **Loan**        | 📋   | EMIs, personal loans                |
+| **Other**       | 🏷️   | Anything else                       |
 
 ---
 
@@ -46,12 +47,14 @@ Kharcha supports these account types:
 ### Naming Conventions
 
 Good account names:
+
 - ✅ "HDFC Savings Account"
 - ✅ "Personal Cash Wallet"
 - ✅ "ICICI Credit Card"
 - ✅ "Google Pay"
 
 Avoid:
+
 - ❌ "Account 1"
 - ❌ "Bank"
 - ❌ "Card"
@@ -68,7 +71,8 @@ Your account balance is calculated automatically:
 Balance = Sum of all transactions for this account
 ```
 
-**Note:** 
+**Note:**
+
 - Expenses are subtracted (shown as negative in transactions)
 - The balance shown is based on your logged transactions
 - It may not match your actual bank balance if you haven't logged all transactions
@@ -92,6 +96,7 @@ Balance = Sum of all transactions for this account
 4. Click **Save**
 
 You can change:
+
 - Name
 - Type
 - Color
@@ -105,6 +110,7 @@ If you no longer use an account but don't want to delete the transaction history
 3. Save
 
 Archived accounts:
+
 - Don't appear in transaction dropdowns
 - Still show in reports (with historical data)
 - Can be unarchived anytime
@@ -114,6 +120,7 @@ Archived accounts:
 **⚠️ Warning:** You can only delete an account if it has no transactions.
 
 To delete:
+
 1. First, delete or reassign all transactions
 2. Then delete the account
 
@@ -135,7 +142,7 @@ Colors help you quickly identify accounts:
 
 ```
 HDFC Bank    - Blue (#2563EB)
-SBI Bank     - Green (#16A34A)  
+SBI Bank     - Green (#16A34A)
 ICICI Card   - Orange (#EA580C)
 Cash         - Yellow (#CA8A04)
 Google Pay   - Teal (#0D9488)
@@ -162,6 +169,7 @@ Google Pay   - Teal (#0D9488)
 ### Recommended Setup
 
 For most users, start with:
+
 - 1-2 Bank accounts (primary and savings)
 - 1 Cash account
 - 1 Credit card (if you use one)
@@ -174,12 +182,14 @@ Add more as needed.
 ## Viewing Account Details
 
 The Accounts page shows:
+
 - Account name and type
 - Current balance
 - Color indicator
 - Quick actions (edit, view transactions)
 
 Click an account to:
+
 - See all transactions for that account
 - Edit account details
 - View balance history (coming soon)
@@ -189,6 +199,7 @@ Click an account to:
 ## Multi-Currency (Coming Soon)
 
 Future versions will support:
+
 - Accounts in different currencies
 - Automatic currency conversion
 - Travel expense tracking

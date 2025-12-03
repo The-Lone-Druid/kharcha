@@ -51,32 +51,32 @@ function OutflowTypesPage() {
     outflowTypes?.filter((type) => type.isCustom === true) ?? [];
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-fade-in">
+    <div className="animate-fade-in flex-1 space-y-6 p-4 pt-6 md:p-8">
       {/* Gradient Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-violet-500 via-purple-500 to-fuchsia-600 p-6 md:p-8 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-violet-500 via-purple-500 to-fuchsia-600 p-6 text-white shadow-xl md:p-8">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAtMTZjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bS0xNiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMC0xNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />
         <div className="relative">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="mb-4 flex items-center gap-3">
             <Button
               variant="ghost"
               size="sm"
               asChild
-              className="text-white/80 hover:text-white hover:bg-white/10 -ml-2"
+              className="-ml-2 text-white/80 hover:bg-white/10 hover:text-white"
             >
               <Link to="/settings">
-                <ArrowLeft className="h-4 w-4 mr-1" />
+                <ArrowLeft className="mr-1 h-4 w-4" />
                 Back to Settings
               </Link>
             </Button>
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+              <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm">
                 <Tag className="h-8 w-8" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Categories</h1>
-                <p className="text-white/80 text-sm mt-1">
+                <h1 className="text-2xl font-bold md:text-3xl">Categories</h1>
+                <p className="mt-1 text-sm text-white/80">
                   Organize your transactions with custom categories
                 </p>
               </div>
@@ -90,7 +90,7 @@ function OutflowTypesPage() {
                 setEditingType(null);
               }}
               trigger={
-                <Button className="bg-white text-violet-600 hover:bg-white/90 shadow-lg">
+                <Button className="bg-white text-violet-600 shadow-lg hover:bg-white/90">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Category
                 </Button>
@@ -100,14 +100,14 @@ function OutflowTypesPage() {
           {/* Stats */}
           <div className="mt-6 flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
-              <Lock className="w-3 h-3 text-white/70" />
-              <span className="text-white/90 text-sm">
+              <Lock className="h-3 w-3 text-white/70" />
+              <span className="text-sm text-white/90">
                 {builtInTypes.length} built-in
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Sparkles className="w-3 h-3 text-white/70" />
-              <span className="text-white/90 text-sm">
+              <Sparkles className="h-3 w-3 text-white/70" />
+              <span className="text-sm text-white/90">
                 {customTypes.length} custom
               </span>
             </div>
@@ -124,7 +124,7 @@ function OutflowTypesPage() {
               <Card key={i}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <div className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-lg" />
+                    <Skeleton className="h-10 w-10 rounded-lg" />
                     <Skeleton className="h-4 w-20" />
                   </div>
                   <Skeleton className="h-6 w-16" />
@@ -142,7 +142,7 @@ function OutflowTypesPage() {
       {outflowTypes && builtInTypes.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Lock className="h-4 w-4 text-muted-foreground" />
+            <Lock className="text-muted-foreground h-4 w-4" />
             <h3 className="text-lg font-semibold">Built-in Categories</h3>
             <Badge variant="secondary" className="text-xs">
               Read-only
@@ -156,20 +156,20 @@ function OutflowTypesPage() {
                 style={{ animationDelay: `${index * 30}ms` }}
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium flex items-center gap-3">
-                    <span className="text-2xl p-2 bg-background rounded-lg shadow-sm">
+                  <CardTitle className="flex items-center gap-3 text-sm font-medium">
+                    <span className="bg-background rounded-lg p-2 text-2xl shadow-sm">
                       {type.emoji}
                     </span>
                     <span className="font-semibold">{type.name}</span>
                   </CardTitle>
-                  <Badge variant="outline" className="text-xs bg-background">
-                    <Lock className="w-3 h-3 mr-1" />
+                  <Badge variant="outline" className="bg-background text-xs">
+                    <Lock className="mr-1 h-3 w-3" />
                     Built-in
                   </Badge>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
+                  <p className="text-muted-foreground flex items-center gap-1 text-xs">
+                    <Sparkles className="h-3 w-3" />
                     {type.extraFields?.length || 0} additional fields
                   </p>
                 </CardContent>
@@ -188,15 +188,15 @@ function OutflowTypesPage() {
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {customTypes.length === 0 ? (
-              <Card className="col-span-full border-dashed animate-fade-in">
+              <Card className="animate-fade-in col-span-full border-dashed">
                 <CardContent className="flex flex-col items-center justify-center py-12">
-                  <div className="p-4 bg-violet-100 dark:bg-violet-900/30 rounded-full mb-4">
+                  <div className="mb-4 rounded-full bg-violet-100 p-4 dark:bg-violet-900/30">
                     <Tag className="h-10 w-10 text-violet-600 dark:text-violet-400" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">
+                  <h3 className="mb-2 text-lg font-semibold">
                     No custom categories yet
                   </h3>
-                  <p className="text-muted-foreground text-center mb-6 max-w-sm">
+                  <p className="text-muted-foreground mb-6 max-w-sm text-center">
                     Create custom categories to better organize your
                     transactions beyond the built-in options.
                   </p>
@@ -205,7 +205,7 @@ function OutflowTypesPage() {
                     onOpenChange={setShowAddDialog}
                     onSuccess={() => setShowAddDialog(false)}
                     trigger={
-                      <Button className="bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white shadow-lg">
+                      <Button className="bg-linear-to-r from-violet-500 to-purple-500 text-white shadow-lg hover:from-violet-600 hover:to-purple-600">
                         <Plus className="mr-2 h-4 w-4" />
                         Create Custom Category
                       </Button>
@@ -217,26 +217,26 @@ function OutflowTypesPage() {
               customTypes.map((type, index) => (
                 <Card
                   key={type._id}
-                  className="relative group animate-slide-up overflow-hidden"
+                  className="group animate-slide-up relative overflow-hidden"
                   style={{
                     animationDelay: `${(builtInTypes.length + index) * 30}ms`,
                   }}
                 >
                   <div
-                    className="absolute top-0 left-0 right-0 h-1"
+                    className="absolute top-0 right-0 left-0 h-1"
                     style={{ backgroundColor: type.colorHex }}
                   />
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4">
-                    <CardTitle className="text-sm font-medium flex items-center gap-3">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pt-4 pb-2">
+                    <CardTitle className="flex items-center gap-3 text-sm font-medium">
                       <span
-                        className="text-2xl p-2 rounded-lg"
+                        className="rounded-lg p-2 text-2xl"
                         style={{ backgroundColor: `${type.colorHex}20` }}
                       >
                         {type.emoji}
                       </span>
                       <span className="font-semibold">{type.name}</span>
                     </CardTitle>
-                    <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
                       <AddOutflowTypeDialog
                         open={editingType?._id === type._id}
                         onOpenChange={(open) => {
@@ -249,7 +249,7 @@ function OutflowTypesPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => setEditingType(type)}
-                            className="h-8 w-8 p-0 hover:bg-muted"
+                            className="hover:bg-muted h-8 w-8 p-0"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -259,15 +259,15 @@ function OutflowTypesPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDelete(type._id)}
-                        className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                        className="hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Sparkles className="w-3 h-3" />
+                    <p className="text-muted-foreground flex items-center gap-1 text-xs">
+                      <Sparkles className="h-3 w-3" />
                       {type.extraFields?.length || 0} additional fields
                     </p>
                   </CardContent>

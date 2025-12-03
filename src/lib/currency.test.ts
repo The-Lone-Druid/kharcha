@@ -10,7 +10,7 @@ import {
  * ====================================
  * TESTING GUIDE - MORE UTILITY FUNCTIONS
  * ====================================
- * 
+ *
  * This file shows testing patterns for:
  * - Functions that return objects
  * - Functions that work with arrays
@@ -20,7 +20,7 @@ import {
 describe("Currency Utilities", () => {
   /**
    * Testing getCurrencyByCode
-   * 
+   *
    * Pattern: Testing functions that search/filter data
    */
   describe("getCurrencyByCode", () => {
@@ -63,7 +63,7 @@ describe("Currency Utilities", () => {
 
   /**
    * Testing getExchangeRateLookupUrl
-   * 
+   *
    * Pattern: Testing string formatting functions
    */
   describe("getExchangeRateLookupUrl", () => {
@@ -84,7 +84,7 @@ describe("Currency Utilities", () => {
 
   /**
    * Testing calculateConvertedAmount
-   * 
+   *
    * Pattern: Testing mathematical functions with precision
    */
   describe("calculateConvertedAmount", () => {
@@ -129,7 +129,7 @@ describe("Currency Utilities", () => {
 
   /**
    * Testing CURRENCIES array
-   * 
+   *
    * Pattern: Testing data structures and constants
    */
   describe("CURRENCIES array", () => {
@@ -154,7 +154,7 @@ describe("Currency Utilities", () => {
         expect(currency).toHaveProperty("code");
         expect(currency).toHaveProperty("name");
         expect(currency).toHaveProperty("symbol");
-        
+
         // Check they're not empty
         expect(currency.code.length).toBeGreaterThan(0);
         expect(currency.name.length).toBeGreaterThan(0);

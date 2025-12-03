@@ -17,34 +17,34 @@ export function LoadingScreen({
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-background to-muted/20 relative overflow-hidden">
+    <div className="from-background via-background to-muted/20 relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-br">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating circles */}
         <div
-          className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/5 rounded-full animate-pulse"
+          className="bg-primary/5 absolute top-1/4 left-1/4 h-32 w-32 animate-pulse rounded-full"
           style={{ animationDelay: "0s", animationDuration: "3s" }}
         />
         <div
-          className="absolute top-3/4 right-1/4 w-24 h-24 bg-secondary/10 rounded-full animate-pulse"
+          className="bg-secondary/10 absolute top-3/4 right-1/4 h-24 w-24 animate-pulse rounded-full"
           style={{ animationDelay: "1s", animationDuration: "4s" }}
         />
         <div
-          className="absolute bottom-1/4 left-1/3 w-16 h-16 bg-accent/15 rounded-full animate-pulse"
+          className="bg-accent/15 absolute bottom-1/4 left-1/3 h-16 w-16 animate-pulse rounded-full"
           style={{ animationDelay: "2s", animationDuration: "3.5s" }}
         />
 
         {/* Floating geometric shapes */}
         <div
-          className="absolute top-1/3 right-1/3 w-8 h-8 border-2 border-primary/20 rotate-45 animate-bounce"
+          className="border-primary/20 absolute top-1/3 right-1/3 h-8 w-8 rotate-45 animate-bounce border-2"
           style={{ animationDelay: "0.5s", animationDuration: "2s" }}
         />
         <div
-          className="absolute bottom-1/3 right-1/2 w-6 h-6 bg-linear-to-r from-primary/10 to-secondary/10 rounded animate-ping"
+          className="from-primary/10 to-secondary/10 absolute right-1/2 bottom-1/3 h-6 w-6 animate-ping rounded bg-linear-to-r"
           style={{ animationDelay: "1.5s", animationDuration: "3s" }}
         />
         <div
-          className="absolute top-2/3 left-1/2 w-4 h-4 bg-accent/20 rounded-full animate-pulse"
+          className="bg-accent/20 absolute top-2/3 left-1/2 h-4 w-4 animate-pulse rounded-full"
           style={{ animationDelay: "2.5s", animationDuration: "2.5s" }}
         />
       </div>
@@ -55,28 +55,28 @@ export function LoadingScreen({
         <div className="relative">
           {/* Outer rotating ring */}
           <div
-            className="w-24 h-24 border-4 border-primary/20 rounded-full animate-spin"
+            className="border-primary/20 h-24 w-24 animate-spin rounded-full border-4"
             style={{ animationDuration: "3s" }}
           />
 
           {/* Inner pulsing circle */}
           <div
-            className="absolute inset-2 bg-linear-to-r from-primary to-secondary rounded-full animate-pulse"
+            className="from-primary to-secondary absolute inset-2 animate-pulse rounded-full bg-linear-to-r"
             style={{ animationDuration: "2s" }}
           />
 
           {/* Center dot */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className="w-3 h-3 bg-white rounded-full animate-ping"
+              className="h-3 w-3 animate-ping rounded-full bg-white"
               style={{ animationDelay: "0.5s" }}
             />
           </div>
         </div>
 
         {/* Loading text with animated dots */}
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-semibold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent animate-pulse">
+        <div className="space-y-2 text-center">
+          <h2 className="from-primary to-secondary animate-pulse bg-linear-to-r bg-clip-text text-2xl font-semibold text-transparent">
             Kharcha
           </h2>
           <p className="text-muted-foreground text-sm font-medium">
@@ -86,16 +86,16 @@ export function LoadingScreen({
         </div>
 
         {/* Progress indicator */}
-        <div className="w-48 h-1 bg-muted rounded-full overflow-hidden">
+        <div className="bg-muted h-1 w-48 overflow-hidden rounded-full">
           <div
-            className="h-full bg-linear-to-r from-primary to-secondary rounded-full animate-pulse"
+            className="from-primary to-secondary h-full animate-pulse rounded-full bg-linear-to-r"
             style={{ animationDuration: "1.5s" }}
           />
         </div>
 
         {/* Subtle hint text */}
         <p
-          className="text-xs text-muted-foreground/60 animate-fade-in"
+          className="text-muted-foreground/60 animate-fade-in text-xs"
           style={{ animationDelay: "1s" }}
         >
           Setting up your personalized dashboard

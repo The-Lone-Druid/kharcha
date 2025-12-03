@@ -8,11 +8,11 @@ Before you begin, make sure you have the following:
 
 ### Required Software
 
-| Software | Minimum Version | Download |
-|----------|-----------------|----------|
-| Node.js | v18.0.0 | [nodejs.org](https://nodejs.org/) |
-| npm or pnpm | npm 9+ / pnpm 8+ | Comes with Node.js |
-| Git | Any recent version | [git-scm.com](https://git-scm.com/) |
+| Software    | Minimum Version    | Download                            |
+| ----------- | ------------------ | ----------------------------------- |
+| Node.js     | v18.0.0            | [nodejs.org](https://nodejs.org/)   |
+| npm or pnpm | npm 9+ / pnpm 8+   | Comes with Node.js                  |
+| Git         | Any recent version | [git-scm.com](https://git-scm.com/) |
 
 ### Required Accounts
 
@@ -35,11 +35,13 @@ cd kharcha
 ### Step 2: Install Dependencies
 
 Using npm:
+
 ```bash
 npm install
 ```
 
 Or using pnpm:
+
 ```bash
 pnpm install
 ```
@@ -64,6 +66,7 @@ npx convex dev
 ```
 
 The first time you run `convex dev`, it will:
+
 - Ask you to select or create a Convex project
 - Generate a `.env.local` file with your `VITE_CONVEX_URL`
 - Push your schema and functions to Convex
@@ -81,6 +84,7 @@ The first time you run `convex dev`, it will:
 #### 4.2 Get Your API Keys
 
 In your Clerk dashboard:
+
 1. Go to **API Keys** in the sidebar
 2. Copy the **Publishable key** (starts with `pk_test_` or `pk_live_`)
 
@@ -117,6 +121,7 @@ npm run dev
 This runs both Vite and Convex development servers concurrently.
 
 Open your browser and navigate to:
+
 - **App:** [http://localhost:5173](http://localhost:5173)
 
 ---
@@ -146,9 +151,11 @@ Open your browser and navigate to:
 #### Database Tables Not Created
 
 Run:
+
 ```bash
 npx convex dev
 ```
+
 This will push your schema to Convex.
 
 ---
@@ -162,6 +169,7 @@ npm run seed
 ```
 
 This creates default outflow types like:
+
 - 🍔 Food & Dining
 - 🚗 Transportation
 - 🏠 Housing

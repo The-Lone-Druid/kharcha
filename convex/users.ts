@@ -111,12 +111,14 @@ export const updateUserPreferences = mutation({
       language: v.optional(v.string()),
       darkMode: v.optional(v.boolean()),
       onboardingCompleted: v.optional(v.boolean()),
-      notificationPreferences: v.optional(v.object({
-        globalNotifications: v.boolean(),
-        subscriptionReminders: v.boolean(),
-        dueDateReminders: v.boolean(),
-        emailNotifications: v.boolean(),
-      })),
+      notificationPreferences: v.optional(
+        v.object({
+          globalNotifications: v.boolean(),
+          subscriptionReminders: v.boolean(),
+          dueDateReminders: v.boolean(),
+          emailNotifications: v.boolean(),
+        })
+      ),
     }),
   },
   handler: async (ctx, args) => {
@@ -136,14 +138,19 @@ export const updateUserPreferences = mutation({
     if (existing) {
       // Merge preferences, preserving existing values if not provided
       const updates: Record<string, unknown> = {};
-      if (args.preferences.currency !== undefined) updates.currency = args.preferences.currency;
-      if (args.preferences.language !== undefined) updates.language = args.preferences.language;
-      if (args.preferences.darkMode !== undefined) updates.darkMode = args.preferences.darkMode;
-      if (args.preferences.onboardingCompleted !== undefined) updates.onboardingCompleted = args.preferences.onboardingCompleted;
+      if (args.preferences.currency !== undefined)
+        updates.currency = args.preferences.currency;
+      if (args.preferences.language !== undefined)
+        updates.language = args.preferences.language;
+      if (args.preferences.darkMode !== undefined)
+        updates.darkMode = args.preferences.darkMode;
+      if (args.preferences.onboardingCompleted !== undefined)
+        updates.onboardingCompleted = args.preferences.onboardingCompleted;
       if (args.preferences.notificationPreferences !== undefined) {
-        updates.notificationPreferences = args.preferences.notificationPreferences;
+        updates.notificationPreferences =
+          args.preferences.notificationPreferences;
       }
-      
+
       await ctx.db.patch(existing._id, updates);
     } else {
       // Create new preferences with defaults
@@ -211,10 +218,14 @@ export const updateNotificationPreferences = mutation({
 
       await ctx.db.patch(existing._id, {
         notificationPreferences: {
-          globalNotifications: args.globalNotifications ?? currentPrefs.globalNotifications,
-          subscriptionReminders: args.subscriptionReminders ?? currentPrefs.subscriptionReminders,
-          dueDateReminders: args.dueDateReminders ?? currentPrefs.dueDateReminders,
-          emailNotifications: args.emailNotifications ?? currentPrefs.emailNotifications,
+          globalNotifications:
+            args.globalNotifications ?? currentPrefs.globalNotifications,
+          subscriptionReminders:
+            args.subscriptionReminders ?? currentPrefs.subscriptionReminders,
+          dueDateReminders:
+            args.dueDateReminders ?? currentPrefs.dueDateReminders,
+          emailNotifications:
+            args.emailNotifications ?? currentPrefs.emailNotifications,
         },
       });
     }
@@ -274,7 +285,7 @@ export const getAllUsers = query({
   handler: async (ctx) => {
     // Get all unique clerkIds from userPreferences
     const preferences = await ctx.db.query("userPreferences").collect();
-    return preferences.map(p => ({ clerkId: p.clerkId }));
+    return preferences.map((p) => ({ clerkId: p.clerkId }));
   },
 });
 
@@ -382,5 +393,3 @@ export const seedOutflowTypes = mutation({
     return { message: "Default outflow types seeded successfully" };
   },
 });
-
-

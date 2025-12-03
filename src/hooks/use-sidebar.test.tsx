@@ -7,12 +7,14 @@ describe("useSidebar", () => {
   describe("when used outside SidebarProvider", () => {
     it("should throw an error", () => {
       // Suppress console.error for this test
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
       expect(() => {
         renderHook(() => useSidebar());
       }).toThrow("useSidebar must be used within a SidebarProvider.");
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -59,7 +61,9 @@ describe("useSidebar", () => {
         </SidebarContext.Provider>
       );
 
-      const { result } = renderHook(() => useSidebar(), { wrapper: collapsedWrapper });
+      const { result } = renderHook(() => useSidebar(), {
+        wrapper: collapsedWrapper,
+      });
 
       expect(result.current.state).toBe("collapsed");
       expect(result.current.open).toBe(false);
@@ -78,7 +82,9 @@ describe("useSidebar", () => {
         </SidebarContext.Provider>
       );
 
-      const { result } = renderHook(() => useSidebar(), { wrapper: mobileWrapper });
+      const { result } = renderHook(() => useSidebar(), {
+        wrapper: mobileWrapper,
+      });
 
       expect(result.current.isMobile).toBe(true);
       expect(result.current.openMobile).toBe(true);

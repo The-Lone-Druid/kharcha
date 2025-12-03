@@ -34,32 +34,32 @@ function AccountsPage() {
   };
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-fade-in">
+    <div className="animate-fade-in flex-1 space-y-6 p-4 pt-6 md:p-8">
       {/* Gradient Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-500 via-teal-500 to-cyan-600 p-6 md:p-8 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-500 via-teal-500 to-cyan-600 p-6 text-white shadow-xl md:p-8">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAtMTZjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bS0xNiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMC0xNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />
         <div className="relative">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="mb-4 flex items-center gap-3">
             <Button
               variant="ghost"
               size="sm"
               asChild
-              className="text-white/80 hover:text-white hover:bg-white/10 -ml-2"
+              className="-ml-2 text-white/80 hover:bg-white/10 hover:text-white"
             >
               <Link to="/settings">
-                <ArrowLeft className="h-4 w-4 mr-1" />
+                <ArrowLeft className="mr-1 h-4 w-4" />
                 Back to Settings
               </Link>
             </Button>
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+              <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm">
                 <Wallet className="h-8 w-8" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Accounts</h1>
-                <p className="text-white/80 text-sm mt-1">
+                <h1 className="text-2xl font-bold md:text-3xl">Accounts</h1>
+                <p className="mt-1 text-sm text-white/80">
                   Manage your financial accounts and track balances
                 </p>
               </div>
@@ -73,7 +73,7 @@ function AccountsPage() {
                 setEditingAccount(null);
               }}
               trigger={
-                <Button className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg">
+                <Button className="bg-white text-emerald-600 shadow-lg hover:bg-white/90">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Account
                 </Button>
@@ -83,15 +83,16 @@ function AccountsPage() {
           {/* Stats */}
           <div className="mt-6 flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-white/80" />
-              <span className="text-white/90 text-sm">
+              <div className="h-2 w-2 rounded-full bg-white/80" />
+              <span className="text-sm text-white/90">
                 {accounts?.length ?? 0} accounts
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-300" />
-              <span className="text-white/90 text-sm">
-                {accounts?.filter((a) => a.type === "Bank").length ?? 0} bank accounts
+              <div className="h-2 w-2 rounded-full bg-green-300" />
+              <span className="text-sm text-white/90">
+                {accounts?.filter((a) => a.type === "Bank").length ?? 0} bank
+                accounts
               </span>
             </div>
           </div>
@@ -106,32 +107,32 @@ function AccountsPage() {
             <Card key={i}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <div className="flex items-center gap-2">
-                  <Skeleton className="w-4 h-4 rounded-full" />
+                  <Skeleton className="h-4 w-4 rounded-full" />
                   <Skeleton className="h-4 w-24" />
                 </div>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-6 w-16 mt-2" />
+                <Skeleton className="mt-2 h-6 w-16" />
               </CardContent>
             </Card>
           ))
         ) : accounts.length === 0 ? (
-          <Card className="col-span-full border-dashed animate-fade-in">
+          <Card className="animate-fade-in col-span-full border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-4">
+              <div className="mb-4 rounded-full bg-emerald-100 p-4 dark:bg-emerald-900/30">
                 <Wallet className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">No accounts yet</h3>
-              <p className="text-muted-foreground text-center mb-6 max-w-sm">
-                Create your first account to start tracking your finances
-                across different payment methods.
+              <h3 className="mb-2 text-lg font-semibold">No accounts yet</h3>
+              <p className="text-muted-foreground mb-6 max-w-sm text-center">
+                Create your first account to start tracking your finances across
+                different payment methods.
               </p>
               <AddAccountDialog
                 open={showAddDialog}
                 onOpenChange={setShowAddDialog}
                 onSuccess={() => setShowAddDialog(false)}
                 trigger={
-                  <Button className="bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg">
+                  <Button className="bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-lg hover:from-emerald-600 hover:to-teal-600">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Your First Account
                   </Button>
@@ -143,17 +144,17 @@ function AccountsPage() {
           accounts.map((account, index) => (
             <Card
               key={account._id}
-              className="relative group animate-slide-up overflow-hidden"
+              className="group animate-slide-up relative overflow-hidden"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div
-                className="absolute top-0 left-0 right-0 h-1"
+                className="absolute top-0 right-0 left-0 h-1"
                 style={{ backgroundColor: account.colorHex }}
               />
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pt-4 pb-2">
+                <CardTitle className="flex items-center gap-2 text-sm font-medium">
                   <div
-                    className="w-4 h-4 rounded-full shadow-sm"
+                    className="h-4 w-4 rounded-full shadow-sm"
                     style={{
                       backgroundColor: account.colorHex,
                       boxShadow: `0 0 0 2px var(--background), 0 0 0 4px ${account.colorHex}`,
@@ -161,7 +162,7 @@ function AccountsPage() {
                   />
                   <span className="font-semibold">{account.name}</span>
                 </CardTitle>
-                <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
                   <AddAccountDialog
                     open={editingAccount?._id === account._id}
                     onOpenChange={(open) => {
@@ -174,7 +175,7 @@ function AccountsPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setEditingAccount(account)}
-                        className="h-8 w-8 p-0 hover:bg-muted"
+                        className="hover:bg-muted h-8 w-8 p-0"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -184,7 +185,7 @@ function AccountsPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDelete(account._id)}
-                    className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                    className="hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

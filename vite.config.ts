@@ -16,7 +16,12 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
+      includeAssets: [
+        "favicon.svg",
+        "favicon.ico",
+        "apple-touch-icon.png",
+        "mask-icon.svg",
+      ],
       manifest: {
         name: "Kharcha - Expense Tracker",
         short_name: "Kharcha",
@@ -82,6 +87,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "@convex": path.resolve(__dirname, "./convex"),
     },
-    extensions: [".mjs", ".js", ".mts", ".ts", ".jsx", ".tsx", ".json", ".d.ts"],
+    extensions: [
+      ".mjs",
+      ".js",
+      ".mts",
+      ".ts",
+      ".jsx",
+      ".tsx",
+      ".json",
+      ".d.ts",
+    ],
   },
 });

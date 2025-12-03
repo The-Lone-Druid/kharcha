@@ -95,7 +95,9 @@ export function AddSubscriptionDialog({
   const currentUser = useQuery(api.users.getCurrentUser);
   const createTransaction = useMutation(api.transactions.addTransaction);
   const updateTransaction = useMutation(api.transactions.updateTransaction);
-  const createOutflowType = useMutation(api.outflowTypes.createCustomOutflowType);
+  const createOutflowType = useMutation(
+    api.outflowTypes.createCustomOutflowType
+  );
 
   const preferredCurrency = currentUser?.preferences?.currency || "INR";
 
@@ -157,7 +159,9 @@ export function AddSubscriptionDialog({
             ],
           });
         } catch (error) {
-          toast.error("Failed to create subscription category. Please try again.");
+          toast.error(
+            "Failed to create subscription category. Please try again."
+          );
           console.error("Failed to create subscription outflow type:", error);
           return;
         }
@@ -201,9 +205,9 @@ export function AddSubscriptionDialog({
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[500px] overflow-y-auto pb-6">
+      <SheetContent className="w-full overflow-y-auto pb-6 sm:max-w-[500px]">
         <SheetHeader className="space-y-2">
-          <SheetTitle className="text-lg sm:text-xl flex items-center gap-2">
+          <SheetTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <CreditCard className="h-5 w-5" />
             {subscription ? "Edit Subscription" : "Add Subscription"}
           </SheetTitle>
@@ -218,7 +222,7 @@ export function AddSubscriptionDialog({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 p-4"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="provider"
@@ -310,7 +314,7 @@ export function AddSubscriptionDialog({
               )}
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="date"
@@ -432,7 +436,7 @@ export function AddSubscriptionDialog({
                     <FormLabel className="text-base">
                       Renewal Reminder
                     </FormLabel>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       Get notified before renewal date
                     </div>
                   </div>
@@ -451,9 +455,7 @@ export function AddSubscriptionDialog({
               name="note"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    Note
-                  </FormLabel>
+                  <FormLabel className="text-sm font-medium">Note</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g., Family plan"
@@ -466,16 +468,16 @@ export function AddSubscriptionDialog({
               )}
             />
 
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
+            <div className="flex flex-col-reverse space-y-2 space-y-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
-                className="w-full sm:w-auto h-11"
+                className="h-11 w-full sm:w-auto"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="w-full sm:w-auto h-11">
+              <Button type="submit" className="h-11 w-full sm:w-auto">
                 {subscription ? "Update" : "Add"} Subscription
               </Button>
             </div>

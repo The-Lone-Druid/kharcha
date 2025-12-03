@@ -35,7 +35,7 @@ function AuthenticatedLayout() {
   return (
     <>
       <Authenticated>
-        <div className="min-h-screen bg-background">
+        <div className="bg-background min-h-screen">
           <main className="pb-16">
             <Outlet />
           </main>

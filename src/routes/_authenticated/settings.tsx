@@ -156,19 +156,19 @@ function SettingsPage() {
   };
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-fade-in">
+    <div className="animate-fade-in flex-1 space-y-6 p-4 pt-6 md:p-8">
       {/* Gradient Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-600 via-slate-700 to-slate-800 p-6 md:p-8 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-600 via-slate-700 to-slate-800 p-6 text-white shadow-xl md:p-8">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAtMTZjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bS0xNiAxNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMC0xNmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />
         <div className="relative">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+              <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm">
                 <Settings className="h-8 w-8" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Settings</h1>
-                <p className="text-white/80 text-sm mt-1">
+                <h1 className="text-2xl font-bold md:text-3xl">Settings</h1>
+                <p className="mt-1 text-sm text-white/80">
                   Customize your app preferences and manage your data
                 </p>
               </div>
@@ -177,21 +177,21 @@ function SettingsPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-12">
+      <div className="grid grid-cols-12 gap-4">
         <Card
-          className="col-span-12 md:col-span-6 animate-slide-up"
+          className="animate-slide-up col-span-12 md:col-span-6"
           style={{ animationDelay: "0ms" }}
         >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <div className="p-1.5 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+              <div className="rounded-lg bg-amber-100 p-1.5 dark:bg-amber-900/30">
                 <Palette className="h-4 w-4 text-amber-600 dark:text-amber-400" />
               </div>
               Appearance
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
               <Label htmlFor="theme" className="font-medium">
                 Theme
               </Label>
@@ -210,19 +210,19 @@ function SettingsPage() {
         </Card>
 
         <Card
-          className="col-span-12 md:col-span-6 animate-slide-up"
+          className="animate-slide-up col-span-12 md:col-span-6"
           style={{ animationDelay: "50ms" }}
         >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <div className="rounded-lg bg-blue-100 p-1.5 dark:bg-blue-900/30">
                 <Globe className="h-4 w-4 text-blue-600 dark:text-blue-400" />
               </div>
               Preferences
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
               <Label htmlFor="currency" className="font-medium">
                 Currency
               </Label>
@@ -237,7 +237,7 @@ function SettingsPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
               <Label htmlFor="language" className="font-medium">
                 Language
               </Label>
@@ -255,24 +255,24 @@ function SettingsPage() {
         </Card>
 
         <Card
-          className="col-span-12 md:col-span-6 animate-slide-up"
+          className="animate-slide-up col-span-12 md:col-span-6"
           style={{ animationDelay: "100ms" }}
         >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+              <div className="rounded-lg bg-purple-100 p-1.5 dark:bg-purple-900/30">
                 <Bell className="h-4 w-4 text-purple-600 dark:text-purple-400" />
               </div>
               Notifications
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
               <div className="space-y-0.5">
                 <Label htmlFor="global-notifications" className="font-medium">
                   Enable Notifications
                 </Label>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Master toggle for all notifications
                 </p>
               </div>
@@ -284,12 +284,12 @@ function SettingsPage() {
                 }
               />
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
               <div className="space-y-0.5">
                 <Label htmlFor="subscription-reminders" className="font-medium">
                   Subscription Reminders
                 </Label>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Get notified before subscriptions renew
                 </p>
               </div>
@@ -302,12 +302,12 @@ function SettingsPage() {
                 disabled={!notifPrefs.globalNotifications}
               />
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 transition-colors">
               <div className="space-y-0.5">
                 <Label htmlFor="due-date-reminders" className="font-medium">
                   Due Date Reminders
                 </Label>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Get notified when money lent is due
                 </p>
               </div>
@@ -323,7 +323,7 @@ function SettingsPage() {
 
             {/* Browser Notification Permission Status */}
             {isSupported && (
-              <Alert className="border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+              <Alert className="border-purple-200 bg-purple-50 dark:border-purple-800 dark:bg-purple-950/30">
                 <AlertDescription className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bell className="h-4 w-4 text-purple-600 dark:text-purple-400" />
@@ -361,7 +361,7 @@ function SettingsPage() {
                     </Button>
                   )}
                   {permission === "denied" && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Enable in browser settings
                     </p>
                   )}
@@ -369,14 +369,14 @@ function SettingsPage() {
               </Alert>
             )}
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors opacity-60">
+            <div className="bg-muted/30 hover:bg-muted/50 flex items-center justify-between rounded-lg p-3 opacity-60 transition-colors">
               <div className="space-y-0.5">
                 <Label htmlFor="email-notifications" className="font-medium">
                   Email Notifications
                 </Label>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Receive notifications via email
-                  <Badge variant="outline" className="ml-2 text-[10px] py-0">
+                  <Badge variant="outline" className="ml-2 py-0 text-[10px]">
                     Coming Soon
                   </Badge>
                 </p>
@@ -394,26 +394,26 @@ function SettingsPage() {
         </Card>
 
         <Card
-          className="col-span-12 md:col-span-6 animate-slide-up"
+          className="animate-slide-up col-span-12 md:col-span-6"
           style={{ animationDelay: "150ms" }}
         >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <div className="p-1.5 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
+              <div className="rounded-lg bg-cyan-100 p-1.5 dark:bg-cyan-900/30">
                 <Sparkles className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
               </div>
               Management
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex flex-col space-y-2 rounded-lg p-3 transition-colors md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <div className="rounded-lg bg-green-100 p-2 dark:bg-green-900/30">
                   <Download className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
                   <Label className="font-medium">Export Data</Label>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Download all your data as Excel
                   </p>
                 </div>
@@ -427,14 +427,14 @@ function SettingsPage() {
                 Export
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex flex-col space-y-2 rounded-lg p-3 transition-colors md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                <div className="rounded-lg bg-emerald-100 p-2 dark:bg-emerald-900/30">
                   <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
                   <Label className="font-medium">Accounts</Label>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Manage your financial accounts
                   </p>
                 </div>
@@ -442,18 +442,18 @@ function SettingsPage() {
               <Button variant="outline" asChild className="group">
                 <Link to="/accounts">
                   Manage
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div className="bg-muted/30 hover:bg-muted/50 flex flex-col space-y-2 rounded-lg p-3 transition-colors md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-violet-100 dark:bg-violet-900/30 rounded-lg">
+                <div className="rounded-lg bg-violet-100 p-2 dark:bg-violet-900/30">
                   <Tag className="h-5 w-5 text-violet-600 dark:text-violet-400" />
                 </div>
                 <div>
                   <Label className="font-medium">Categories</Label>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Manage transaction categories
                   </p>
                 </div>
@@ -461,11 +461,11 @@ function SettingsPage() {
               <Button
                 variant="outline"
                 asChild
-                className="w-full md:w-auto group"
+                className="group w-full md:w-auto"
               >
                 <Link to="/outflow-types">
                   Manage
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
             </div>
@@ -473,26 +473,26 @@ function SettingsPage() {
         </Card>
 
         <Card
-          className="col-span-12 md:col-span-6 border-red-200 dark:border-red-900/50 animate-slide-up"
+          className="animate-slide-up col-span-12 border-red-200 md:col-span-6 dark:border-red-900/50"
           style={{ animationDelay: "200ms" }}
         >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base text-red-600 dark:text-red-400">
-              <div className="p-1.5 bg-red-100 dark:bg-red-900/30 rounded-lg">
+              <div className="rounded-lg bg-red-100 p-1.5 dark:bg-red-900/30">
                 <Shield className="h-4 w-4 text-red-600 dark:text-red-400" />
               </div>
               Danger Zone
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-muted/30 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">
+            <div className="bg-muted/30 flex flex-col space-y-2 rounded-lg p-3 transition-colors hover:bg-red-50 md:flex-row md:items-center md:justify-between dark:hover:bg-red-950/20">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                <div className="rounded-lg bg-orange-100 p-2 dark:bg-orange-900/30">
                   <LogOut className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
                   <Label className="font-medium">Logout</Label>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Sign out of your account
                   </p>
                 </div>
@@ -500,22 +500,22 @@ function SettingsPage() {
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="w-full md:w-auto hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300 dark:hover:bg-orange-950/30"
+                className="w-full hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600 md:w-auto dark:hover:bg-orange-950/30"
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>
             </div>
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between p-3 rounded-lg bg-red-50/50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/30">
+            <div className="flex flex-col space-y-2 rounded-lg border border-red-200/50 bg-red-50/50 p-3 md:flex-row md:items-center md:justify-between dark:border-red-900/30 dark:bg-red-950/20">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                <div className="rounded-lg bg-red-100 p-2 dark:bg-red-900/30">
                   <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
                 </div>
                 <div>
                   <h3 className="font-medium text-red-700 dark:text-red-400">
                     Delete All Data
                   </h3>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Permanently delete everything. Cannot be undone.
                   </p>
                 </div>
@@ -532,7 +532,7 @@ function SettingsPage() {
           </CardContent>
         </Card>
         <div
-          className="col-span-12 animate-slide-up"
+          className="animate-slide-up col-span-12"
           style={{ animationDelay: "250ms" }}
         >
           <UserProfile

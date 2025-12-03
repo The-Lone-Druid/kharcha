@@ -112,10 +112,7 @@ export const getMonthlySummary = query({
     const transactions = await ctx.db
       .query("transactions")
       .withIndex("by_clerk_id_date", (q) =>
-        q
-          .eq("clerkId", clerkId)
-          .gte("date", start)
-          .lt("date", end)
+        q.eq("clerkId", clerkId).gte("date", start).lt("date", end)
       )
       .collect();
 

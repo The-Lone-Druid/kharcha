@@ -15,11 +15,11 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: "JPY", name: "Japanese Yen", symbol: "¥" },
   { code: "CNY", name: "Chinese Yuan", symbol: "¥" },
   { code: "INR", name: "Indian Rupee", symbol: "₹" },
-  
+
   // North America
   { code: "CAD", name: "Canadian Dollar", symbol: "C$" },
   { code: "MXN", name: "Mexican Peso", symbol: "$" },
-  
+
   // Europe
   { code: "CHF", name: "Swiss Franc", symbol: "CHF" },
   { code: "SEK", name: "Swedish Krona", symbol: "kr" },
@@ -34,7 +34,7 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: "RUB", name: "Russian Ruble", symbol: "₽" },
   { code: "UAH", name: "Ukrainian Hryvnia", symbol: "₴" },
   { code: "TRY", name: "Turkish Lira", symbol: "₺" },
-  
+
   // Asia Pacific
   { code: "AUD", name: "Australian Dollar", symbol: "A$" },
   { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$" },
@@ -54,7 +54,7 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: "MMK", name: "Myanmar Kyat", symbol: "K" },
   { code: "KHR", name: "Cambodian Riel", symbol: "៛" },
   { code: "LAK", name: "Lao Kip", symbol: "₭" },
-  
+
   // Middle East
   { code: "AED", name: "UAE Dirham", symbol: "د.إ" },
   { code: "SAR", name: "Saudi Riyal", symbol: "﷼" },
@@ -66,7 +66,7 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: "ILS", name: "Israeli Shekel", symbol: "₪" },
   { code: "IQD", name: "Iraqi Dinar", symbol: "ع.د" },
   { code: "IRR", name: "Iranian Rial", symbol: "﷼" },
-  
+
   // Africa
   { code: "ZAR", name: "South African Rand", symbol: "R" },
   { code: "EGP", name: "Egyptian Pound", symbol: "E£" },
@@ -85,7 +85,7 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: "ZMW", name: "Zambian Kwacha", symbol: "ZK" },
   { code: "BWP", name: "Botswana Pula", symbol: "P" },
   { code: "MUR", name: "Mauritian Rupee", symbol: "₨" },
-  
+
   // South America
   { code: "BRL", name: "Brazilian Real", symbol: "R$" },
   { code: "ARS", name: "Argentine Peso", symbol: "$" },
@@ -96,13 +96,13 @@ export const CURRENCIES: CurrencyInfo[] = [
   { code: "VES", name: "Venezuelan Bolívar", symbol: "Bs" },
   { code: "BOB", name: "Bolivian Boliviano", symbol: "Bs." },
   { code: "PYG", name: "Paraguayan Guarani", symbol: "₲" },
-  
+
   // Caribbean
   { code: "JMD", name: "Jamaican Dollar", symbol: "J$" },
   { code: "TTD", name: "Trinidad Dollar", symbol: "TT$" },
   { code: "BBD", name: "Barbadian Dollar", symbol: "Bds$" },
   { code: "BSD", name: "Bahamian Dollar", symbol: "B$" },
-  
+
   // Other
   { code: "ISK", name: "Icelandic Króna", symbol: "kr" },
 ];
@@ -117,7 +117,10 @@ export function getCurrencyByCode(code: string): CurrencyInfo | undefined {
 /**
  * Get the exchange rate lookup URL (Google search)
  */
-export function getExchangeRateLookupUrl(fromCurrency: string, toCurrency: string): string {
+export function getExchangeRateLookupUrl(
+  fromCurrency: string,
+  toCurrency: string
+): string {
   return `https://www.google.com/search?q=1+${fromCurrency}+to+${toCurrency}`;
 }
 

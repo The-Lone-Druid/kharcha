@@ -7,6 +7,7 @@ Transactions are the heart of Kharcha. Every expense, income, or transfer is rec
 ## What is a Transaction?
 
 A transaction records the movement of money:
+
 - **Expense**: Money going out (e.g., buying coffee)
 - **Income**: Money coming in (e.g., salary)
 - **Transfer**: Moving money between accounts
@@ -15,14 +16,14 @@ A transaction records the movement of money:
 
 ## Transaction Fields
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| **Amount** | ✅ | How much money |
-| **Account** | ✅ | Which account was used |
-| **Category** | ✅ | Type of expense |
-| **Date** | ✅ | When it happened |
-| **Note** | ❌ | Optional description |
-| **Receipt** | ❌ | Attach an image (coming soon) |
+| Field        | Required | Description                   |
+| ------------ | -------- | ----------------------------- |
+| **Amount**   | ✅       | How much money                |
+| **Account**  | ✅       | Which account was used        |
+| **Category** | ✅       | Type of expense               |
+| **Date**     | ✅       | When it happened              |
+| **Note**     | ❌       | Optional description          |
+| **Receipt**  | ❌       | Attach an image (coming soon) |
 
 ---
 
@@ -56,6 +57,7 @@ A transaction records the movement of money:
 ### Transaction List
 
 The Transactions page shows all your transactions:
+
 - Sorted by date (newest first)
 - Shows amount, category, account, and note
 - Color-coded by category
@@ -63,6 +65,7 @@ The Transactions page shows all your transactions:
 ### Transaction Card Details
 
 Each transaction displays:
+
 - Category emoji and name
 - Transaction amount
 - Account name and type
@@ -78,13 +81,13 @@ Use filters to find specific transactions:
 
 ### By Date
 
-| Filter | Shows |
-|--------|-------|
-| All | Everything |
-| Today | Today only |
-| This Week | Last 7 days |
-| This Month | Current month |
-| Custom | Select date range |
+| Filter     | Shows             |
+| ---------- | ----------------- |
+| All        | Everything        |
+| Today      | Today only        |
+| This Week  | Last 7 days       |
+| This Month | Current month     |
+| Custom     | Select date range |
 
 ### By Account
 
@@ -97,6 +100,7 @@ Filter to see all transactions of a specific type (e.g., all "Food & Dining").
 ### By Search
 
 Type in the search box to filter by:
+
 - Note content
 - Partial matches work
 
@@ -110,6 +114,7 @@ Type in the search box to filter by:
 4. Click **Save**
 
 You can change:
+
 - Amount
 - Account
 - Category
@@ -133,6 +138,7 @@ You can change:
 ### 1. Log Immediately
 
 The best time to log a transaction is right after it happens:
+
 - You remember the exact amount
 - You know which account was used
 - Details are fresh in your mind
@@ -146,11 +152,13 @@ The best time to log a transaction is right after it happens:
 ### 3. Add Useful Notes
 
 Good notes:
+
 - ✅ "Dinner with John at Pizza Hut"
 - ✅ "Monthly electricity bill - March"
 - ✅ "Amazon order #12345"
 
 Less useful:
+
 - ❌ "Food"
 - ❌ "Bill"
 - ❌ (blank)
@@ -168,6 +176,7 @@ Less useful:
 ### Splitting a Bill
 
 When you split a bill with friends:
+
 - Log only YOUR share
 - Example: "Dinner split 4 ways" → Log ₹500, not ₹2000
 
@@ -176,11 +185,13 @@ When you split a bill with friends:
 Two approaches:
 
 **Approach A: Track as Transfer**
+
 - Deduct from bank account
 - Add to cash account
 - No category needed
 
 **Approach B: Don't Track**
+
 - Only track when you spend the cash
 - Simpler but less accurate account balances
 
@@ -192,10 +203,12 @@ Two approaches:
 ### Gifts
 
 **Giving gifts:**
+
 - Category: Gifts
 - Account: Whichever you paid from
 
 **Receiving cash gifts:**
+
 - Log as income
 - Add to Cash or Bank account
 
@@ -204,6 +217,7 @@ Two approaches:
 ## Transaction History
 
 Your transaction history is preserved forever:
+
 - No automatic deletion
 - Filter by any date range
 - Export anytime from Settings
@@ -213,6 +227,7 @@ Your transaction history is preserved forever:
 ## Bulk Operations (Coming Soon)
 
 Future features:
+
 - Select multiple transactions
 - Bulk delete
 - Bulk category change

@@ -31,7 +31,11 @@ import {
 } from "recharts";
 
 // Custom tooltip component that adapts to theme
-const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<number, string>) => {
   const { theme } = useTheme();
 
   if (active && payload && payload.length) {
@@ -39,15 +43,19 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
 
     // Handle bar chart data (uses label for month)
     return (
-      <div className={`rounded-lg border p-3 shadow-lg ${
-        theme === 'dark'
-          ? 'bg-gray-800 border-gray-700 text-white'
-          : 'bg-white border-gray-200 text-gray-900'
-      }`}>
+      <div
+        className={`rounded-lg border p-3 shadow-lg ${
+          theme === "dark"
+            ? "border-gray-700 bg-gray-800 text-white"
+            : "border-gray-200 bg-white text-gray-900"
+        }`}
+      >
         <p className="font-medium">{label}</p>
-        <p className={`text-sm ${
-          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-        }`}>
+        <p
+          className={`text-sm ${
+            theme === "dark" ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
           Spent: <span className="font-semibold">₹{data.value}</span>
         </p>
       </div>
@@ -65,10 +73,19 @@ function InsightsPage() {
   const monthlySpend = useQuery(api.insights.getMonthlySpend);
   const outflowBreakdown = useQuery(api.insights.getOutflowTypeBreakdown, {});
   const subscriptions = useQuery(api.insights.getSubscriptions);
-  const subscriptionBreakdown = useQuery(api.insights.getSubscriptionBreakdown, {});
-  const subscriptionSpendOverTime = useQuery(api.insights.getSubscriptionSpendOverTime, { months: 12 });
-  const projectedSubscriptionSpend = useQuery(api.insights.getProjectedSubscriptionSpend, { monthsAhead: 12 });
-  
+  const subscriptionBreakdown = useQuery(
+    api.insights.getSubscriptionBreakdown,
+    {}
+  );
+  const subscriptionSpendOverTime = useQuery(
+    api.insights.getSubscriptionSpendOverTime,
+    { months: 12 }
+  );
+  const projectedSubscriptionSpend = useQuery(
+    api.insights.getProjectedSubscriptionSpend,
+    { monthsAhead: 12 }
+  );
+
   const [projectionMonths, setProjectionMonths] = useState<string>("12");
   const [historicalMonths, setHistoricalMonths] = useState<string>("12");
 
@@ -77,23 +94,26 @@ function InsightsPage() {
     api.insights.getProjectedSubscriptionSpend,
     { monthsAhead: parseInt(projectionMonths) }
   );
-  
-  const customHistorical = useQuery(
-    api.insights.getSubscriptionSpendOverTime,
-    { months: parseInt(historicalMonths) }
-  );
+
+  const customHistorical = useQuery(api.insights.getSubscriptionSpendOverTime, {
+    months: parseInt(historicalMonths),
+  });
 
   // Calculate totals for current month and year
   const currentMonthTotal = useMemo(() => {
-    if (!subscriptionSpendOverTime || subscriptionSpendOverTime.length === 0) return 0;
-    return subscriptionSpendOverTime[subscriptionSpendOverTime.length - 1]?.amount || 0;
+    if (!subscriptionSpendOverTime || subscriptionSpendOverTime.length === 0)
+      return 0;
+    return (
+      subscriptionSpendOverTime[subscriptionSpendOverTime.length - 1]?.amount ||
+      0
+    );
   }, [subscriptionSpendOverTime]);
 
   const currentYearTotal = useMemo(() => {
     if (!subscriptionSpendOverTime) return 0;
     const currentYear = new Date().getFullYear();
     return subscriptionSpendOverTime
-      .filter(m => m.month.startsWith(currentYear.toString()))
+      .filter((m) => m.month.startsWith(currentYear.toString()))
       .reduce((sum, m) => sum + m.amount, 0);
   }, [subscriptionSpendOverTime]);
 
@@ -105,10 +125,10 @@ function InsightsPage() {
   }, [projectedSubscriptionSpend]);
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+    <div className="animate-in fade-in slide-in-from-bottom-4 flex-1 space-y-6 p-4 pt-6 duration-500 md:p-8">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="from-foreground to-foreground/70 bg-linear-to-r bg-clip-text text-2xl font-bold tracking-tight text-transparent md:text-3xl">
             Insights
           </h2>
           <p className="text-muted-foreground mt-1">
@@ -119,17 +139,27 @@ function InsightsPage() {
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="bg-muted/50 p-1">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">Overview</TabsTrigger>
-          <TabsTrigger value="subscriptions" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">Subscriptions</TabsTrigger>
+          <TabsTrigger
+            value="overview"
+            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+          >
+            Overview
+          </TabsTrigger>
+          <TabsTrigger
+            value="subscriptions"
+            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+          >
+            Subscriptions
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid grid-cols-12 gap-4">
             {/* Monthly Spend Chart */}
-            <Card className="col-span-12 bg-linear-to-br from-violet-500/5 via-purple-500/5 to-transparent border-violet-500/20">
+            <Card className="col-span-12 border-violet-500/20 bg-linear-to-br from-violet-500/5 via-purple-500/5 to-transparent">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-violet-500/10">
+                  <div className="rounded-lg bg-violet-500/10 p-2">
                     <TrendingUp className="h-4 w-4 text-violet-500" />
                   </div>
                   Monthly Spend (Last 12 Months)
@@ -140,7 +170,10 @@ function InsightsPage() {
                   monthlySpend.length > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={monthlySpend} barCategoryGap="10%">
-                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          className="stroke-border"
+                        />
                         <XAxis
                           dataKey="month"
                           angle={-45}
@@ -149,11 +182,24 @@ function InsightsPage() {
                           fontSize={12}
                           className="fill-muted-foreground"
                         />
-                        <YAxis fontSize={12} className="fill-muted-foreground" />
+                        <YAxis
+                          fontSize={12}
+                          className="fill-muted-foreground"
+                        />
                         <Tooltip content={<CustomTooltip />} />
-                        <Bar dataKey="total" fill="url(#colorGradient)" radius={[4, 4, 0, 0]} />
+                        <Bar
+                          dataKey="total"
+                          fill="url(#colorGradient)"
+                          radius={[4, 4, 0, 0]}
+                        />
                         <defs>
-                          <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                          <linearGradient
+                            id="colorGradient"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
                             <stop offset="0%" stopColor="#8b5cf6" />
                             <stop offset="100%" stopColor="#6366f1" />
                           </linearGradient>
@@ -161,7 +207,7 @@ function InsightsPage() {
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (
-                    <p className="text-center text-muted-foreground">
+                    <p className="text-muted-foreground text-center">
                       No data available
                     </p>
                   )
@@ -185,13 +231,15 @@ function InsightsPage() {
                           key={item.outflowTypeId}
                           className="flex justify-between"
                         >
-                          <span>{item.emoji} {item.name}</span>
+                          <span>
+                            {item.emoji} {item.name}
+                          </span>
                           <Badge>₹{item.total.toLocaleString()}</Badge>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center text-muted-foreground">
+                    <p className="text-muted-foreground text-center">
                       No data available
                     </p>
                   )
@@ -220,11 +268,13 @@ function InsightsPage() {
                       {subscriptions.slice(0, 5).map((sub) => (
                         <div
                           key={sub.id}
-                          className="flex justify-between items-center p-3 border rounded-lg"
+                          className="flex items-center justify-between rounded-lg border p-3"
                         >
                           <div>
-                            <p className="font-medium">{sub.provider || "Unknown Provider"}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="font-medium">
+                              {sub.provider || "Unknown Provider"}
+                            </p>
+                            <p className="text-muted-foreground text-sm">
                               ₹{sub.amount} • {sub.frequency || "monthly"}
                             </p>
                           </div>
@@ -234,16 +284,17 @@ function InsightsPage() {
                         </div>
                       ))}
                       {subscriptions.length > 5 && (
-                        <p className="text-sm text-muted-foreground text-center">
+                        <p className="text-muted-foreground text-center text-sm">
                           +{subscriptions.length - 5} more subscriptions
                         </p>
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-6">
-                      <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <div className="py-6 text-center">
+                      <CreditCard className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
                       <p className="text-muted-foreground mb-4">
-                        No subscriptions found. Track your recurring payments here.
+                        No subscriptions found. Track your recurring payments
+                        here.
                       </p>
                       <AddSubscriptionDialog
                         trigger={
@@ -258,7 +309,10 @@ function InsightsPage() {
                 ) : (
                   <div className="space-y-3">
                     {Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="flex justify-between items-center p-3 border rounded-lg">
+                      <div
+                        key={i}
+                        className="flex items-center justify-between rounded-lg border p-3"
+                      >
                         <div className="space-y-1">
                           <Skeleton className="h-4 w-32" />
                           <Skeleton className="h-3 w-48" />
@@ -278,12 +332,16 @@ function InsightsPage() {
             {/* Summary Cards */}
             <Card className="col-span-12 md:col-span-4">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Current Month</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">
+                  Current Month
+                </CardTitle>
+                <Calendar className="text-muted-foreground h-4 w-4" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹{currentMonthTotal.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-2xl font-bold">
+                  ₹{currentMonthTotal.toLocaleString()}
+                </div>
+                <p className="text-muted-foreground text-xs">
                   Subscription spending this month
                 </p>
               </CardContent>
@@ -291,12 +349,16 @@ function InsightsPage() {
 
             <Card className="col-span-12 md:col-span-4">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Current Year</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">
+                  Current Year
+                </CardTitle>
+                <TrendingUp className="text-muted-foreground h-4 w-4" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹{currentYearTotal.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-2xl font-bold">
+                  ₹{currentYearTotal.toLocaleString()}
+                </div>
+                <p className="text-muted-foreground text-xs">
                   Total subscription spending this year
                 </p>
               </CardContent>
@@ -304,12 +366,16 @@ function InsightsPage() {
 
             <Card className="col-span-12 md:col-span-4">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Projected (12 months)</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">
+                  Projected (12 months)
+                </CardTitle>
+                <TrendingUp className="text-muted-foreground h-4 w-4" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹{projectedYearTotal.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-2xl font-bold">
+                  ₹{projectedYearTotal.toLocaleString()}
+                </div>
+                <p className="text-muted-foreground text-xs">
                   Estimated spending for next 12 months
                 </p>
               </CardContent>
@@ -320,7 +386,10 @@ function InsightsPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Subscription Spend Over Time</CardTitle>
-                  <Select value={historicalMonths} onValueChange={setHistoricalMonths}>
+                  <Select
+                    value={historicalMonths}
+                    onValueChange={setHistoricalMonths}
+                  >
                     <SelectTrigger className="w-32">
                       <SelectValue />
                     </SelectTrigger>
@@ -358,7 +427,9 @@ function InsightsPage() {
                       </LineChart>
                     </ResponsiveContainer>
                   ) : (
-                    <p className="text-center text-muted-foreground">No historical data available</p>
+                    <p className="text-muted-foreground text-center">
+                      No historical data available
+                    </p>
                   )
                 ) : (
                   <Skeleton className="h-72 w-full" />
@@ -371,7 +442,10 @@ function InsightsPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Projected Subscription Spend</CardTitle>
-                  <Select value={projectionMonths} onValueChange={setProjectionMonths}>
+                  <Select
+                    value={projectionMonths}
+                    onValueChange={setProjectionMonths}
+                  >
                     <SelectTrigger className="w-32">
                       <SelectValue />
                     </SelectTrigger>
@@ -403,7 +477,9 @@ function InsightsPage() {
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (
-                    <p className="text-center text-muted-foreground">No projection data available</p>
+                    <p className="text-muted-foreground text-center">
+                      No projection data available
+                    </p>
                   )
                 ) : (
                   <Skeleton className="h-72 w-full" />
@@ -423,11 +499,15 @@ function InsightsPage() {
                       {subscriptionBreakdown.breakdown
                         .sort((a, b) => b.amount - a.amount)
                         .map((item, idx) => (
-                          <div key={idx} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded-lg border p-3"
+                          >
                             <div className="flex-1">
                               <p className="font-medium">{item.provider}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {item.count} transaction{item.count > 1 ? 's' : ''}
+                              <p className="text-muted-foreground text-sm">
+                                {item.count} transaction
+                                {item.count > 1 ? "s" : ""}
                               </p>
                             </div>
                             <Badge variant="secondary" className="text-base">
@@ -435,21 +515,28 @@ function InsightsPage() {
                             </Badge>
                           </div>
                         ))}
-                      <div className="pt-3 border-t">
+                      <div className="border-t pt-3">
                         <div className="flex items-center justify-between">
                           <span className="font-semibold">Total</span>
-                          <Badge className="text-base">₹{subscriptionBreakdown.total.toLocaleString()}</Badge>
+                          <Badge className="text-base">
+                            ₹{subscriptionBreakdown.total.toLocaleString()}
+                          </Badge>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-center text-muted-foreground">No subscription data available</p>
+                    <p className="text-muted-foreground text-center">
+                      No subscription data available
+                    </p>
                   )
                 ) : (
                   <div className="space-y-3">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="space-y-1 flex-1">
+                      <div
+                        key={i}
+                        className="flex items-center justify-between rounded-lg border p-3"
+                      >
+                        <div className="flex-1 space-y-1">
                           <Skeleton className="h-4 w-32" />
                           <Skeleton className="h-3 w-24" />
                         </div>

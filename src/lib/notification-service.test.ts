@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-    getNotificationPermission,
-    initializeNotifications,
-    isNotificationSupported,
-    requestNotificationPermission,
-    shouldRequestPermission,
-    showNotification,
-    showReminderNotification,
+  getNotificationPermission,
+  initializeNotifications,
+  isNotificationSupported,
+  requestNotificationPermission,
+  shouldRequestPermission,
+  showNotification,
+  showReminderNotification,
 } from "./notification-service";
 
 describe("notification-service", () => {
@@ -191,7 +191,9 @@ describe("notification-service", () => {
     });
 
     it("should handle permission request error", async () => {
-      const mockRequestPermission = vi.fn().mockRejectedValue(new Error("Failed"));
+      const mockRequestPermission = vi
+        .fn()
+        .mockRejectedValue(new Error("Failed"));
       Object.defineProperty(globalThis, "Notification", {
         value: {
           permission: "default",
@@ -205,7 +207,9 @@ describe("notification-service", () => {
         writable: true,
         configurable: true,
       });
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const result = await requestNotificationPermission();
 
@@ -271,14 +275,19 @@ describe("notification-service", () => {
         configurable: true,
       });
 
-      const result = await showNotification("Test Title", { body: "Test body" });
+      const result = await showNotification("Test Title", {
+        body: "Test body",
+      });
 
       expect(result).toBe(true);
-      expect(mockShowNotification).toHaveBeenCalledWith("Test Title", expect.objectContaining({
-        body: "Test body",
-        icon: "/pwa-192x192.png",
-        badge: "/pwa-64x64.png",
-      }));
+      expect(mockShowNotification).toHaveBeenCalledWith(
+        "Test Title",
+        expect.objectContaining({
+          body: "Test body",
+          icon: "/pwa-192x192.png",
+          badge: "/pwa-64x64.png",
+        })
+      );
     });
 
     it("should fall back to regular notification when no service worker controller", async () => {
@@ -301,10 +310,13 @@ describe("notification-service", () => {
       const result = await showNotification("Test Title");
 
       expect(result).toBe(true);
-      expect(MockNotification).toHaveBeenCalledWith("Test Title", expect.objectContaining({
-        icon: "/pwa-192x192.png",
-        badge: "/pwa-64x64.png",
-      }));
+      expect(MockNotification).toHaveBeenCalledWith(
+        "Test Title",
+        expect.objectContaining({
+          icon: "/pwa-192x192.png",
+          badge: "/pwa-64x64.png",
+        })
+      );
     });
 
     it("should handle notification error", async () => {
@@ -323,7 +335,9 @@ describe("notification-service", () => {
         writable: true,
         configurable: true,
       });
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const result = await showNotification("Test");
 
@@ -467,7 +481,9 @@ describe("notification-service", () => {
 
       await initializeNotifications();
 
-      expect(consoleSpy).toHaveBeenCalledWith("Notifications not supported in this browser");
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Notifications not supported in this browser"
+      );
 
       consoleSpy.mockRestore();
     });
@@ -492,8 +508,14 @@ describe("notification-service", () => {
 
       await initializeNotifications();
 
-      expect(consoleSpy).toHaveBeenCalledWith("Notification permission:", "granted");
-      expect(mockAddEventListener).toHaveBeenCalledWith("message", expect.any(Function));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Notification permission:",
+        "granted"
+      );
+      expect(mockAddEventListener).toHaveBeenCalledWith(
+        "message",
+        expect.any(Function)
+      );
 
       consoleSpy.mockRestore();
     });
@@ -501,11 +523,13 @@ describe("notification-service", () => {
     it("should handle notification click messages", async () => {
       type MessageHandler = (event: { data: unknown }) => void;
       let messageHandler: MessageHandler | null = null;
-      const mockAddEventListener = vi.fn((event: string, handler: MessageHandler) => {
-        if (event === "message") {
-          messageHandler = handler;
+      const mockAddEventListener = vi.fn(
+        (event: string, handler: MessageHandler) => {
+          if (event === "message") {
+            messageHandler = handler;
+          }
         }
-      });
+      );
       Object.defineProperty(globalThis, "Notification", {
         value: { permission: "granted" },
         writable: true,

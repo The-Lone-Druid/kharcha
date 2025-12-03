@@ -117,20 +117,23 @@ function TransactionsPage() {
   ]);
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+    <div className="animate-in fade-in slide-in-from-bottom-4 flex-1 space-y-6 p-4 pt-6 duration-500 md:p-8">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="from-foreground to-foreground/70 bg-linear-to-r bg-clip-text text-2xl font-bold tracking-tight text-transparent md:text-3xl">
             Transactions
           </h2>
           <p className="text-muted-foreground mt-1">
             View and manage all your transactions
           </p>
         </div>
-        <div className="flex items-stretch sm:items-center gap-3">
+        <div className="flex items-stretch gap-3 sm:items-center">
           <AddSubscriptionDialog
             trigger={
-              <Button variant="outline" className="gap-2 shadow-sm hover:shadow-md transition-all">
+              <Button
+                variant="outline"
+                className="gap-2 shadow-sm transition-all hover:shadow-md"
+              >
                 <CreditCard className="h-4 w-4" />
                 <span className="hidden sm:inline">Add Subscription</span>
                 <span className="sm:hidden">Subscription</span>
@@ -139,7 +142,7 @@ function TransactionsPage() {
           />
           <AddTransactionSheet
             trigger={
-              <Button className="gap-2 bg-linear-to-r from-primary to-orange-600 hover:from-primary/90 hover:to-orange-600/90 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all">
+              <Button className="from-primary hover:from-primary/90 shadow-primary/25 hover:shadow-primary/40 gap-2 bg-linear-to-r to-orange-600 shadow-lg transition-all hover:to-orange-600/90">
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline">Add Transaction</span>
                 <span className="sm:hidden">Add</span>
@@ -150,17 +153,17 @@ function TransactionsPage() {
       </div>
       <div className="space-y-4">
         {/* Search and Filters */}
-        <div className="space-y-4 p-4 rounded-xl bg-muted/30 border border-border/50">
+        <div className="bg-muted/30 border-border/50 space-y-4 rounded-xl border p-4">
           {/* Search Bar */}
           <Input
             placeholder="Search transactions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-background"
+            className="bg-background w-full"
           />
 
           {/* Filters */}
-          <div className="grid grid-cols-12 gap-3 items-end">
+          <div className="grid grid-cols-12 items-end gap-3">
             <div className="col-span-4">
               <Select
                 value={selectedAccount}
@@ -220,64 +223,65 @@ function TransactionsPage() {
             filteredTransactions.map((transaction) => (
               <div
                 key={transaction._id}
-                className="group flex items-start gap-4 px-4 py-3 rounded-xl bg-card border border-border shadow-sm hover:shadow-md transition-all cursor-pointer"
+                className="group bg-card border-border flex cursor-pointer items-start gap-4 rounded-xl border px-4 py-3 shadow-sm transition-all hover:shadow-md"
               >
                 {/* Category Icon */}
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-sm"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xl shadow-sm"
                   style={{
                     backgroundColor: transaction.outflowType?.colorHex
                       ? `color-mix(in srgb, ${transaction.outflowType.colorHex} 18%, transparent)`
-                      : 'hsl(var(--primary) / 0.1)',
+                      : "hsl(var(--primary) / 0.1)",
                   }}
                 >
                   {transaction.outflowType?.emoji || "💰"}
                 </div>
 
                 {/* Transaction Details */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   {/* Top row - Title and Amount */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-foreground truncate">
+                      <h4 className="text-foreground truncate font-semibold">
                         {transaction.note || "Untitled Transaction"}
                       </h4>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-muted-foreground mt-1 text-sm">
                         {transaction.outflowType?.name || "Uncategorized"}
                       </p>
                     </div>
-                    <div className="text-right shrink-0">
-                      <p className="font-bold text-lg font-mono text-red-500 dark:text-red-400">
+                    <div className="shrink-0 text-right">
+                      <p className="font-mono text-lg font-bold text-red-500 dark:text-red-400">
                         -₹{transaction.amount.toLocaleString("en-IN")}
                       </p>
                     </div>
                   </div>
-                  
+
                   {/* Bottom row - Meta info */}
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 pt-2 border-t border-border/40">
+                  <div className="border-border/40 mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 border-t pt-2">
                     {/* Account */}
                     <div className="flex items-center gap-1.5">
                       <div
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        className="h-2.5 w-2.5 shrink-0 rounded-full"
                         style={{
-                          backgroundColor: transaction.account?.colorHex || "#888",
+                          backgroundColor:
+                            transaction.account?.colorHex || "#888",
                         }}
                       />
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-muted-foreground text-sm">
                         {transaction.account?.name || "Unknown"}
                       </span>
                     </div>
-                    
+
                     {/* Account Type */}
-                    <span className="text-sm text-muted-foreground/70">
+                    <span className="text-muted-foreground/70 text-sm">
                       {transaction.account?.type || "N/A"}
                     </span>
-                    
+
                     {/* Date & Time */}
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground text-sm">
                       {format(new Date(transaction.date), "MMM dd, yyyy")}
                     </span>
-                    <span className="text-sm text-muted-foreground/70">
+                    <span className="text-muted-foreground/70 text-sm">
                       {format(new Date(transaction.date), "h:mm a")}
                     </span>
 
@@ -291,7 +295,7 @@ function TransactionsPage() {
                             size="sm"
                             className="h-7 px-2"
                           >
-                            <Edit className="h-3.5 w-3.5 mr-1" />
+                            <Edit className="mr-1 h-3.5 w-3.5" />
                             <span className="text-xs">Edit</span>
                           </Button>
                         }
@@ -301,23 +305,26 @@ function TransactionsPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10 h-7 px-2"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Transaction</AlertDialogTitle>
+                            <AlertDialogTitle>
+                              Delete Transaction
+                            </AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to delete this transaction? This action cannot be undone.
+                              Are you sure you want to delete this transaction?
+                              This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleDelete(transaction._id)}
-                              className="bg-destructive text-white hover:bg-destructive/90"
+                              className="bg-destructive hover:bg-destructive/90 text-white"
                             >
                               Delete
                             </AlertDialogAction>
@@ -331,8 +338,11 @@ function TransactionsPage() {
             ))
           ) : transactions === undefined ? (
             Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex items-start gap-4 px-4 py-3 rounded-xl bg-card border border-border">
-                <Skeleton className="w-12 h-12 rounded-xl shrink-0" />
+              <div
+                key={i}
+                className="bg-card border-border flex items-start gap-4 rounded-xl border px-4 py-3"
+              >
+                <Skeleton className="h-12 w-12 shrink-0 rounded-xl" />
                 <div className="flex-1">
                   {/* Top row */}
                   <div className="flex items-start justify-between gap-3">
@@ -343,9 +353,9 @@ function TransactionsPage() {
                     <Skeleton className="h-6 w-20" />
                   </div>
                   {/* Bottom row */}
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 pt-2 border-t border-border/40">
+                  <div className="border-border/40 mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 border-t pt-2">
                     <div className="flex items-center gap-1.5">
-                      <Skeleton className="w-2.5 h-2.5 rounded-full" />
+                      <Skeleton className="h-2.5 w-2.5 rounded-full" />
                       <Skeleton className="h-4 w-20" />
                     </div>
                     <Skeleton className="h-4 w-12" />
@@ -360,12 +370,15 @@ function TransactionsPage() {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <CreditCard className="w-8 h-8 text-muted-foreground" />
+              <div className="bg-muted mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+                <CreditCard className="text-muted-foreground h-8 w-8" />
               </div>
-              <h3 className="font-semibold text-lg">No transactions found</h3>
-              <p className="text-sm text-muted-foreground mt-1 max-w-xs">
-                {searchTerm || selectedAccount !== "all" || selectedOutflowType !== "all" || dateFilter !== "all"
+              <h3 className="text-lg font-semibold">No transactions found</h3>
+              <p className="text-muted-foreground mt-1 max-w-xs text-sm">
+                {searchTerm ||
+                selectedAccount !== "all" ||
+                selectedOutflowType !== "all" ||
+                dateFilter !== "all"
                   ? "Try adjusting your filters to see more results"
                   : "Start by adding your first transaction"}
               </p>

@@ -53,7 +53,9 @@ export const createCustomOutflowType = mutation({
     // Check if name already exists
     const existing = await ctx.db
       .query("outflowTypes")
-      .withIndex("by_name", (q) => q.eq("clerkId", clerkId).eq("name", args.name))
+      .withIndex("by_name", (q) =>
+        q.eq("clerkId", clerkId).eq("name", args.name)
+      )
       .first();
     if (existing) {
       throw new ConvexError("Outflow type with this name already exists");

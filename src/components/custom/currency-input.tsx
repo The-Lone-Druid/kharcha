@@ -87,7 +87,7 @@ export function CurrencyInput({
           disabled={disabled}
           className="pr-16"
         />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+        <span className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm">
           {preferredCurrency}
         </span>
       </div>
@@ -97,15 +97,15 @@ export function CurrencyInput({
         <button
           type="button"
           onClick={() => setShowCurrencyConverter(true)}
-          className="text-xs text-primary hover:underline flex items-center gap-1"
+          className="text-primary flex items-center gap-1 text-xs hover:underline"
           disabled={disabled}
         >
           💱 Entering in different currency?
         </button>
       ) : (
-        <div className="rounded-lg border bg-muted/30 p-3 space-y-3">
+        <div className="bg-muted/30 space-y-3 rounded-lg border p-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-muted-foreground text-xs font-medium">
               Convert from another currency
             </span>
             <Button
@@ -131,7 +131,7 @@ export function CurrencyInput({
                 {selectedCurrency ? (
                   <>
                     <span className="font-medium">{selectedCurrency}</span>
-                    <span className="ml-2 text-muted-foreground">
+                    <span className="text-muted-foreground ml-2">
                       {selectedCurrencyInfo?.name}
                     </span>
                   </>
@@ -166,7 +166,7 @@ export function CurrencyInput({
                             )}
                           />
                           <span className="font-medium">{currency.code}</span>
-                          <span className="ml-2 text-muted-foreground text-xs truncate">
+                          <span className="text-muted-foreground ml-2 truncate text-xs">
                             {currency.name} ({currency.symbol})
                           </span>
                         </CommandItem>
@@ -183,7 +183,7 @@ export function CurrencyInput({
               {/* Amount and Exchange Rate inputs */}
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs text-muted-foreground mb-1 block">
+                  <label className="text-muted-foreground mb-1 block text-xs">
                     Amount in {selectedCurrency}
                   </label>
                   <Input
@@ -194,7 +194,7 @@ export function CurrencyInput({
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground mb-1 block">
+                  <label className="text-muted-foreground mb-1 block text-xs">
                     Exchange Rate
                   </label>
                   <Input
@@ -212,10 +212,11 @@ export function CurrencyInput({
                 href={lookupUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-primary hover:underline flex items-center gap-1"
+                className="text-primary flex items-center gap-1 text-xs hover:underline"
               >
                 <ExternalLink className="h-3 w-3" />
-                Look up 1 {selectedCurrency} to {preferredCurrency} rate on Google
+                Look up 1 {selectedCurrency} to {preferredCurrency} rate on
+                Google
               </a>
 
               {/* Conversion result */}
@@ -223,12 +224,12 @@ export function CurrencyInput({
                 exchangeRate &&
                 parseFloat(foreignAmount) > 0 &&
                 parseFloat(exchangeRate) > 0 && (
-                  <div className="text-sm bg-primary/10 rounded-md p-2 text-center">
+                  <div className="bg-primary/10 rounded-md p-2 text-center text-sm">
                     <span className="text-muted-foreground">
                       {foreignAmount} {selectedCurrency} ×{" "}
                       {parseFloat(exchangeRate).toFixed(4)} ={" "}
                     </span>
-                    <span className="font-semibold text-primary">
+                    <span className="text-primary font-semibold">
                       {actualValue.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,

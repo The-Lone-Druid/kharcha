@@ -8,191 +8,191 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as FeaturesRouteImport } from './routes/features'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedOutflowTypesRouteImport } from './routes/_authenticated/outflow-types'
-import { Route as AuthenticatedInsightsRouteImport } from './routes/_authenticated/insights'
-import { Route as AuthenticatedAccountsRouteImport } from './routes/_authenticated/accounts'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as FeaturesRouteImport } from "./routes/features";
+import { Route as AuthenticatedRouteImport } from "./routes/_authenticated";
+import { Route as AuthenticatedIndexRouteImport } from "./routes/_authenticated/index";
+import { Route as AuthenticatedTransactionsRouteImport } from "./routes/_authenticated/transactions";
+import { Route as AuthenticatedSettingsRouteImport } from "./routes/_authenticated/settings";
+import { Route as AuthenticatedOutflowTypesRouteImport } from "./routes/_authenticated/outflow-types";
+import { Route as AuthenticatedInsightsRouteImport } from "./routes/_authenticated/insights";
+import { Route as AuthenticatedAccountsRouteImport } from "./routes/_authenticated/accounts";
 
 const FeaturesRoute = FeaturesRouteImport.update({
-  id: '/features',
-  path: '/features',
+  id: "/features",
+  path: "/features",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+  id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 const AuthenticatedTransactionsRoute =
   AuthenticatedTransactionsRouteImport.update({
-    id: '/transactions',
-    path: '/transactions',
+    id: "/transactions",
+    path: "/transactions",
     getParentRoute: () => AuthenticatedRoute,
-  } as any)
+  } as any);
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+  id: "/settings",
+  path: "/settings",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 const AuthenticatedOutflowTypesRoute =
   AuthenticatedOutflowTypesRouteImport.update({
-    id: '/outflow-types',
-    path: '/outflow-types',
+    id: "/outflow-types",
+    path: "/outflow-types",
     getParentRoute: () => AuthenticatedRoute,
-  } as any)
+  } as any);
 const AuthenticatedInsightsRoute = AuthenticatedInsightsRouteImport.update({
-  id: '/insights',
-  path: '/insights',
+  id: "/insights",
+  path: "/insights",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 const AuthenticatedAccountsRoute = AuthenticatedAccountsRouteImport.update({
-  id: '/accounts',
-  path: '/accounts',
+  id: "/accounts",
+  path: "/accounts",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/features': typeof FeaturesRoute
-  '/accounts': typeof AuthenticatedAccountsRoute
-  '/insights': typeof AuthenticatedInsightsRoute
-  '/outflow-types': typeof AuthenticatedOutflowTypesRoute
-  '/settings': typeof AuthenticatedSettingsRoute
-  '/transactions': typeof AuthenticatedTransactionsRoute
-  '/': typeof AuthenticatedIndexRoute
+  "/features": typeof FeaturesRoute;
+  "/accounts": typeof AuthenticatedAccountsRoute;
+  "/insights": typeof AuthenticatedInsightsRoute;
+  "/outflow-types": typeof AuthenticatedOutflowTypesRoute;
+  "/settings": typeof AuthenticatedSettingsRoute;
+  "/transactions": typeof AuthenticatedTransactionsRoute;
+  "/": typeof AuthenticatedIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/features': typeof FeaturesRoute
-  '/accounts': typeof AuthenticatedAccountsRoute
-  '/insights': typeof AuthenticatedInsightsRoute
-  '/outflow-types': typeof AuthenticatedOutflowTypesRoute
-  '/settings': typeof AuthenticatedSettingsRoute
-  '/transactions': typeof AuthenticatedTransactionsRoute
-  '/': typeof AuthenticatedIndexRoute
+  "/features": typeof FeaturesRoute;
+  "/accounts": typeof AuthenticatedAccountsRoute;
+  "/insights": typeof AuthenticatedInsightsRoute;
+  "/outflow-types": typeof AuthenticatedOutflowTypesRoute;
+  "/settings": typeof AuthenticatedSettingsRoute;
+  "/transactions": typeof AuthenticatedTransactionsRoute;
+  "/": typeof AuthenticatedIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/features': typeof FeaturesRoute
-  '/_authenticated/accounts': typeof AuthenticatedAccountsRoute
-  '/_authenticated/insights': typeof AuthenticatedInsightsRoute
-  '/_authenticated/outflow-types': typeof AuthenticatedOutflowTypesRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
-  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
+  __root__: typeof rootRouteImport;
+  "/_authenticated": typeof AuthenticatedRouteWithChildren;
+  "/features": typeof FeaturesRoute;
+  "/_authenticated/accounts": typeof AuthenticatedAccountsRoute;
+  "/_authenticated/insights": typeof AuthenticatedInsightsRoute;
+  "/_authenticated/outflow-types": typeof AuthenticatedOutflowTypesRoute;
+  "/_authenticated/settings": typeof AuthenticatedSettingsRoute;
+  "/_authenticated/transactions": typeof AuthenticatedTransactionsRoute;
+  "/_authenticated/": typeof AuthenticatedIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/features'
-    | '/accounts'
-    | '/insights'
-    | '/outflow-types'
-    | '/settings'
-    | '/transactions'
-    | '/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/features"
+    | "/accounts"
+    | "/insights"
+    | "/outflow-types"
+    | "/settings"
+    | "/transactions"
+    | "/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/features'
-    | '/accounts'
-    | '/insights'
-    | '/outflow-types'
-    | '/settings'
-    | '/transactions'
-    | '/'
+    | "/features"
+    | "/accounts"
+    | "/insights"
+    | "/outflow-types"
+    | "/settings"
+    | "/transactions"
+    | "/";
   id:
-    | '__root__'
-    | '/_authenticated'
-    | '/features'
-    | '/_authenticated/accounts'
-    | '/_authenticated/insights'
-    | '/_authenticated/outflow-types'
-    | '/_authenticated/settings'
-    | '/_authenticated/transactions'
-    | '/_authenticated/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/_authenticated"
+    | "/features"
+    | "/_authenticated/accounts"
+    | "/_authenticated/insights"
+    | "/_authenticated/outflow-types"
+    | "/_authenticated/settings"
+    | "/_authenticated/transactions"
+    | "/_authenticated/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
-  FeaturesRoute: typeof FeaturesRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
+  FeaturesRoute: typeof FeaturesRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/features': {
-      id: '/features'
-      path: '/features'
-      fullPath: '/features'
-      preLoaderRoute: typeof FeaturesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/transactions': {
-      id: '/_authenticated/transactions'
-      path: '/transactions'
-      fullPath: '/transactions'
-      preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/outflow-types': {
-      id: '/_authenticated/outflow-types'
-      path: '/outflow-types'
-      fullPath: '/outflow-types'
-      preLoaderRoute: typeof AuthenticatedOutflowTypesRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/insights': {
-      id: '/_authenticated/insights'
-      path: '/insights'
-      fullPath: '/insights'
-      preLoaderRoute: typeof AuthenticatedInsightsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/accounts': {
-      id: '/_authenticated/accounts'
-      path: '/accounts'
-      fullPath: '/accounts'
-      preLoaderRoute: typeof AuthenticatedAccountsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
+    "/features": {
+      id: "/features";
+      path: "/features";
+      fullPath: "/features";
+      preLoaderRoute: typeof FeaturesRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated": {
+      id: "/_authenticated";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthenticatedRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated/": {
+      id: "/_authenticated/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/transactions": {
+      id: "/_authenticated/transactions";
+      path: "/transactions";
+      fullPath: "/transactions";
+      preLoaderRoute: typeof AuthenticatedTransactionsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/settings": {
+      id: "/_authenticated/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/outflow-types": {
+      id: "/_authenticated/outflow-types";
+      path: "/outflow-types";
+      fullPath: "/outflow-types";
+      preLoaderRoute: typeof AuthenticatedOutflowTypesRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/insights": {
+      id: "/_authenticated/insights";
+      path: "/insights";
+      fullPath: "/insights";
+      preLoaderRoute: typeof AuthenticatedInsightsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/accounts": {
+      id: "/_authenticated/accounts";
+      path: "/accounts";
+      fullPath: "/accounts";
+      preLoaderRoute: typeof AuthenticatedAccountsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
   }
 }
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedAccountsRoute: typeof AuthenticatedAccountsRoute
-  AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute
-  AuthenticatedOutflowTypesRoute: typeof AuthenticatedOutflowTypesRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
-  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAccountsRoute: typeof AuthenticatedAccountsRoute;
+  AuthenticatedInsightsRoute: typeof AuthenticatedInsightsRoute;
+  AuthenticatedOutflowTypesRoute: typeof AuthenticatedOutflowTypesRoute;
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
+  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute;
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -202,16 +202,16 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-}
+};
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren,
-)
+  AuthenticatedRouteChildren
+);
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   FeaturesRoute: FeaturesRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

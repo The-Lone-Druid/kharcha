@@ -8,7 +8,7 @@ const crons = cronJobs();
 crons.daily(
   "daily reminder notifications",
   { hourUTC: 9, minuteUTC: 0 },
-  internal.reminders.scheduledReminders,
+  internal.reminders.scheduledReminders
 );
 
 export default crons;

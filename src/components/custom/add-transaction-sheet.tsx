@@ -262,7 +262,7 @@ export function AddTransactionSheet({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto pb-6">
+      <SheetContent className="w-full overflow-y-auto pb-6 sm:max-w-[600px]">
         <SheetHeader>
           <SheetTitle>
             {transaction ? "Edit Transaction" : "Add Transaction"}
@@ -282,7 +282,7 @@ export function AddTransactionSheet({
             {/* Basic Information */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Basic Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="amount"
@@ -313,7 +313,7 @@ export function AddTransactionSheet({
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full pl-3 text-left font-normal h-10",
+                                "h-10 w-full pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -485,7 +485,7 @@ export function AddTransactionSheet({
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
+            <div className="flex flex-col-reverse space-y-2 space-y-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
               <Button
                 type="button"
                 variant="outline"

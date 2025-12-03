@@ -98,7 +98,10 @@ describe("export-utils", () => {
       expect(mockCreateElement).toHaveBeenCalledWith("a");
       expect(mockCreateObjectURL).toHaveBeenCalled();
       expect(mockSetAttribute).toHaveBeenCalledWith("href", "blob:test-url");
-      expect(mockSetAttribute).toHaveBeenCalledWith("download", "transactions.csv");
+      expect(mockSetAttribute).toHaveBeenCalledWith(
+        "download",
+        "transactions.csv"
+      );
       expect(mockAppendChild).toHaveBeenCalled();
       expect(mockClick).toHaveBeenCalled();
       expect(mockRemoveChild).toHaveBeenCalled();
@@ -108,7 +111,10 @@ describe("export-utils", () => {
     it("should use custom filename", () => {
       exportToCSV([mockTransaction], "my-exports.csv");
 
-      expect(mockSetAttribute).toHaveBeenCalledWith("download", "my-exports.csv");
+      expect(mockSetAttribute).toHaveBeenCalledWith(
+        "download",
+        "my-exports.csv"
+      );
     });
 
     it("should handle transaction with subscription metadata", () => {
@@ -171,8 +177,16 @@ describe("export-utils", () => {
     it("should handle multiple transactions", () => {
       const transactions = [
         mockTransaction,
-        { ...mockTransaction, _id: "tx2" as unknown as Transaction["_id"], amount: 2500 },
-        { ...mockTransaction, _id: "tx3" as unknown as Transaction["_id"], amount: 3500 },
+        {
+          ...mockTransaction,
+          _id: "tx2" as unknown as Transaction["_id"],
+          amount: 2500,
+        },
+        {
+          ...mockTransaction,
+          _id: "tx3" as unknown as Transaction["_id"],
+          amount: 3500,
+        },
       ];
 
       exportToCSV(transactions);
@@ -203,7 +217,10 @@ describe("export-utils", () => {
 
       exportSummaryToCSV(summaryData, "monthly-summary.csv");
 
-      expect(mockSetAttribute).toHaveBeenCalledWith("download", "monthly-summary.csv");
+      expect(mockSetAttribute).toHaveBeenCalledWith(
+        "download",
+        "monthly-summary.csv"
+      );
     });
 
     it("should handle string values", () => {

@@ -3,7 +3,10 @@ import type { Transaction } from "@/types";
 /**
  * Export transactions to CSV format
  */
-export function exportToCSV(transactions: Transaction[], filename = "transactions.csv") {
+export function exportToCSV(
+  transactions: Transaction[],
+  filename = "transactions.csv"
+) {
   if (transactions.length === 0) {
     throw new Error("No transactions to export");
   }
@@ -27,13 +30,15 @@ export function exportToCSV(transactions: Transaction[], filename = "transaction
     const account = t.account?.name || "Unknown";
     const accountType = t.account?.type || "N/A";
     const note = t.note || "";
-    
+
     // Extract relevant metadata
     let details = "";
     if (t.metadata) {
       if ("provider" in t.metadata) details = t.metadata.provider as string;
-      else if ("borrowerName" in t.metadata) details = t.metadata.borrowerName as string;
-      else if ("loanName" in t.metadata) details = t.metadata.loanName as string;
+      else if ("borrowerName" in t.metadata)
+        details = t.metadata.borrowerName as string;
+      else if ("loanName" in t.metadata)
+        details = t.metadata.loanName as string;
     }
 
     return [
@@ -54,15 +59,15 @@ export function exportToCSV(transactions: Transaction[], filename = "transaction
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
-  
+
   link.setAttribute("href", url);
   link.setAttribute("download", filename);
   link.style.visibility = "hidden";
-  
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  
+
   URL.revokeObjectURL(url);
 }
 
@@ -74,25 +79,24 @@ export function exportSummaryToCSV(
   filename = "summary.csv"
 ) {
   const headers = ["Category", "Value"];
-  const rows = data.map((item) => [
-    `"${item.label}"`,
-    `"${item.value}"`,
-  ].join(","));
+  const rows = data.map((item) =>
+    [`"${item.label}"`, `"${item.value}"`].join(",")
+  );
 
   const csv = [headers.join(","), ...rows].join("\n");
 
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
-  
+
   link.setAttribute("href", url);
   link.setAttribute("download", filename);
   link.style.visibility = "hidden";
-  
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  
+
   URL.revokeObjectURL(url);
 }
 

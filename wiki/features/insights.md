@@ -7,6 +7,7 @@ The Insights page transforms your transaction data into actionable knowledge abo
 ## Overview
 
 Insights help you answer questions like:
+
 - Where does my money go?
 - Am I spending more than usual?
 - Which categories need attention?
@@ -21,11 +22,13 @@ Insights help you answer questions like:
 **What it shows:** Pie chart of spending by category for the current month.
 
 **How to read it:**
+
 - Larger slices = more spending
 - Colors match category colors
 - Hover for exact amounts and percentages
 
 **Insights to look for:**
+
 - Is one category dominating?
 - Any unexpected large slices?
 - Categories that should be smaller?
@@ -37,12 +40,14 @@ Insights help you answer questions like:
 **What it shows:** Line or bar chart of total spending over time.
 
 **Time periods:**
+
 - Last 7 days
 - Last 30 days
 - Last 6 months
 - Last 12 months
 
 **Insights to look for:**
+
 - Upward trend = spending increasing
 - Downward trend = spending decreasing
 - Spikes = unusual months (holidays, big purchases)
@@ -54,6 +59,7 @@ Insights help you answer questions like:
 **What it shows:** Compare spending across categories over time.
 
 **Use this to:**
+
 - See if a category is growing
 - Identify seasonal patterns
 - Compare before/after lifestyle changes
@@ -65,6 +71,7 @@ Insights help you answer questions like:
 **What it shows:** Your largest individual transactions.
 
 **Why it matters:**
+
 - Big expenses have outsized impact
 - Helps identify one-time vs recurring big expenses
 - Spot potential areas for savings
@@ -76,6 +83,7 @@ Insights help you answer questions like:
 **What it shows:** How much of each budget has been used.
 
 **Visual indicators:**
+
 - Green: On track (<75% used)
 - Yellow: Caution (75-90% used)
 - Red: Over budget (>90% or exceeded)
@@ -87,6 +95,7 @@ Insights help you answer questions like:
 ### Pie Charts
 
 Best for: Category distribution
+
 - Shows proportions
 - Quick visual of where money goes
 - Hover for details
@@ -94,6 +103,7 @@ Best for: Category distribution
 ### Bar Charts
 
 Best for: Comparisons
+
 - Compare months side by side
 - Compare categories
 - Easy to see differences
@@ -101,6 +111,7 @@ Best for: Comparisons
 ### Line Charts
 
 Best for: Trends over time
+
 - Shows direction (up/down)
 - Identifies patterns
 - Spots anomalies
@@ -112,6 +123,7 @@ Best for: Trends over time
 ### Weekly Check
 
 Quick 2-minute review:
+
 1. Glance at category breakdown
 2. Note any surprises
 3. Check if on track for budgets
@@ -119,6 +131,7 @@ Quick 2-minute review:
 ### Monthly Analysis
 
 Deeper 10-minute review:
+
 1. Compare to last month
 2. Review each category's spending
 3. Identify areas for improvement
@@ -127,6 +140,7 @@ Deeper 10-minute review:
 ### Quarterly Review
 
 Strategic 30-minute session:
+
 1. Review 3-month trends
 2. Analyze category patterns
 3. Evaluate financial goals
@@ -181,6 +195,7 @@ Strategic 30-minute session:
 ### Spotting Problems
 
 Look for:
+
 - Categories with no budget that are growing
 - Spending patterns you don't recognize
 - Transactions you don't remember
@@ -204,6 +219,7 @@ Look for:
 ### 3. Take Action
 
 Insights are only valuable if you act on them:
+
 - Set budgets based on what you learn
 - Make concrete changes
 - Track if changes are working
@@ -219,6 +235,7 @@ Insights are only valuable if you act on them:
 ## Future Insights (Coming Soon)
 
 Planned additions:
+
 - AI-powered spending predictions
 - Anomaly detection (unusual transactions)
 - Savings recommendations

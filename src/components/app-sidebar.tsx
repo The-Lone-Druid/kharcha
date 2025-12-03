@@ -15,7 +15,14 @@ import {
 import { cn } from "@/lib/utils";
 import { useClerk } from "@clerk/clerk-react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { BarChart3, Home, LogOut, Receipt, Settings, Wallet } from "lucide-react";
+import {
+  BarChart3,
+  Home,
+  LogOut,
+  Receipt,
+  Settings,
+  Wallet,
+} from "lucide-react";
 
 const menuItems = [
   {
@@ -48,11 +55,11 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center justify-between gap-2 px-4 py-3">
-          <div className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-primary to-orange-600 shadow-lg shadow-primary/25 group-hover:shadow-primary/40 transition-all duration-300 group-hover:scale-105">
+          <div className="group flex items-center gap-3">
+            <div className="from-primary shadow-primary/25 group-hover:shadow-primary/40 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-105">
               <Wallet className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-lg bg-linear-to-r from-primary to-orange-600 bg-clip-text text-transparent">
+            <span className="from-primary bg-linear-to-r to-orange-600 bg-clip-text text-lg font-bold text-transparent">
               Kharcha
             </span>
           </div>
@@ -61,7 +68,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70">
+          <SidebarGroupLabel className="text-muted-foreground/70 text-xs tracking-wider uppercase">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -70,24 +77,27 @@ export function AppSidebar() {
                 const isActive = location.pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
+                    <SidebarMenuButton
                       asChild
                       className={cn(
-                        "transition-all duration-200 rounded-lg",
-                        isActive && "bg-primary/10 text-primary border-l-2 border-primary"
+                        "rounded-lg transition-all duration-200",
+                        isActive &&
+                          "bg-primary/10 text-primary border-primary border-l-2"
                       )}
                     >
-                      <Link 
+                      <Link
                         to={item.url}
                         className={cn(
                           "flex items-center gap-3 px-3 py-2.5",
                           isActive && "font-medium"
                         )}
                       >
-                        <item.icon className={cn(
-                          "h-5 w-5 transition-colors",
-                          isActive ? "text-primary" : "text-muted-foreground"
-                        )} />
+                        <item.icon
+                          className={cn(
+                            "h-5 w-5 transition-colors",
+                            isActive ? "text-primary" : "text-muted-foreground"
+                          )}
+                        />
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
@@ -98,10 +108,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-border/50 p-4">
+      <SidebarFooter className="border-border/50 border-t p-4">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 w-full justify-start gap-3 transition-colors"
           onClick={() => signOut({ redirectUrl: "/" })}
         >
           <LogOut className="h-5 w-5" />

@@ -7,6 +7,7 @@ Customize Kharcha to match your preferences and manage your account.
 ## Accessing Settings
 
 Navigate to **Settings** from:
+
 - Sidebar menu (desktop)
 - Bottom navigation (mobile)
 - User menu dropdown
@@ -20,6 +21,7 @@ Navigate to **Settings** from:
 **What it does:** Sets the currency symbol for all amounts.
 
 **Options:**
+
 - INR (₹) - Indian Rupee
 - USD ($) - US Dollar
 - EUR (€) - Euro
@@ -40,6 +42,7 @@ Navigate to **Settings** from:
 | System | Matches your device setting |
 
 **Tips:**
+
 - Dark mode is easier on the eyes at night
 - System follows your OS preference automatically
 
@@ -48,9 +51,11 @@ Navigate to **Settings** from:
 **What it does:** Interface language preference.
 
 **Currently supported:**
+
 - English
 
 **Coming soon:**
+
 - Hindi
 - Other languages
 
@@ -59,6 +64,7 @@ Navigate to **Settings** from:
 ## Account Information
 
 View your account details:
+
 - Name
 - Email
 - Profile picture
@@ -80,6 +86,7 @@ Export your data for backup or analysis.
 ### Export Contents
 
 The export includes:
+
 - All accounts
 - All categories (outflow types)
 - All transactions
@@ -134,6 +141,7 @@ The export includes:
 ## Logging Out
 
 To log out:
+
 1. Click your profile picture/icon
 2. Select **"Log out"**
 
@@ -197,6 +205,7 @@ To delete your account and all data:
 ## Future Settings (Coming Soon)
 
 Planned additions:
+
 - Notification preferences
 - Default account selection
 - Date format preferences

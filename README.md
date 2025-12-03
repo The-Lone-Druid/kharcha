@@ -100,6 +100,7 @@ npm run dev
 This command runs both the Vite dev server and Convex dev server concurrently.
 
 The app will be available at:
+
 - **Frontend:** http://localhost:5173
 - **Convex Dashboard:** Opens automatically or visit your Convex project dashboard
 
@@ -140,13 +141,13 @@ kharcha/
 
 ## 🔧 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server (Vite + Convex) |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
-| `npm run seed` | Seed default outflow types |
+| Command           | Description                              |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Start development server (Vite + Convex) |
+| `npm run build`   | Build for production                     |
+| `npm run preview` | Preview production build                 |
+| `npm run lint`    | Run ESLint                               |
+| `npm run seed`    | Seed default outflow types               |
 
 ## 🌐 Deployment
 

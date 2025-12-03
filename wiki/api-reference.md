@@ -10,10 +10,10 @@ Kharcha uses [Convex](https://convex.dev/) as its backend. All API calls are mad
 
 ### API Types
 
-| Type | Description |
-|------|-------------|
-| **Query** | Read-only operations that automatically update when data changes |
-| **Mutation** | Write operations that modify data |
+| Type         | Description                                                      |
+| ------------ | ---------------------------------------------------------------- |
+| **Query**    | Read-only operations that automatically update when data changes |
+| **Mutation** | Write operations that modify data                                |
 
 ---
 
@@ -26,6 +26,7 @@ Kharcha uses [Convex](https://convex.dev/) as its backend. All API calls are mad
 Gets the currently authenticated user's profile.
 
 **Returns:**
+
 ```typescript
 {
   _id: Id<"users">,
@@ -43,6 +44,7 @@ Gets the currently authenticated user's profile.
 Creates a new user or updates an existing one (called on authentication).
 
 **Arguments:**
+
 ```typescript
 {
   clerkId: string,
@@ -63,14 +65,15 @@ Creates a new user or updates an existing one (called on authentication).
 Lists all accounts for the current user.
 
 **Returns:**
+
 ```typescript
 Array<{
-  _id: Id<"accounts">,
-  name: string,
-  type: "Cash" | "Bank" | "Credit Card" | "UPI" | "Loan" | "Wallet" | "Other",
-  colorHex: string,
-  isArchived: boolean
-}>
+  _id: Id<"accounts">;
+  name: string;
+  type: "Cash" | "Bank" | "Credit Card" | "UPI" | "Loan" | "Wallet" | "Other";
+  colorHex: string;
+  isArchived: boolean;
+}>;
 ```
 
 ### `accounts.getAccountWithBalance`
@@ -80,13 +83,15 @@ Array<{
 Gets a specific account with its calculated balance.
 
 **Arguments:**
+
 ```typescript
 {
-  id: Id<"accounts">
+  id: Id<"accounts">;
 }
 ```
 
 **Returns:**
+
 ```typescript
 {
   _id: Id<"accounts">,
@@ -105,6 +110,7 @@ Gets a specific account with its calculated balance.
 Creates a new account.
 
 **Arguments:**
+
 ```typescript
 {
   name: string,
@@ -120,6 +126,7 @@ Creates a new account.
 Updates an existing account.
 
 **Arguments:**
+
 ```typescript
 {
   id: Id<"accounts">,
@@ -137,9 +144,10 @@ Updates an existing account.
 Deletes an account. Will fail if the account has transactions.
 
 **Arguments:**
+
 ```typescript
 {
-  id: Id<"accounts">
+  id: Id<"accounts">;
 }
 ```
 
@@ -154,6 +162,7 @@ Deletes an account. Will fail if the account has transactions.
 Lists transactions for the current user with optional filtering.
 
 **Arguments:**
+
 ```typescript
 {
   limit?: number,           // Default: 50
@@ -165,16 +174,17 @@ Lists transactions for the current user with optional filtering.
 ```
 
 **Returns:**
+
 ```typescript
 Array<{
-  _id: Id<"transactions">,
-  amount: number,
-  date: number,
-  note: string,
-  metadata: any,
-  account: { _id, name, type, colorHex } | null,
-  outflowType: { _id, name, emoji, colorHex } | null
-}>
+  _id: Id<"transactions">;
+  amount: number;
+  date: number;
+  note: string;
+  metadata: any;
+  account: { _id; name; type; colorHex } | null;
+  outflowType: { _id; name; emoji; colorHex } | null;
+}>;
 ```
 
 ### `transactions.getTransaction`
@@ -184,9 +194,10 @@ Array<{
 Gets a specific transaction by ID.
 
 **Arguments:**
+
 ```typescript
 {
-  id: Id<"transactions">
+  id: Id<"transactions">;
 }
 ```
 
@@ -197,6 +208,7 @@ Gets a specific transaction by ID.
 Creates a new transaction.
 
 **Arguments:**
+
 ```typescript
 {
   amount: number,
@@ -215,6 +227,7 @@ Creates a new transaction.
 Updates an existing transaction.
 
 **Arguments:**
+
 ```typescript
 {
   id: Id<"transactions">,
@@ -234,9 +247,10 @@ Updates an existing transaction.
 Deletes a transaction.
 
 **Arguments:**
+
 ```typescript
 {
-  id: Id<"transactions">
+  id: Id<"transactions">;
 }
 ```
 
@@ -251,19 +265,20 @@ Deletes a transaction.
 Lists all outflow types (categories) for the current user.
 
 **Returns:**
+
 ```typescript
 Array<{
-  _id: Id<"outflowTypes">,
-  name: string,
-  emoji: string,
-  colorHex: string,
-  isCustom: boolean,
+  _id: Id<"outflowTypes">;
+  name: string;
+  emoji: string;
+  colorHex: string;
+  isCustom: boolean;
   extraFields: Array<{
-    key: string,
-    label: string,
-    type: "text" | "number" | "date" | "toggle"
-  }>
-}>
+    key: string;
+    label: string;
+    type: "text" | "number" | "date" | "toggle";
+  }>;
+}>;
 ```
 
 ### `outflowTypes.createOutflowType`
@@ -273,6 +288,7 @@ Array<{
 Creates a new outflow type.
 
 **Arguments:**
+
 ```typescript
 {
   name: string,
@@ -293,6 +309,7 @@ Creates a new outflow type.
 Updates an existing outflow type.
 
 **Arguments:**
+
 ```typescript
 {
   id: Id<"outflowTypes">,
@@ -310,9 +327,10 @@ Updates an existing outflow type.
 Deletes an outflow type. Will fail if transactions are using it.
 
 **Arguments:**
+
 ```typescript
 {
-  id: Id<"outflowTypes">
+  id: Id<"outflowTypes">;
 }
 ```
 
@@ -327,6 +345,7 @@ Deletes an outflow type. Will fail if transactions are using it.
 Lists budgets for the current user, optionally filtered by month.
 
 **Arguments:**
+
 ```typescript
 {
   month?: string  // Format: "YYYY-MM"
@@ -334,14 +353,15 @@ Lists budgets for the current user, optionally filtered by month.
 ```
 
 **Returns:**
+
 ```typescript
 Array<{
-  _id: Id<"budgets">,
-  amount: number,
-  month: string,
-  outflowType: { _id, name, emoji, colorHex } | null,
-  spent: number  // Calculated from transactions
-}>
+  _id: Id<"budgets">;
+  amount: number;
+  month: string;
+  outflowType: { _id; name; emoji; colorHex } | null;
+  spent: number; // Calculated from transactions
+}>;
 ```
 
 ### `budgets.createBudget`
@@ -351,6 +371,7 @@ Array<{
 Creates a new budget.
 
 **Arguments:**
+
 ```typescript
 {
   outflowTypeId: Id<"outflowTypes">,
@@ -366,6 +387,7 @@ Creates a new budget.
 Updates an existing budget.
 
 **Arguments:**
+
 ```typescript
 {
   id: Id<"budgets">,
@@ -381,9 +403,10 @@ Updates an existing budget.
 Deletes a budget.
 
 **Arguments:**
+
 ```typescript
 {
-  id: Id<"budgets">
+  id: Id<"budgets">;
 }
 ```
 
@@ -398,22 +421,24 @@ Deletes a budget.
 Gets spending aggregated by category for a specific month.
 
 **Arguments:**
+
 ```typescript
 {
-  month: string  // Format: "YYYY-MM"
+  month: string; // Format: "YYYY-MM"
 }
 ```
 
 **Returns:**
+
 ```typescript
 Array<{
-  outflowTypeId: Id<"outflowTypes">,
-  name: string,
-  emoji: string,
-  colorHex: string,
-  total: number,
-  count: number
-}>
+  outflowTypeId: Id<"outflowTypes">;
+  name: string;
+  emoji: string;
+  colorHex: string;
+  total: number;
+  count: number;
+}>;
 ```
 
 ### `insights.getSpendingTrend`
@@ -423,18 +448,20 @@ Array<{
 Gets spending trend over multiple months.
 
 **Arguments:**
+
 ```typescript
 {
-  months: number  // Number of months to include
+  months: number; // Number of months to include
 }
 ```
 
 **Returns:**
+
 ```typescript
 Array<{
-  month: string,
-  total: number
-}>
+  month: string;
+  total: number;
+}>;
 ```
 
 ### `insights.getTopExpenses`
@@ -444,6 +471,7 @@ Array<{
 Gets the largest transactions.
 
 **Arguments:**
+
 ```typescript
 {
   limit?: number  // Default: 10
@@ -463,7 +491,7 @@ import { api } from "@convex/_generated/api";
 function MyComponent() {
   // Query - automatically updates on changes
   const transactions = useQuery(api.transactions.listTransactions, {
-    limit: 20
+    limit: 20,
   });
 
   // Mutation
@@ -475,7 +503,7 @@ function MyComponent() {
       date: Date.now(),
       accountId: "...",
       outflowTypeId: "...",
-      note: "Coffee"
+      note: "Coffee",
     });
   };
 }

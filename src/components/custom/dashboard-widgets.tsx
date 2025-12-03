@@ -21,7 +21,11 @@ import { api } from "@convex/_generated/api";
 import { useTheme } from "@/hooks/use-theme";
 
 // Custom tooltip component that adapts to theme
-const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<number, string>) => {
   const { theme } = useTheme();
 
   if (active && payload && payload.length) {
@@ -30,15 +34,19 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
     // Handle pie chart data (has payload.name)
     if (data.payload && data.payload.name) {
       return (
-        <div className={`rounded-lg border p-3 shadow-lg ${
-          theme === 'dark'
-            ? 'bg-gray-800 border-gray-700 text-white'
-            : 'bg-white border-gray-200 text-gray-900'
-        }`}>
+        <div
+          className={`rounded-lg border p-3 shadow-lg ${
+            theme === "dark"
+              ? "border-gray-700 bg-gray-800 text-white"
+              : "border-gray-200 bg-white text-gray-900"
+          }`}
+        >
           <p className="font-medium">{data.payload.name}</p>
-          <p className={`text-sm ${
-            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-          }`}>
+          <p
+            className={`text-sm ${
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
             Amount: <span className="font-semibold">₹{data.value}</span>
           </p>
         </div>
@@ -47,15 +55,19 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
 
     // Handle bar chart data (uses label for month)
     return (
-      <div className={`rounded-lg border p-3 shadow-lg ${
-        theme === 'dark'
-          ? 'bg-gray-800 border-gray-700 text-white'
-          : 'bg-white border-gray-200 text-gray-900'
-      }`}>
+      <div
+        className={`rounded-lg border p-3 shadow-lg ${
+          theme === "dark"
+            ? "border-gray-700 bg-gray-800 text-white"
+            : "border-gray-200 bg-white text-gray-900"
+        }`}
+      >
         <p className="font-medium">{label}</p>
-        <p className={`text-sm ${
-          theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-        }`}>
+        <p
+          className={`text-sm ${
+            theme === "dark" ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
           Spent: <span className="font-semibold">₹{data.value}</span>
         </p>
       </div>
@@ -79,22 +91,22 @@ export function DashboardWidgets() {
   return (
     <div className="grid grid-cols-12 gap-4">
       {/* Total Spent This Month */}
-      <Card className="col-span-12 md:col-span-4 bg-linear-to-br from-amber-500/10 via-orange-500/5 to-transparent border-amber-500/20 hover:border-amber-500/40 transition-colors">
+      <Card className="col-span-12 border-amber-500/20 bg-linear-to-br from-amber-500/10 via-orange-500/5 to-transparent transition-colors hover:border-amber-500/40 md:col-span-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total Spent This Month
           </CardTitle>
-          <div className="p-2 rounded-lg bg-amber-500/10">
+          <div className="rounded-lg bg-amber-500/10 p-2">
             <TrendingUp className="h-4 w-4 text-amber-500" />
           </div>
         </CardHeader>
         <CardContent>
           {monthlySummary ? (
             <>
-              <div className="text-2xl font-bold bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+              <div className="bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-2xl font-bold text-transparent">
                 ₹{monthlySummary.totalSpent.toLocaleString() || 0}
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 +20.1% from last month
               </p>
             </>
@@ -108,18 +120,20 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Tracking Streak */}
-      <Card className="col-span-12 md:col-span-4 bg-linear-to-br from-green-500/10 via-emerald-500/5 to-transparent border-green-500/20 hover:border-green-500/40 transition-colors">
+      <Card className="col-span-12 border-green-500/20 bg-linear-to-br from-green-500/10 via-emerald-500/5 to-transparent transition-colors hover:border-green-500/40 md:col-span-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Tracking Streak</CardTitle>
-          <div className="p-2 rounded-lg bg-green-500/10">
+          <div className="rounded-lg bg-green-500/10 p-2">
             <Target className="h-4 w-4 text-green-500" />
           </div>
         </CardHeader>
         <CardContent>
           {trackingStreak !== undefined ? (
             <>
-              <div className="text-2xl font-bold bg-linear-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">{trackingStreak}</div>
-              <p className="text-xs text-muted-foreground">consecutive days</p>
+              <div className="bg-linear-to-r from-green-500 to-emerald-500 bg-clip-text text-2xl font-bold text-transparent">
+                {trackingStreak}
+              </div>
+              <p className="text-muted-foreground text-xs">consecutive days</p>
             </>
           ) : (
             <div className="space-y-2">
@@ -131,7 +145,7 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Top 5 Categories Pie Chart */}
-      <Card className="col-span-12 md:col-span-4 bg-linear-to-br from-blue-500/10 via-cyan-500/5 to-transparent border-blue-500/20 hover:border-blue-500/40 transition-colors">
+      <Card className="col-span-12 border-blue-500/20 bg-linear-to-br from-blue-500/10 via-cyan-500/5 to-transparent transition-colors hover:border-blue-500/40 md:col-span-4">
         <CardHeader>
           <CardTitle>Top 5 Categories This Month</CardTitle>
         </CardHeader>
@@ -168,7 +182,7 @@ export function DashboardWidgets() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-center text-muted-foreground">
+              <p className="text-muted-foreground text-center">
                 No data available
               </p>
             )
@@ -193,11 +207,11 @@ export function DashboardWidgets() {
                 {upcomingEvents.slice(0, 5).map((event) => (
                   <div
                     key={event.id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-2 border rounded space-y-2 sm:space-y-0"
+                    className="flex flex-col space-y-2 rounded border p-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:p-2"
                   >
                     <div>
                       <p className="font-medium">{event.description}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         {format(new Date(event.date), "MMM dd, yyyy")}
                       </p>
                     </div>
@@ -213,14 +227,14 @@ export function DashboardWidgets() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-muted-foreground">
+              <p className="text-muted-foreground text-center">
                 No upcoming events
               </p>
             )
           ) : (
             <div className="space-y-2">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="p-3 border rounded space-y-2">
+                <div key={i} className="space-y-2 rounded border p-3">
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-3 w-1/2" />
                   <Skeleton className="h-6 w-16 self-end" />
@@ -255,7 +269,7 @@ export function DashboardWidgets() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-center text-muted-foreground">
+              <p className="text-muted-foreground text-center">
                 No data available
               </p>
             )

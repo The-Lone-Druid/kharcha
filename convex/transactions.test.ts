@@ -7,7 +7,7 @@ import schema from "./schema";
  * ====================================
  * TRANSACTIONS API TESTS
  * ====================================
- * 
+ *
  * Tests for transaction operations including:
  * - Creating transactions
  * - Listing transactions with filters
@@ -19,19 +19,24 @@ import schema from "./schema";
 
 describe("Transactions API", () => {
   // Helper to create required dependencies (account and outflow type)
-  async function setupTestData(asUser: ReturnType<ReturnType<typeof convexTest>["withIdentity"]>) {
+  async function setupTestData(
+    asUser: ReturnType<ReturnType<typeof convexTest>["withIdentity"]>
+  ) {
     const accountId = await asUser.mutation(api.accounts.createAccount, {
       name: "Test Account",
       type: "Bank",
       colorHex: "#10b981",
     });
 
-    const outflowTypeId = await asUser.mutation(api.outflowTypes.createCustomOutflowType, {
-      name: "Expense",
-      emoji: "💸",
-      colorHex: "#ef4444",
-      extraFields: [],
-    });
+    const outflowTypeId = await asUser.mutation(
+      api.outflowTypes.createCustomOutflowType,
+      {
+        name: "Expense",
+        emoji: "💸",
+        colorHex: "#ef4444",
+        extraFields: [],
+      }
+    );
 
     return { accountId, outflowTypeId };
   }
@@ -39,18 +44,21 @@ describe("Transactions API", () => {
   describe("listTransactions", () => {
     it("should return null when user is not authenticated", async () => {
       const t = convexTest(schema);
-      
+
       const transactions = await t.query(api.transactions.listTransactions, {});
-      
+
       expect(transactions).toBeNull();
     });
 
     it("should return empty array for new user", async () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
-      
-      const transactions = await asUser.query(api.transactions.listTransactions, {});
-      
+
+      const transactions = await asUser.query(
+        api.transactions.listTransactions,
+        {}
+      );
+
       expect(transactions).toEqual([]);
     });
 
@@ -58,7 +66,7 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 500,
         date: Date.now(),
@@ -67,9 +75,12 @@ describe("Transactions API", () => {
         note: "Test transaction",
         metadata: {},
       });
-      
-      const transactions = await asUser.query(api.transactions.listTransactions, {});
-      
+
+      const transactions = await asUser.query(
+        api.transactions.listTransactions,
+        {}
+      );
+
       expect(transactions).toHaveLength(1);
       expect(transactions).not.toBeNull();
       expect(transactions![0]).toMatchObject({
@@ -84,13 +95,13 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
+
       const accountId2 = await asUser.mutation(api.accounts.createAccount, {
         name: "Account 2",
         type: "Cash",
         colorHex: "#3b82f6",
       });
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 100,
         date: Date.now(),
@@ -99,7 +110,7 @@ describe("Transactions API", () => {
         note: "From account 1",
         metadata: {},
       });
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 200,
         date: Date.now(),
@@ -108,11 +119,11 @@ describe("Transactions API", () => {
         note: "From account 2",
         metadata: {},
       });
-      
+
       const filtered = await asUser.query(api.transactions.listTransactions, {
         accountId,
       });
-      
+
       expect(filtered).toHaveLength(1);
       expect(filtered).not.toBeNull();
       expect(filtered![0].note).toBe("From account 1");
@@ -122,14 +133,17 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
-      const outflowTypeId2 = await asUser.mutation(api.outflowTypes.createCustomOutflowType, {
-        name: "Food",
-        emoji: "🍔",
-        colorHex: "#f59e0b",
-        extraFields: [],
-      });
-      
+
+      const outflowTypeId2 = await asUser.mutation(
+        api.outflowTypes.createCustomOutflowType,
+        {
+          name: "Food",
+          emoji: "🍔",
+          colorHex: "#f59e0b",
+          extraFields: [],
+        }
+      );
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 100,
         date: Date.now(),
@@ -138,7 +152,7 @@ describe("Transactions API", () => {
         note: "Expense",
         metadata: {},
       });
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 50,
         date: Date.now(),
@@ -147,11 +161,11 @@ describe("Transactions API", () => {
         note: "Food",
         metadata: {},
       });
-      
+
       const filtered = await asUser.query(api.transactions.listTransactions, {
         outflowTypeId,
       });
-      
+
       expect(filtered).toHaveLength(1);
       expect(filtered).not.toBeNull();
       expect(filtered![0].note).toBe("Expense");
@@ -161,11 +175,11 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
+
       const now = Date.now();
       const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
       const twoWeeksAgo = now - 14 * 24 * 60 * 60 * 1000;
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 100,
         date: now,
@@ -174,7 +188,7 @@ describe("Transactions API", () => {
         note: "Recent",
         metadata: {},
       });
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 200,
         date: twoWeeksAgo,
@@ -183,11 +197,11 @@ describe("Transactions API", () => {
         note: "Old",
         metadata: {},
       });
-      
+
       const filtered = await asUser.query(api.transactions.listTransactions, {
         startDate: oneWeekAgo,
       });
-      
+
       expect(filtered).toHaveLength(1);
       expect(filtered).not.toBeNull();
       expect(filtered![0].note).toBe("Recent");
@@ -197,7 +211,7 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
+
       for (let i = 0; i < 10; i++) {
         await asUser.mutation(api.transactions.addTransaction, {
           amount: 100 * i,
@@ -208,11 +222,11 @@ describe("Transactions API", () => {
           metadata: {},
         });
       }
-      
+
       const limited = await asUser.query(api.transactions.listTransactions, {
         limit: 5,
       });
-      
+
       expect(limited).toHaveLength(5);
     });
 
@@ -220,9 +234,9 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser1 = t.withIdentity({ subject: "user_1" });
       const asUser2 = t.withIdentity({ subject: "user_2" });
-      
+
       const { accountId, outflowTypeId } = await setupTestData(asUser1);
-      
+
       await asUser1.mutation(api.transactions.addTransaction, {
         amount: 500,
         date: Date.now(),
@@ -231,9 +245,12 @@ describe("Transactions API", () => {
         note: "User1 transaction",
         metadata: {},
       });
-      
-      const user2Transactions = await asUser2.query(api.transactions.listTransactions, {});
-      
+
+      const user2Transactions = await asUser2.query(
+        api.transactions.listTransactions,
+        {}
+      );
+
       expect(user2Transactions).toEqual([]);
     });
   });
@@ -243,7 +260,7 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
+
       const noAuth = convexTest(schema);
       await expect(
         noAuth.mutation(api.transactions.addTransaction, {
@@ -261,23 +278,29 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
-      const transactionId = await asUser.mutation(api.transactions.addTransaction, {
-        amount: 1500.50,
-        date: Date.now(),
-        accountId,
-        outflowTypeId,
-        note: "Monthly grocery",
-        metadata: { category: "essential" },
-      });
-      
+
+      const transactionId = await asUser.mutation(
+        api.transactions.addTransaction,
+        {
+          amount: 1500.5,
+          date: Date.now(),
+          accountId,
+          outflowTypeId,
+          note: "Monthly grocery",
+          metadata: { category: "essential" },
+        }
+      );
+
       expect(transactionId).toBeDefined();
-      
-      const transactions = await asUser.query(api.transactions.listTransactions, {});
+
+      const transactions = await asUser.query(
+        api.transactions.listTransactions,
+        {}
+      );
       expect(transactions).not.toBeNull();
       expect(transactions![0]).toMatchObject({
         _id: transactionId,
-        amount: 1500.50,
+        amount: 1500.5,
         note: "Monthly grocery",
       });
     });
@@ -286,10 +309,10 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser1 = t.withIdentity({ subject: "user_1" });
       const asUser2 = t.withIdentity({ subject: "user_2" });
-      
+
       const { accountId } = await setupTestData(asUser1);
       const { outflowTypeId } = await setupTestData(asUser2);
-      
+
       await expect(
         asUser2.mutation(api.transactions.addTransaction, {
           amount: 100,
@@ -306,10 +329,10 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser1 = t.withIdentity({ subject: "user_1" });
       const asUser2 = t.withIdentity({ subject: "user_2" });
-      
+
       const { accountId } = await setupTestData(asUser2);
       const { outflowTypeId } = await setupTestData(asUser1);
-      
+
       await expect(
         asUser2.mutation(api.transactions.addTransaction, {
           amount: 100,
@@ -328,22 +351,28 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
-      const transactionId = await asUser.mutation(api.transactions.addTransaction, {
-        amount: 100,
-        date: Date.now(),
-        accountId,
-        outflowTypeId,
-        note: "Original",
-        metadata: {},
-      });
-      
+
+      const transactionId = await asUser.mutation(
+        api.transactions.addTransaction,
+        {
+          amount: 100,
+          date: Date.now(),
+          accountId,
+          outflowTypeId,
+          note: "Original",
+          metadata: {},
+        }
+      );
+
       await asUser.mutation(api.transactions.updateTransaction, {
         id: transactionId,
         amount: 200,
       });
-      
-      const transactions = await asUser.query(api.transactions.listTransactions, {});
+
+      const transactions = await asUser.query(
+        api.transactions.listTransactions,
+        {}
+      );
       expect(transactions).not.toBeNull();
       expect(transactions![0].amount).toBe(200);
     });
@@ -352,22 +381,28 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
-      const transactionId = await asUser.mutation(api.transactions.addTransaction, {
-        amount: 100,
-        date: Date.now(),
-        accountId,
-        outflowTypeId,
-        note: "Original note",
-        metadata: {},
-      });
-      
+
+      const transactionId = await asUser.mutation(
+        api.transactions.addTransaction,
+        {
+          amount: 100,
+          date: Date.now(),
+          accountId,
+          outflowTypeId,
+          note: "Original note",
+          metadata: {},
+        }
+      );
+
       await asUser.mutation(api.transactions.updateTransaction, {
         id: transactionId,
         note: "Updated note",
       });
-      
-      const transactions = await asUser.query(api.transactions.listTransactions, {});
+
+      const transactions = await asUser.query(
+        api.transactions.listTransactions,
+        {}
+      );
       expect(transactions).not.toBeNull();
       expect(transactions![0].note).toBe("Updated note");
     });
@@ -376,18 +411,21 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser1 = t.withIdentity({ subject: "user_1" });
       const asUser2 = t.withIdentity({ subject: "user_2" });
-      
+
       const { accountId, outflowTypeId } = await setupTestData(asUser1);
-      
-      const transactionId = await asUser1.mutation(api.transactions.addTransaction, {
-        amount: 100,
-        date: Date.now(),
-        accountId,
-        outflowTypeId,
-        note: "User1's",
-        metadata: {},
-      });
-      
+
+      const transactionId = await asUser1.mutation(
+        api.transactions.addTransaction,
+        {
+          amount: 100,
+          date: Date.now(),
+          accountId,
+          outflowTypeId,
+          note: "User1's",
+          metadata: {},
+        }
+      );
+
       await expect(
         asUser2.mutation(api.transactions.updateTransaction, {
           id: transactionId,
@@ -402,19 +440,27 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
-      const transactionId = await asUser.mutation(api.transactions.addTransaction, {
-        amount: 100,
-        date: Date.now(),
-        accountId,
-        outflowTypeId,
-        note: "To delete",
-        metadata: {},
+
+      const transactionId = await asUser.mutation(
+        api.transactions.addTransaction,
+        {
+          amount: 100,
+          date: Date.now(),
+          accountId,
+          outflowTypeId,
+          note: "To delete",
+          metadata: {},
+        }
+      );
+
+      await asUser.mutation(api.transactions.deleteTransaction, {
+        id: transactionId,
       });
-      
-      await asUser.mutation(api.transactions.deleteTransaction, { id: transactionId });
-      
-      const transactions = await asUser.query(api.transactions.listTransactions, {});
+
+      const transactions = await asUser.query(
+        api.transactions.listTransactions,
+        {}
+      );
       expect(transactions).toEqual([]);
     });
 
@@ -422,20 +468,25 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser1 = t.withIdentity({ subject: "user_1" });
       const asUser2 = t.withIdentity({ subject: "user_2" });
-      
+
       const { accountId, outflowTypeId } = await setupTestData(asUser1);
-      
-      const transactionId = await asUser1.mutation(api.transactions.addTransaction, {
-        amount: 100,
-        date: Date.now(),
-        accountId,
-        outflowTypeId,
-        note: "User1's",
-        metadata: {},
-      });
-      
+
+      const transactionId = await asUser1.mutation(
+        api.transactions.addTransaction,
+        {
+          amount: 100,
+          date: Date.now(),
+          accountId,
+          outflowTypeId,
+          note: "User1's",
+          metadata: {},
+        }
+      );
+
       await expect(
-        asUser2.mutation(api.transactions.deleteTransaction, { id: transactionId })
+        asUser2.mutation(api.transactions.deleteTransaction, {
+          id: transactionId,
+        })
       ).rejects.toThrow();
     });
   });
@@ -443,18 +494,21 @@ describe("Transactions API", () => {
   describe("getMonthlySummary", () => {
     it("should return null when not authenticated", async () => {
       const t = convexTest(schema);
-      
+
       const summary = await t.query(api.transactions.getMonthlySummary, {});
-      
+
       expect(summary).toBeNull();
     });
 
     it("should return zero total for month with no transactions", async () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
-      
-      const summary = await asUser.query(api.transactions.getMonthlySummary, {});
-      
+
+      const summary = await asUser.query(
+        api.transactions.getMonthlySummary,
+        {}
+      );
+
       expect(summary).toMatchObject({
         totalSpent: 0,
         topTypes: [],
@@ -465,9 +519,9 @@ describe("Transactions API", () => {
       const t = convexTest(schema);
       const asUser = t.withIdentity({ subject: "user_123" });
       const { accountId, outflowTypeId } = await setupTestData(asUser);
-      
+
       const now = Date.now();
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 500,
         date: now,
@@ -476,7 +530,7 @@ describe("Transactions API", () => {
         note: "Transaction 1",
         metadata: {},
       });
-      
+
       await asUser.mutation(api.transactions.addTransaction, {
         amount: 300,
         date: now,
@@ -485,9 +539,12 @@ describe("Transactions API", () => {
         note: "Transaction 2",
         metadata: {},
       });
-      
-      const summary = await asUser.query(api.transactions.getMonthlySummary, {});
-      
+
+      const summary = await asUser.query(
+        api.transactions.getMonthlySummary,
+        {}
+      );
+
       expect(summary?.totalSpent).toBe(800);
     });
   });

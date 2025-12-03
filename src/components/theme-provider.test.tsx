@@ -25,7 +25,10 @@ function TestConsumer() {
 describe("ThemeProvider", () => {
   let localStorageMock: Record<string, string>;
   let matchMediaMock: ReturnType<typeof vi.fn>;
-  let documentClassListMock: { add: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
+  let documentClassListMock: {
+    add: ReturnType<typeof vi.fn>;
+    remove: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     // Mock localStorage
@@ -127,7 +130,10 @@ describe("ThemeProvider", () => {
         </ThemeProvider>
       );
 
-      expect(documentClassListMock.remove).toHaveBeenCalledWith("light", "dark");
+      expect(documentClassListMock.remove).toHaveBeenCalledWith(
+        "light",
+        "dark"
+      );
       expect(documentClassListMock.add).toHaveBeenCalledWith("dark");
     });
 
@@ -138,7 +144,10 @@ describe("ThemeProvider", () => {
         </ThemeProvider>
       );
 
-      expect(documentClassListMock.remove).toHaveBeenCalledWith("light", "dark");
+      expect(documentClassListMock.remove).toHaveBeenCalledWith(
+        "light",
+        "dark"
+      );
       expect(documentClassListMock.add).toHaveBeenCalledWith("light");
     });
 
@@ -188,7 +197,10 @@ describe("ThemeProvider", () => {
       });
 
       expect(screen.getByTestId("theme").textContent).toBe("dark");
-      expect(localStorage.setItem).toHaveBeenCalledWith("vite-ui-theme", "dark");
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        "vite-ui-theme",
+        "dark"
+      );
     });
 
     it("should switch from dark to light", () => {

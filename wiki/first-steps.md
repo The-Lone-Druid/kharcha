@@ -21,15 +21,15 @@ Let's go through each step.
 
 Accounts represent where your money is stored or comes from. Kharcha supports various account types:
 
-| Account Type | Example Use |
-|--------------|-------------|
-| **Cash** | Physical wallet, petty cash |
-| **Bank** | Savings account, current account |
-| **Credit Card** | Visa, Mastercard, Amex |
-| **UPI** | Google Pay, PhonePe, Paytm |
-| **Wallet** | Digital wallets like Amazon Pay |
-| **Loan** | Track loan payments |
-| **Other** | Any other financial account |
+| Account Type    | Example Use                      |
+| --------------- | -------------------------------- |
+| **Cash**        | Physical wallet, petty cash      |
+| **Bank**        | Savings account, current account |
+| **Credit Card** | Visa, Mastercard, Amex           |
+| **UPI**         | Google Pay, PhonePe, Paytm       |
+| **Wallet**      | Digital wallets like Amazon Pay  |
+| **Loan**        | Track loan payments              |
+| **Other**       | Any other financial account      |
 
 ### How to Create an Account
 
@@ -58,18 +58,18 @@ Kharcha comes with default expense categories, but you can create custom ones to
 
 When you sign up, these categories are automatically created:
 
-| Emoji | Category | Description |
-|-------|----------|-------------|
-| 🍔 | Food & Dining | Restaurants, groceries, food delivery |
-| 🚗 | Transportation | Fuel, public transit, ride-sharing |
-| 🏠 | Housing | Rent, utilities, maintenance |
-| 🛒 | Shopping | Clothing, electronics, general purchases |
-| 🎮 | Entertainment | Movies, games, streaming services |
-| 💊 | Healthcare | Medical expenses, pharmacy |
-| 📚 | Education | Courses, books, training |
-| ✈️ | Travel | Flights, hotels, vacation expenses |
-| 💼 | Business | Work-related expenses |
-| 🎁 | Gifts | Presents for others |
+| Emoji | Category       | Description                              |
+| ----- | -------------- | ---------------------------------------- |
+| 🍔    | Food & Dining  | Restaurants, groceries, food delivery    |
+| 🚗    | Transportation | Fuel, public transit, ride-sharing       |
+| 🏠    | Housing        | Rent, utilities, maintenance             |
+| 🛒    | Shopping       | Clothing, electronics, general purchases |
+| 🎮    | Entertainment  | Movies, games, streaming services        |
+| 💊    | Healthcare     | Medical expenses, pharmacy               |
+| 📚    | Education      | Courses, books, training                 |
+| ✈️    | Travel         | Flights, hotels, vacation expenses       |
+| 💼    | Business       | Work-related expenses                    |
+| 🎁    | Gifts          | Presents for others                      |
 
 ### Creating Custom Categories
 
@@ -112,13 +112,13 @@ Now let's record an expense!
 
 ### Transaction Fields Explained
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| Amount | ✅ | The transaction amount |
-| Account | ✅ | Which account to deduct from |
-| Category | ✅ | Type of expense |
-| Date | ✅ | Transaction date and time |
-| Note | ❌ | Optional description |
+| Field    | Required | Description                  |
+| -------- | -------- | ---------------------------- |
+| Amount   | ✅       | The transaction amount       |
+| Account  | ✅       | Which account to deduct from |
+| Category | ✅       | Type of expense              |
+| Date     | ✅       | Transaction date and time    |
+| Note     | ❌       | Optional description         |
 
 ---
 
@@ -135,6 +135,7 @@ For recurring expenses like Netflix, Spotify, or gym memberships:
 3. Click **Save**
 
 Subscriptions help you:
+
 - Track recurring expenses
 - Remember when payments are due
 - See total subscription costs
@@ -147,13 +148,13 @@ The Dashboard gives you an at-a-glance view of your finances:
 
 ### Dashboard Widgets
 
-| Widget | What It Shows |
-|--------|---------------|
-| **Total Balance** | Sum of all account balances |
-| **This Month's Spending** | Total spent this month |
-| **Category Breakdown** | Spending by category |
-| **Recent Transactions** | Latest transactions |
-| **Top Spending Categories** | Where most money goes |
+| Widget                      | What It Shows               |
+| --------------------------- | --------------------------- |
+| **Total Balance**           | Sum of all account balances |
+| **This Month's Spending**   | Total spent this month      |
+| **Category Breakdown**      | Spending by category        |
+| **Recent Transactions**     | Latest transactions         |
+| **Top Spending Categories** | Where most money goes       |
 
 ### Reading the Charts
 
@@ -196,14 +197,17 @@ Now that you know the basics:
 ### Recommended Workflow
 
 **Daily:**
+
 - Add transactions as they happen
 - Check the dashboard briefly
 
 **Weekly:**
+
 - Review this week's spending
 - Ensure all transactions are recorded
 
 **Monthly:**
+
 - Check budget progress
 - Review insights and trends
 - Adjust budgets for next month

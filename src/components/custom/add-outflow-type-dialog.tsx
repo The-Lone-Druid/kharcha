@@ -162,7 +162,7 @@ export function AddOutflowTypeDialog({
   const onSubmit = async (data: OutflowTypeFormData) => {
     try {
       let categoryId: string | undefined;
-      
+
       if (outflowType) {
         await updateOutflowType({
           id: outflowType._id,
@@ -183,7 +183,7 @@ export function AddOutflowTypeDialog({
         toast.success("Category created successfully");
         categoryId = newCategory;
       }
-      
+
       handleOpenChange(false);
       form.reset();
       onSuccess?.(categoryId);
@@ -196,7 +196,7 @@ export function AddOutflowTypeDialog({
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto pb-6">
+      <SheetContent className="w-full overflow-y-auto pb-6 sm:max-w-[600px]">
         <SheetHeader className="space-y-2">
           <SheetTitle className="text-lg sm:text-xl">
             {outflowType ? "Edit Category" : "Add Custom Category"}
@@ -209,14 +209,19 @@ export function AddOutflowTypeDialog({
         </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 p-4"
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Category Name</FormLabel>
+                    <FormLabel className="text-sm font-medium">
+                      Category Name
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g., Groceries"
@@ -261,12 +266,12 @@ export function AddOutflowTypeDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Color</FormLabel>
-                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-3 py-2">
+                  <div className="grid grid-cols-6 gap-3 py-2 sm:grid-cols-8">
                     {colors.map((color) => (
                       <button
                         key={color}
                         type="button"
-                        className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full border-2 transition-all ${
+                        className={`h-10 w-10 rounded-full border-2 transition-all sm:h-8 sm:w-8 ${
                           field.value === color
                             ? "border-foreground scale-110"
                             : "border-muted hover:scale-105"
@@ -284,16 +289,18 @@ export function AddOutflowTypeDialog({
 
             {/* Extra Fields */}
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <FormLabel className="text-base font-medium">Additional Fields</FormLabel>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <FormLabel className="text-base font-medium">
+                  Additional Fields
+                </FormLabel>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => append({ key: "", label: "", type: "text" })}
-                  className="w-full sm:w-auto h-9"
+                  className="h-9 w-full sm:w-auto"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="mr-2 h-4 w-4" />
                   Add Field
                 </Button>
               </div>
@@ -302,15 +309,17 @@ export function AddOutflowTypeDialog({
                 {fields.map((field, index) => (
                   <div
                     key={field.id}
-                    className="flex flex-col gap-3 p-4 border rounded-lg bg-muted/30"
+                    className="bg-muted/30 flex flex-col gap-3 rounded-lg border p-4"
                   >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <FormField
                         control={form.control}
                         name={`extraFields.${index}.label`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">Field Label</FormLabel>
+                            <FormLabel className="text-sm">
+                              Field Label
+                            </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="e.g., Provider"
@@ -360,7 +369,10 @@ export function AddOutflowTypeDialog({
                               </FormControl>
                               <SelectContent>
                                 {fieldTypes.map((type) => (
-                                  <SelectItem key={type.value} value={type.value}>
+                                  <SelectItem
+                                    key={type.value}
+                                    value={type.value}
+                                  >
                                     {type.label}
                                   </SelectItem>
                                 ))}
@@ -376,7 +388,7 @@ export function AddOutflowTypeDialog({
                         variant="outline"
                         size="sm"
                         onClick={() => remove(index)}
-                        className="h-10 px-3 text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive h-10 px-3"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -386,16 +398,16 @@ export function AddOutflowTypeDialog({
               </div>
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0 pt-4 border-t">
+            <div className="flex flex-col-reverse space-y-2 space-y-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
-                className="w-full sm:w-auto h-11"
+                className="h-11 w-full sm:w-auto"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="w-full sm:w-auto h-11">
+              <Button type="submit" className="h-11 w-full sm:w-auto">
                 {outflowType ? "Update" : "Create"} Category
               </Button>
             </div>

@@ -105,8 +105,9 @@ export async function showReminderNotification(
   message: string,
   type: "renewal" | "due" = "renewal"
 ): Promise<boolean> {
-  const title = type === "renewal" ? "🔄 Subscription Renewal" : "💰 Payment Due";
-  
+  const title =
+    type === "renewal" ? "🔄 Subscription Renewal" : "💰 Payment Due";
+
   return showNotification(title, {
     body: message,
     tag: `reminder-${type}`,
