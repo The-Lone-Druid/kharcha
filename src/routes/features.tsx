@@ -28,7 +28,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import Logo from "../../public/favicon.svg";
+import Logo from "/favicon.svg?url";
 
 export const Route = createFileRoute("/features")({
   component: FeaturesPage,
