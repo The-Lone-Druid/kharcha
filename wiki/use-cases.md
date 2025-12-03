@@ -10,6 +10,7 @@ This guide covers real-world scenarios and how to handle them effectively in Kha
 - [Tracking Multiple Bank Accounts](#tracking-multiple-bank-accounts)
 - [Managing Credit Card Expenses](#managing-credit-card-expenses)
 - [Tracking Subscriptions](#tracking-subscriptions)
+- [Never Miss a Subscription Renewal](#never-miss-a-subscription-renewal)
 - [Splitting Expenses](#splitting-expenses)
 - [Tracking Business Expenses](#tracking-business-expenses)
 - [Monthly Financial Review](#monthly-financial-review)
@@ -153,6 +154,49 @@ Use Option A for detailed tracking. Create a habit of logging right after each s
 - Is there a cheaper alternative?
 - Can I share with family?
 - Is annual billing cheaper?
+
+---
+
+## 🔔 Never Miss a Subscription Renewal
+
+**Scenario:** You want to be reminded before subscriptions auto-renew so you can cancel if needed.
+
+### Setup
+
+1. **Enable Notifications**
+   - Settings → Notifications → Enable all notifications
+   - Grant browser permission for instant alerts
+
+2. **Mark Subscriptions for Reminders**
+   - When adding subscriptions, check "Remind me before renewal"
+   - Or edit existing subscriptions to enable reminders
+
+3. **Daily Automation**
+   - Kharcha automatically checks for renewals every day at 9 AM UTC
+   - Sends notifications 24 hours before renewal
+   - No manual setup needed after initial configuration
+
+### Example Workflow
+
+```
+Day 1: Add Netflix subscription (₹649, renews on 15th)
+Day 14: Receive notification "Netflix renewal tomorrow for ₹649"
+Day 15: Decide to cancel or let it renew
+```
+
+### Benefits
+
+- **Save Money** - Cancel unused subscriptions before they renew
+- **Stay Organized** - Never forget upcoming payments
+- **Peace of Mind** - Automated reminders handle the tracking
+
+### Notification Preferences
+
+Customize what you want to be notified about:
+
+- **Subscription Renewals** - Control renewal reminders
+- **Global Notifications** - Master on/off switch
+- **Browser Alerts** - Instant notifications in your browser
 
 ---
 

@@ -17,6 +17,7 @@ Welcome to the Kharcha documentation! This wiki provides comprehensive guides, f
 - [Transactions](./features/transactions.md) - Recording and managing transactions
 - [Categories (Outflow Types)](./features/categories.md) - Organizing your expenses
 - [Insights & Analytics](./features/insights.md) - Understanding your spending patterns
+- [Notifications](./features/notifications.md) - Managing reminders and alerts
 - [Settings](./features/settings.md) - Customizing your experience
 
 ### Use Cases
@@ -27,6 +28,7 @@ Welcome to the Kharcha documentation! This wiki provides comprehensive guides, f
 
 - [API Reference](./api-reference.md) - Backend API documentation
 - [Database Schema](./schema.md) - Data structure reference
+- [Testing Guide](./testing.md) - Testing strategy and guidelines
 
 ---
 
@@ -38,7 +40,9 @@ Welcome to the Kharcha documentation! This wiki provides comprehensive guides, f
 | Add my first transaction | [First Steps](./first-steps.md)                                    |
 | Understand my spending   | [Insights](./features/insights.md)                                 |
 | Track subscriptions      | [Use Cases - Subscriptions](./use-cases.md#tracking-subscriptions) |
-| Export my data           | [Settings](./features/settings.md#data-export)                     |
+| Manage notifications     | [Notifications](./features/notifications.md)                      |
+| Export my data           | [Settings - Data Export](./features/settings.md#data-export)      |
+| Run tests                | [Testing Guide](./testing.md)                                      |
 
 ---
 

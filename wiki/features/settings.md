@@ -61,6 +61,46 @@ Navigate to **Settings** from:
 
 ---
 
+## 🔔 Notification Preferences
+
+Control what notifications you receive.
+
+### Global Notifications
+
+**Master Switch**
+- Enable/disable all notifications
+- When disabled, no notifications are sent
+
+### Subscription Reminders
+
+**What it controls:**
+- Reminders for subscription renewals
+- Sent 24 hours before renewal date
+
+**Default:** Enabled
+
+### Due Date Reminders
+
+**What it controls:**
+- Reminders for upcoming payments
+- Loan due dates, bill payments
+
+**Default:** Enabled
+
+**Note:** Due date reminders are planned for future releases.
+
+### Browser Notifications
+
+**Permission Required**
+- Click "Enable Notifications" to allow browser alerts
+- You'll see a permission prompt from your browser
+
+**Benefits:**
+- Instant notifications without opening the app
+- Works even when Kharcha isn't active
+
+---
+
 ## Account Information
 
 View your account details:
@@ -73,31 +113,40 @@ These are synced from your Clerk authentication.
 
 ---
 
-## Data Export
+## 📤 Data Export
 
-Export your data for backup or analysis.
+Export your financial data for backup, analysis, or tax purposes.
+
+### Export Options
+
+**CSV Export**
+- Compatible with Excel, Google Sheets, and accounting software
+- Includes all transaction details
+- Ready for import into other financial tools
+
+**What's Included in CSV:**
+- Date and time
+- Amount (with currency symbol)
+- Category (outflow type)
+- Account name and type
+- Transaction notes
+- Provider details (for subscriptions)
 
 ### How to Export
 
 1. Go to **Settings**
 2. Click **"Export Data"**
-3. Download the JSON file
+3. Choose your preferred format
+4. Download the file
 
-### Export Contents
+### Use Cases
 
-The export includes:
+- **Tax Preparation** - Export for your accountant
+- **Backup** - Keep a copy of your financial data
+- **Analysis** - Import into Excel for custom reports
+- **Migration** - Move data to other financial apps
 
-- All accounts
-- All categories (outflow types)
-- All transactions
-- All budgets
-- User preferences
-
-### Export Format
-
-```json
-{
-  "accounts": [...],
+---
   "outflowTypes": [...],
   "transactions": [...],
   "budgets": [...],

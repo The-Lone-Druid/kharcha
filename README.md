@@ -12,12 +12,16 @@
 - 💸 **Transaction Tracking** - Log income and expenses with detailed categorization
 - 📊 **Visual Insights** - Charts and analytics to understand your spending patterns
 - 📂 **Custom Categories** - Create personalized outflow types with custom colors and emojis
-- 💳 **Subscription Tracking** - Manage recurring payments and subscriptions
+- 💳 **Subscription Tracking** - Manage recurring payments with renewal reminders
 - 🎯 **Budget Management** - Set monthly budgets for different expense categories
+- 🔔 **Smart Notifications** - Automated reminders for subscriptions and due dates
 - 🌙 **Dark/Light Mode** - Beautiful UI with theme support
 - 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
 - 🔐 **Secure Authentication** - Powered by Clerk authentication
 - ⚡ **Real-time Updates** - Powered by Convex backend
+- 📤 **Data Export** - Export transactions to CSV format
+- 🧪 **Comprehensive Testing** - 290+ tests with CI/CD pipeline
+- 🎨 **Code Quality** - Prettier formatting and ESLint integration
 
 ## 🛠️ Tech Stack
 
@@ -28,6 +32,10 @@
 - **Authentication:** Clerk
 - **Charts:** Recharts
 - **Forms:** TanStack Form, React Hook Form
+- **Testing:** Vitest, React Testing Library, jsdom
+- **Code Quality:** ESLint, Prettier, Husky
+- **CI/CD:** GitHub Actions
+- **Deployment:** Vercel, Convex
 
 ## 📋 Prerequisites
 
@@ -139,15 +147,26 @@ kharcha/
 └── wiki/                   # Documentation
 ```
 
-## 🔧 Available Scripts
+## 🧪 Testing & Quality
 
-| Command           | Description                              |
-| ----------------- | ---------------------------------------- |
-| `npm run dev`     | Start development server (Vite + Convex) |
-| `npm run build`   | Build for production                     |
-| `npm run preview` | Preview production build                 |
-| `npm run lint`    | Run ESLint                               |
-| `npm run seed`    | Seed default outflow types               |
+Kharcha maintains high code quality with comprehensive testing and automated checks.
+
+### Testing Suite
+- **Frontend Tests:** 150+ React component and utility tests
+- **Backend Tests:** 142+ Convex function tests  
+- **Coverage:** 90%+ codebase coverage
+- **Tools:** Vitest, React Testing Library, jsdom
+
+### Code Quality
+- **Linting:** ESLint with React and TypeScript rules
+- **Formatting:** Prettier with Tailwind CSS plugin
+- **Type Checking:** TypeScript strict mode
+- **Automated:** Pre-commit hooks and CI/CD checks
+
+### CI/CD Pipeline
+- **GitHub Actions:** Automated testing on every push/PR
+- **Quality Gates:** Tests must pass before deployment
+- **Deployment:** Automatic Vercel + Convex deployment on main branch
 
 ## 🌐 Deployment
 

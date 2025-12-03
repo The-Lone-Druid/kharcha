@@ -99,23 +99,28 @@ Organize your expenses into meaningful categories.
 
 ---
 
-## 💳 Subscription Tracking
+## 🔔 Smart Notifications
 
-Keep track of recurring expenses.
+Stay on top of your finances with automated notifications.
 
-**Track:**
+**Notification Types:**
 
-- Streaming services (Netflix, Spotify)
-- Software subscriptions (Adobe, Microsoft 365)
-- Gym memberships
-- Any recurring payment
+- **Subscription Renewals** - Get reminded before subscriptions renew
+- **Due Date Alerts** - Notifications for upcoming payments
+- **Custom Reminders** - Set personal financial reminders
 
 **Features:**
 
-- Set billing dates
-- Track monthly/yearly costs
-- See total subscription spend
-- Never forget a renewal
+- ✅ Daily automated checks (9:00 AM UTC)
+- ✅ Customizable notification preferences
+- ✅ In-app notification center
+- ✅ Browser permission integration
+- ✅ Email notification support (planned)
+
+**Daily Automation:**
+- Cron jobs run automatically every day
+- Checks for subscriptions renewing tomorrow
+- Sends timely reminders to keep you informed
 
 ---
 
@@ -160,6 +165,26 @@ Understand your spending patterns with visual analytics.
 
 ---
 
+## 🧪 Quality Assurance
+
+Kharcha is built with testing and code quality in mind.
+
+**Testing Coverage:**
+
+- **290+ Automated Tests** - Frontend and backend coverage
+- **90%+ Code Coverage** - Comprehensive test suite
+- **CI/CD Pipeline** - Automated testing on every change
+- **Quality Gates** - No deployment without passing tests
+
+**Code Quality Tools:**
+
+- **ESLint** - Code linting and error detection
+- **Prettier** - Automated code formatting
+- **TypeScript** - Type safety and better developer experience
+- **Pre-commit Hooks** - Automated quality checks
+
+---
+
 ## ⚙️ Settings & Customization
 
 Personalize Kharcha to your preferences.
@@ -169,7 +194,8 @@ Personalize Kharcha to your preferences.
 - **Currency** - Set your preferred currency (INR, USD, EUR, etc.)
 - **Theme** - Light mode, Dark mode, or System
 - **Language** - Interface language preference
-- **Data Export** - Export your data as JSON
+- **Data Export** - Export your transaction data as CSV
+- **Notification Preferences** - Control reminder settings
 
 **Account Settings:**
 
@@ -178,6 +204,28 @@ Personalize Kharcha to your preferences.
 - Log out
 
 [Learn more about Settings →](./features/settings.md)
+
+---
+
+## 📤 Data Export
+
+Export your financial data for backup, analysis, or tax purposes.
+
+**Export Options:**
+
+- **CSV Format** - Compatible with Excel, Google Sheets
+- **Complete Transaction History** - All your financial records
+- **Structured Data** - Includes dates, amounts, categories, accounts
+- **Ready for Analysis** - Perfect for budgeting software or accountants
+
+**What's Included:**
+
+- Transaction date and time
+- Amount and currency
+- Category (outflow type)
+- Account information
+- Notes and metadata
+- Provider details (for subscriptions)
 
 ---
 
