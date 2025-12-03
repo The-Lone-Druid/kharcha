@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for lib/currency.ts</title>
+    <title>Code coverage report for components/ui/dialog.tsx</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../prettify.css" />
-    <link rel="stylesheet" href="../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../sort-arrow-sprite.png);
+            background-image: url(../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">lib</a> currency.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/ui</a> dialog.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
                 <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -195,7 +195,16 @@
 <a name='L130'></a><a href='#L130'>130</a>
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
-<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,7 +213,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -308,14 +316,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">168x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -325,139 +331,160 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Common currencies list for manual selection
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { XIcon } from "lucide-react"
 &nbsp;
-export interface CurrencyInfo {
-  code: string;
-  name: string;
-  symbol: string;
+import { cn } from "@/lib/utils"
+&nbsp;
+function <span class="fstat-no" title="function not covered" >Dialog({</span>
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Root&gt;) {
+  return &lt;DialogPrimitive.Root data-slot="dialog" {...props} /&gt;
 }
 &nbsp;
-// Comprehensive list of world currencies
-export const CURRENCIES: CurrencyInfo[] = [
-  // Major currencies
-  { code: "USD", name: "US Dollar", symbol: "$" },
-  { code: "EUR", name: "Euro", symbol: "€" },
-  { code: "GBP", name: "British Pound", symbol: "£" },
-  { code: "JPY", name: "Japanese Yen", symbol: "¥" },
-  { code: "CNY", name: "Chinese Yuan", symbol: "¥" },
-  { code: "INR", name: "Indian Rupee", symbol: "₹" },
-  
-  // North America
-  { code: "CAD", name: "Canadian Dollar", symbol: "C$" },
-  { code: "MXN", name: "Mexican Peso", symbol: "$" },
-  
-  // Europe
-  { code: "CHF", name: "Swiss Franc", symbol: "CHF" },
-  { code: "SEK", name: "Swedish Krona", symbol: "kr" },
-  { code: "NOK", name: "Norwegian Krone", symbol: "kr" },
-  { code: "DKK", name: "Danish Krone", symbol: "kr" },
-  { code: "PLN", name: "Polish Zloty", symbol: "zł" },
-  { code: "CZK", name: "Czech Koruna", symbol: "Kč" },
-  { code: "HUF", name: "Hungarian Forint", symbol: "Ft" },
-  { code: "RON", name: "Romanian Leu", symbol: "lei" },
-  { code: "BGN", name: "Bulgarian Lev", symbol: "лв" },
-  { code: "HRK", name: "Croatian Kuna", symbol: "kn" },
-  { code: "RUB", name: "Russian Ruble", symbol: "₽" },
-  { code: "UAH", name: "Ukrainian Hryvnia", symbol: "₴" },
-  { code: "TRY", name: "Turkish Lira", symbol: "₺" },
-  
-  // Asia Pacific
-  { code: "AUD", name: "Australian Dollar", symbol: "A$" },
-  { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$" },
-  { code: "SGD", name: "Singapore Dollar", symbol: "S$" },
-  { code: "HKD", name: "Hong Kong Dollar", symbol: "HK$" },
-  { code: "KRW", name: "South Korean Won", symbol: "₩" },
-  { code: "TWD", name: "Taiwan Dollar", symbol: "NT$" },
-  { code: "THB", name: "Thai Baht", symbol: "฿" },
-  { code: "MYR", name: "Malaysian Ringgit", symbol: "RM" },
-  { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp" },
-  { code: "PHP", name: "Philippine Peso", symbol: "₱" },
-  { code: "VND", name: "Vietnamese Dong", symbol: "₫" },
-  { code: "PKR", name: "Pakistani Rupee", symbol: "₨" },
-  { code: "BDT", name: "Bangladeshi Taka", symbol: "৳" },
-  { code: "LKR", name: "Sri Lankan Rupee", symbol: "Rs" },
-  { code: "NPR", name: "Nepalese Rupee", symbol: "₨" },
-  { code: "MMK", name: "Myanmar Kyat", symbol: "K" },
-  { code: "KHR", name: "Cambodian Riel", symbol: "៛" },
-  { code: "LAK", name: "Lao Kip", symbol: "₭" },
-  
-  // Middle East
-  { code: "AED", name: "UAE Dirham", symbol: "د.إ" },
-  { code: "SAR", name: "Saudi Riyal", symbol: "﷼" },
-  { code: "QAR", name: "Qatari Riyal", symbol: "﷼" },
-  { code: "KWD", name: "Kuwaiti Dinar", symbol: "د.ك" },
-  { code: "BHD", name: "Bahraini Dinar", symbol: "BD" },
-  { code: "OMR", name: "Omani Rial", symbol: "﷼" },
-  { code: "JOD", name: "Jordanian Dinar", symbol: "JD" },
-  { code: "ILS", name: "Israeli Shekel", symbol: "₪" },
-  { code: "IQD", name: "Iraqi Dinar", symbol: "ع.د" },
-  { code: "IRR", name: "Iranian Rial", symbol: "﷼" },
-  
-  // Africa
-  { code: "ZAR", name: "South African Rand", symbol: "R" },
-  { code: "EGP", name: "Egyptian Pound", symbol: "E£" },
-  { code: "NGN", name: "Nigerian Naira", symbol: "₦" },
-  { code: "KES", name: "Kenyan Shilling", symbol: "KSh" },
-  { code: "TZS", name: "Tanzanian Shilling", symbol: "TSh" },
-  { code: "UGX", name: "Ugandan Shilling", symbol: "USh" },
-  { code: "GHS", name: "Ghanaian Cedi", symbol: "₵" },
-  { code: "MAD", name: "Moroccan Dirham", symbol: "د.م." },
-  { code: "DZD", name: "Algerian Dinar", symbol: "د.ج" },
-  { code: "TND", name: "Tunisian Dinar", symbol: "د.ت" },
-  { code: "XOF", name: "West African CFA Franc", symbol: "CFA" },
-  { code: "XAF", name: "Central African CFA Franc", symbol: "FCFA" },
-  { code: "RWF", name: "Rwandan Franc", symbol: "FRw" },
-  { code: "ETB", name: "Ethiopian Birr", symbol: "Br" },
-  { code: "ZMW", name: "Zambian Kwacha", symbol: "ZK" },
-  { code: "BWP", name: "Botswana Pula", symbol: "P" },
-  { code: "MUR", name: "Mauritian Rupee", symbol: "₨" },
-  
-  // South America
-  { code: "BRL", name: "Brazilian Real", symbol: "R$" },
-  { code: "ARS", name: "Argentine Peso", symbol: "$" },
-  { code: "CLP", name: "Chilean Peso", symbol: "$" },
-  { code: "COP", name: "Colombian Peso", symbol: "$" },
-  { code: "PEN", name: "Peruvian Sol", symbol: "S/" },
-  { code: "UYU", name: "Uruguayan Peso", symbol: "$U" },
-  { code: "VES", name: "Venezuelan Bolívar", symbol: "Bs" },
-  { code: "BOB", name: "Bolivian Boliviano", symbol: "Bs." },
-  { code: "PYG", name: "Paraguayan Guarani", symbol: "₲" },
-  
-  // Caribbean
-  { code: "JMD", name: "Jamaican Dollar", symbol: "J$" },
-  { code: "TTD", name: "Trinidad Dollar", symbol: "TT$" },
-  { code: "BBD", name: "Barbadian Dollar", symbol: "Bds$" },
-  { code: "BSD", name: "Bahamian Dollar", symbol: "B$" },
-  
-  // Other
-  { code: "ISK", name: "Icelandic Króna", symbol: "kr" },
-];
-&nbsp;
-/**
- * Get currency info by code
- */
-export function getCurrencyByCode(code: string): CurrencyInfo | undefined {
-  return CURRENCIES.find((c) =&gt; c.code === code);
+function <span class="fstat-no" title="function not covered" >DialogTrigger({</span>
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Trigger&gt;) {
+  return &lt;DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} /&gt;
 }
 &nbsp;
-/**
- * Get the exchange rate lookup URL (Google search)
- */
-export function getExchangeRateLookupUrl(fromCurrency: string, toCurrency: string): string {
-  return `https://www.google.com/search?q=1+${fromCurrency}+to+${toCurrency}`;
+function <span class="fstat-no" title="function not covered" >DialogPortal({</span>
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Portal&gt;) {
+  return &lt;DialogPrimitive.Portal data-slot="dialog-portal" {...props} /&gt;
 }
 &nbsp;
-/**
- * Calculate converted amount based on exchange rate
- */
-export function calculateConvertedAmount(
-  amount: number,
-  exchangeRate: number
-): number {
-  return Math.round(amount * exchangeRate * 100) / 100;
+function <span class="fstat-no" title="function not covered" >DialogClose({</span>
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Close&gt;) {
+  return &lt;DialogPrimitive.Close data-slot="dialog-close" {...props} /&gt;
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >DialogOverlay({</span>
+  className,
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Overlay&gt;) {
+  return (
+    &lt;DialogPrimitive.Overlay
+      data-slot="dialog-overlay"
+      className={cn(
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        className
+      )}
+      {...props}
+    /&gt;
+  )
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >DialogContent({</span>
+  className,
+  children,
+  showCloseButton = <span class="branch-0 cbranch-no" title="branch not covered" >true,</span>
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Content&gt; &amp; {
+  showCloseButton?: boolean
+}) {
+  return (
+    &lt;DialogPortal data-slot="dialog-portal"&gt;
+      &lt;DialogOverlay /&gt;
+      &lt;DialogPrimitive.Content
+        data-slot="dialog-content"
+        className={cn(
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+          className
+        )}
+        {...props}
+      &gt;
+        {children}
+        {showCloseButton &amp;&amp; (
+          &lt;DialogPrimitive.Close
+            data-slot="dialog-close"
+            className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"
+          &gt;
+            &lt;XIcon /&gt;
+            &lt;span className="sr-only"&gt;Close&lt;/span&gt;
+          &lt;/DialogPrimitive.Close&gt;
+        )}
+      &lt;/DialogPrimitive.Content&gt;
+    &lt;/DialogPortal&gt;
+  )
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >DialogHeader({</span> className, ...props }: React.ComponentProps&lt;"div"&gt;) {
+  return (
+    &lt;div
+      data-slot="dialog-header"
+      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      {...props}
+    /&gt;
+  )
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >DialogFooter({</span> className, ...props }: React.ComponentProps&lt;"div"&gt;) {
+  return (
+    &lt;div
+      data-slot="dialog-footer"
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className
+      )}
+      {...props}
+    /&gt;
+  )
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >DialogTitle({</span>
+  className,
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Title&gt;) {
+  return (
+    &lt;DialogPrimitive.Title
+      data-slot="dialog-title"
+      className={cn("text-lg leading-none font-semibold", className)}
+      {...props}
+    /&gt;
+  )
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >DialogDescription({</span>
+  className,
+  ...props
+}: React.ComponentProps&lt;typeof DialogPrimitive.Description&gt;) {
+  return (
+    &lt;DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn("text-muted-foreground text-sm", className)}
+      {...props}
+    /&gt;
+  )
+}
+&nbsp;
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -468,14 +495,14 @@ export function calculateConvertedAmount(
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-12-03T07:11:51.459Z
             </div>
-        <script src="../prettify.js"></script>
+        <script src="../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../sorter.js"></script>
-        <script src="../block-navigation.js"></script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
     </body>
 </html>
     
