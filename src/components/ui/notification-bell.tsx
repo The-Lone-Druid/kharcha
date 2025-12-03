@@ -15,13 +15,73 @@ import { api } from "@convex/_generated/api";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import type { Id } from "@convex/_generated/dataModel";
+import { useNotifications } from "@/hooks/use-notifications";
+import { useEffect } from "react";
 
 export function NotificationBell() {
   const notifications = useQuery(api.notifications.listNotifications);
   const markAsRead = useMutation(api.notifications.markAsRead);
   const deleteNotification = useMutation(api.notifications.deleteNotification);
+  
+  const { 
+    permission, 
+    isSupported, 
+    shouldPrompt, 
+    requestPermission,
+    showNotification 
+  } = useNotifications();
 
   const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
+
+  // Show browser notification for new unread notifications
+  useEffect(() => {
+    if (notifications && permission === "granted") {
+      const unreadNotifs = notifications.filter((n) => !n.isRead);
+      
+      // Only show browser notification if there are new unread notifications
+      // and we haven't shown them yet (you might want to track this in localStorage)
+      if (unreadNotifs.length > 0) {
+        const lastNotif = unreadNotifs[0];
+        const lastShownId = localStorage.getItem("lastShownNotificationId");
+        
+        if (lastShownId !== lastNotif._id) {
+          showNotification(
+            lastNotif.message,
+            lastNotif.type
+          );
+          localStorage.setItem("lastShownNotificationId", lastNotif._id);
+        }
+      }
+    }
+  }, [notifications, permission, showNotification]);
+
+  // Prompt for permission if needed and user has notifications enabled
+  useEffect(() => {
+    if (shouldPrompt && isSupported && notifications && notifications.length > 0) {
+      // Show a toast to ask for permission
+      const timer = setTimeout(() => {
+        toast.info(
+          "Enable browser notifications to receive reminders even when the app is closed",
+          {
+            action: {
+              label: "Enable",
+              onClick: async () => {
+                const result = await requestPermission();
+                if (result === "granted") {
+                  toast.success("Notifications enabled!");
+                } else if (result === "denied") {
+                  toast.error("Notification permission denied. You can enable it in your browser settings.");
+                }
+              },
+            },
+            duration: 10000,
+          }
+        );
+      }, 2000); // Wait 2 seconds before prompting
+
+      return () => clearTimeout(timer);
+    }
+  }, [shouldPrompt, isSupported, notifications, requestPermission]);
 
   const handleMarkAsRead = async (id: Id<"notifications">) => {
     try {

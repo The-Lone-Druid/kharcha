@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTheme } from "@/hooks/use-theme";
-import { Trash2, Wallet, Tag, LogOut, Download, Bell } from "lucide-react";
+import { Trash2, Wallet, Tag, LogOut, Download, Bell, Check, X } from "lucide-react";
 import { useClerk, UserProfile } from "@clerk/clerk-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
@@ -19,6 +19,9 @@ import * as XLSX from "xlsx";
 import { useAppData } from "../_authenticated";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
+import { useNotifications } from "@/hooks/use-notifications";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: SettingsPage,
@@ -30,6 +33,12 @@ function SettingsPage() {
   const { accounts, outflowTypes } = useAppData();
   const currentUser = useQuery(api.users.getCurrentUser);
   const updateNotificationPrefs = useMutation(api.users.updateNotificationPreferences);
+  
+  const { 
+    permission, 
+    isSupported, 
+    requestPermission 
+  } = useNotifications();
 
   const transactions = useQuery(api.transactions.listTransactions, {
     limit: 10000,
@@ -244,6 +253,53 @@ function SettingsPage() {
                 disabled={!notifPrefs.globalNotifications}
               />
             </div>
+            
+            {/* Browser Notification Permission Status */}
+            {isSupported && (
+              <Alert>
+                <AlertDescription className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4" />
+                    <span className="text-sm">
+                      Browser Notifications:
+                    </span>
+                    {permission === "granted" ? (
+                      <Badge variant="default" className="gap-1">
+                        <Check className="h-3 w-3" /> Enabled
+                      </Badge>
+                    ) : permission === "denied" ? (
+                      <Badge variant="destructive" className="gap-1">
+                        <X className="h-3 w-3" /> Blocked
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">Not Set</Badge>
+                    )}
+                  </div>
+                  {permission === "default" && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={async () => {
+                        const result = await requestPermission();
+                        if (result === "granted") {
+                          toast.success("Browser notifications enabled!");
+                        } else if (result === "denied") {
+                          toast.error("Permission denied. Enable in browser settings.");
+                        }
+                      }}
+                    >
+                      Enable
+                    </Button>
+                  )}
+                  {permission === "denied" && (
+                    <p className="text-xs text-muted-foreground">
+                      Enable in browser settings
+                    </p>
+                  )}
+                </AlertDescription>
+              </Alert>
+            )}
+            
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="email-notifications">Email Notifications</Label>
