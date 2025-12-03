@@ -307,4 +307,394 @@ describe("Insights API", () => {
       expect(moneyLent?.overdue0_30.length).toBeGreaterThan(0);
     });
   });
+
+  describe("getLoans", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const loans = await t.query(api.insights.getLoans);
+      
+      expect(loans).toBeNull();
+    });
+
+    it("should return empty array for user with no loans", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const loans = await asUser.query(api.insights.getLoans);
+      
+      expect(loans).toEqual([]);
+    });
+
+    it("should return loan transactions with EMI details", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId } = await setupTestData(asUser);
+      
+      // Create EMI/Loan outflow type
+      const loanTypeId = await asUser.mutation(api.outflowTypes.createCustomOutflowType, {
+        name: "EMI/Loan",
+        emoji: "🏦",
+        colorHex: "#10b981",
+        extraFields: [
+          { key: "loanName", label: "Loan Name", type: "text" },
+          { key: "emiAmount", label: "EMI Amount", type: "number" },
+        ],
+      });
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 500000,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: loanTypeId,
+        note: "Home Loan",
+        metadata: { loanName: "Home Loan", emiAmount: 25000 },
+      });
+      
+      const loans = await asUser.query(api.insights.getLoans);
+      
+      expect(loans?.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe("getProjectedRecurring", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const projected = await t.query(api.insights.getProjectedRecurring, {});
+      
+      expect(projected).toBeNull();
+    });
+
+    it("should return projections for default 3 months", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const projected = await asUser.query(api.insights.getProjectedRecurring, {});
+      
+      expect(projected).toHaveLength(3);
+    });
+
+    it("should return projections for specified months", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const projected = await asUser.query(api.insights.getProjectedRecurring, { months: 6 });
+      
+      expect(projected).toHaveLength(6);
+    });
+
+    it("should include subscription totals in projections", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix" },
+      });
+      
+      const projected = await asUser.query(api.insights.getProjectedRecurring, {});
+      
+      expect(projected).not.toBeNull();
+      expect(projected![0].subscriptions).toBe(999);
+    });
+  });
+
+  describe("getUpcomingEvents", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const events = await t.query(api.insights.getUpcomingEvents);
+      
+      expect(events).toBeNull();
+    });
+
+    it("should return empty array for user with no upcoming events", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const events = await asUser.query(api.insights.getUpcomingEvents);
+      
+      expect(events).toEqual([]);
+    });
+
+    it("should return upcoming renewal events", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      const renewalDate = Date.now() + 3 * 24 * 60 * 60 * 1000; // 3 days from now
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix", renewalDate },
+      });
+      
+      const events = await asUser.query(api.insights.getUpcomingEvents);
+      
+      expect(events?.length).toBeGreaterThan(0);
+      expect(events![0].type).toBe("renewal");
+    });
+
+    it("should return upcoming due events", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, moneyLentTypeId } = await setupTestData(asUser);
+      
+      const dueDate = Date.now() + 5 * 24 * 60 * 60 * 1000; // 5 days from now
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 5000,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: moneyLentTypeId,
+        note: "Lent to John",
+        metadata: { borrowerName: "John", dueDate },
+      });
+      
+      const events = await asUser.query(api.insights.getUpcomingEvents);
+      
+      expect(events?.length).toBeGreaterThan(0);
+      expect(events![0].type).toBe("due");
+    });
+  });
+
+  describe("getTrackingStreak", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const streak = await t.query(api.insights.getTrackingStreak);
+      
+      expect(streak).toBeNull();
+    });
+
+    it("should return 0 for user with no transactions", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const streak = await asUser.query(api.insights.getTrackingStreak);
+      
+      expect(streak).toBe(0);
+    });
+
+    it("should return streak count for consecutive days", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, expenseTypeId } = await setupTestData(asUser);
+      
+      // Add transaction for today
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 100,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: expenseTypeId,
+        note: "Today",
+        metadata: {},
+      });
+      
+      const streak = await asUser.query(api.insights.getTrackingStreak);
+      
+      expect(streak).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe("getSubscriptionBreakdown", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const breakdown = await t.query(api.insights.getSubscriptionBreakdown, {});
+      
+      expect(breakdown).toBeNull();
+    });
+
+    it("should return empty breakdown for user with no subscriptions", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const breakdown = await asUser.query(api.insights.getSubscriptionBreakdown, {});
+      
+      expect(breakdown).toMatchObject({ breakdown: [], total: 0 });
+    });
+
+    it("should break down subscriptions by provider", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix" },
+      });
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 199,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Spotify",
+        metadata: { provider: "Spotify" },
+      });
+      
+      const breakdown = await asUser.query(api.insights.getSubscriptionBreakdown, {});
+      
+      expect(breakdown?.breakdown.length).toBe(2);
+      expect(breakdown?.total).toBe(1198);
+    });
+
+    it("should filter by date range", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      const now = Date.now();
+      const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: now,
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix" },
+      });
+      
+      const breakdown = await asUser.query(api.insights.getSubscriptionBreakdown, {
+        startDate: oneWeekAgo,
+        endDate: now + 1000,
+      });
+      
+      expect(breakdown?.total).toBe(999);
+    });
+  });
+
+  describe("getProjectedSubscriptionSpend", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const projected = await t.query(api.insights.getProjectedSubscriptionSpend, {});
+      
+      expect(projected).toBeNull();
+    });
+
+    it("should return empty array for user with no subscriptions", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const projected = await asUser.query(api.insights.getProjectedSubscriptionSpend, {});
+      
+      expect(projected).toEqual([]);
+    });
+
+    it("should project subscription spend for 12 months by default", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix", frequency: "monthly" },
+      });
+      
+      const projected = await asUser.query(api.insights.getProjectedSubscriptionSpend, {});
+      
+      expect(projected).toHaveLength(12);
+    });
+
+    it("should project for specified months ahead", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix" },
+      });
+      
+      const projected = await asUser.query(api.insights.getProjectedSubscriptionSpend, {
+        monthsAhead: 6,
+      });
+      
+      expect(projected).toHaveLength(6);
+    });
+  });
+
+  describe("getSubscriptionSpendOverTime", () => {
+    it("should return null when not authenticated", async () => {
+      const t = convexTest(schema);
+      
+      const history = await t.query(api.insights.getSubscriptionSpendOverTime, {});
+      
+      expect(history).toBeNull();
+    });
+
+    it("should return empty array for user with no subscriptions", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      
+      const history = await asUser.query(api.insights.getSubscriptionSpendOverTime, {});
+      
+      expect(history).toEqual([]);
+    });
+
+    it("should return 12 months of history by default", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix" },
+      });
+      
+      const history = await asUser.query(api.insights.getSubscriptionSpendOverTime, {});
+      
+      expect(history).toHaveLength(12);
+    });
+
+    it("should return specified months of history", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+      const { accountId, subscriptionTypeId } = await setupTestData(asUser);
+      
+      await asUser.mutation(api.transactions.addTransaction, {
+        amount: 999,
+        date: Date.now(),
+        accountId,
+        outflowTypeId: subscriptionTypeId,
+        note: "Netflix",
+        metadata: { provider: "Netflix" },
+      });
+      
+      const history = await asUser.query(api.insights.getSubscriptionSpendOverTime, {
+        months: 6,
+      });
+      
+      expect(history).toHaveLength(6);
+    });
+  });
 });

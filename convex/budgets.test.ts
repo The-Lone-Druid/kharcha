@@ -344,10 +344,9 @@ describe("Budgets API", () => {
       expect(progress).toHaveLength(1);
       expect(progress).not.toBeNull();
       expect(progress![0]).toMatchObject({
-        budgetAmount: 10000,
+        budgeted: 10000,
         spent: 5000,
-        remaining: 5000,
-        percentage: 50,
+        progress: 0.5,
       });
     });
   });
