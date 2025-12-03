@@ -105,40 +105,59 @@ function InsightsPage() {
   }, [projectedSubscriptionSpend]);
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Insights</h2>
+    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Insights
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Analyze your spending patterns and trends
+          </p>
+        </div>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="bg-muted/50 p-1">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">Overview</TabsTrigger>
+          <TabsTrigger value="subscriptions" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">Subscriptions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid grid-cols-12 gap-4">
             {/* Monthly Spend Chart */}
-            <Card className="col-span-12">
+            <Card className="col-span-12 bg-linear-to-br from-violet-500/5 via-purple-500/5 to-transparent border-violet-500/20">
               <CardHeader>
-                <CardTitle>Monthly Spend (Last 12 Months)</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-violet-500/10">
+                    <TrendingUp className="h-4 w-4 text-violet-500" />
+                  </div>
+                  Monthly Spend (Last 12 Months)
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 {monthlySpend ? (
                   monthlySpend.length > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={monthlySpend} barCategoryGap="10%">
-                        <CartesianGrid strokeDasharray="3 3" />
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                         <XAxis
                           dataKey="month"
                           angle={-45}
                           textAnchor="end"
                           height={60}
                           fontSize={12}
+                          className="fill-muted-foreground"
                         />
-                        <YAxis fontSize={12} />
+                        <YAxis fontSize={12} className="fill-muted-foreground" />
                         <Tooltip content={<CustomTooltip />} />
-                        <Bar dataKey="total" fill="#8884d8" />
+                        <Bar dataKey="total" fill="url(#colorGradient)" radius={[4, 4, 0, 0]} />
+                        <defs>
+                          <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#8b5cf6" />
+                            <stop offset="100%" stopColor="#6366f1" />
+                          </linearGradient>
+                        </defs>
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (

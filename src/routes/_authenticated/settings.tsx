@@ -146,11 +146,16 @@ function SettingsPage() {
   };
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-          Settings
-        </h2>
+    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Settings
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Customize your app preferences
+          </p>
+        </div>
       </div>
 
       <div className="grid gap-4 grid-cols-12">

@@ -1,6 +1,6 @@
-import { Home, Receipt, BarChart3, Settings, LogOut } from "lucide-react";
+import { Home, Receipt, BarChart3, Settings, LogOut, Wallet } from "lucide-react";
 import { useClerk } from "@clerk/clerk-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/ui/notification-bell";
+import { cn } from "@/lib/utils";
 
 const menuItems = [
   {
@@ -41,47 +42,70 @@ const menuItems = [
 
 export function AppSidebar() {
   const { signOut } = useClerk();
+  const location = useLocation();
 
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center justify-between gap-2 px-4 py-2">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              💰
+        <div className="flex items-center justify-between gap-2 px-4 py-3">
+          <div className="flex items-center gap-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-primary to-orange-600 shadow-lg shadow-primary/25 group-hover:shadow-primary/40 transition-all duration-300 group-hover:scale-105">
+              <Wallet className="h-5 w-5 text-white" />
             </div>
-            <span className="font-semibold">Kharcha</span>
+            <span className="font-bold text-lg bg-linear-to-r from-primary to-orange-600 bg-clip-text text-transparent">
+              Kharcha
+            </span>
           </div>
           <NotificationBell />
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70">
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu className="space-y-1">
+              {menuItems.map((item) => {
+                const isActive = location.pathname === item.url;
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild
+                      className={cn(
+                        "transition-all duration-200 rounded-lg",
+                        isActive && "bg-primary/10 text-primary border-l-2 border-primary"
+                      )}
+                    >
+                      <Link 
+                        to={item.url}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2.5",
+                          isActive && "font-medium"
+                        )}
+                      >
+                        <item.icon className={cn(
+                          "h-5 w-5 transition-colors",
+                          isActive ? "text-primary" : "text-muted-foreground"
+                        )} />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-border/50 p-4">
         <Button
           variant="ghost"
-          className="w-full justify-start"
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
           onClick={() => signOut({ redirectUrl: "/" })}
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
         </Button>
       </SidebarFooter>
     </Sidebar>

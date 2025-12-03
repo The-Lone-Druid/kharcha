@@ -79,17 +79,19 @@ export function DashboardWidgets() {
   return (
     <div className="grid grid-cols-12 gap-4">
       {/* Total Spent This Month */}
-      <Card className="col-span-12 md:col-span-4">
+      <Card className="col-span-12 md:col-span-4 bg-linear-to-br from-amber-500/10 via-orange-500/5 to-transparent border-amber-500/20 hover:border-amber-500/40 transition-colors">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total Spent This Month
           </CardTitle>
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <div className="p-2 rounded-lg bg-amber-500/10">
+            <TrendingUp className="h-4 w-4 text-amber-500" />
+          </div>
         </CardHeader>
         <CardContent>
           {monthlySummary ? (
             <>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold bg-linear-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
                 ₹{monthlySummary.totalSpent.toLocaleString() || 0}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -106,15 +108,17 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Tracking Streak */}
-      <Card className="col-span-12 md:col-span-4">
+      <Card className="col-span-12 md:col-span-4 bg-linear-to-br from-green-500/10 via-emerald-500/5 to-transparent border-green-500/20 hover:border-green-500/40 transition-colors">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Tracking Streak</CardTitle>
-          <Target className="h-4 w-4 text-muted-foreground" />
+          <div className="p-2 rounded-lg bg-green-500/10">
+            <Target className="h-4 w-4 text-green-500" />
+          </div>
         </CardHeader>
         <CardContent>
           {trackingStreak !== undefined ? (
             <>
-              <div className="text-2xl font-bold">{trackingStreak}</div>
+              <div className="text-2xl font-bold bg-linear-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">{trackingStreak}</div>
               <p className="text-xs text-muted-foreground">consecutive days</p>
             </>
           ) : (
@@ -127,7 +131,7 @@ export function DashboardWidgets() {
       </Card>
 
       {/* Top 5 Categories Pie Chart */}
-      <Card className="col-span-12 md:col-span-4">
+      <Card className="col-span-12 md:col-span-4 bg-linear-to-br from-blue-500/10 via-cyan-500/5 to-transparent border-blue-500/20 hover:border-blue-500/40 transition-colors">
         <CardHeader>
           <CardTitle>Top 5 Categories This Month</CardTitle>
         </CardHeader>

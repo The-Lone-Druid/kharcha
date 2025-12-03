@@ -117,25 +117,32 @@ function TransactionsPage() {
   ]);
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-          Transactions
-        </h2>
-        <div className="flex items-stretch sm:items-center gap-2">
+    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Transactions
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            View and manage all your transactions
+          </p>
+        </div>
+        <div className="flex items-stretch sm:items-center gap-3">
           <AddSubscriptionDialog
             trigger={
-              <Button variant="outline">
-                <CreditCard className="mr-2 h-4 w-4" />
-                Add Subscription
+              <Button variant="outline" className="gap-2 shadow-sm hover:shadow-md transition-all">
+                <CreditCard className="h-4 w-4" />
+                <span className="hidden sm:inline">Add Subscription</span>
+                <span className="sm:hidden">Subscription</span>
               </Button>
             }
           />
           <AddTransactionSheet
             trigger={
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Transaction
+              <Button className="gap-2 bg-linear-to-r from-primary to-orange-600 hover:from-primary/90 hover:to-orange-600/90 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Add Transaction</span>
+                <span className="sm:hidden">Add</span>
               </Button>
             }
           />
@@ -143,13 +150,13 @@ function TransactionsPage() {
       </div>
       <div className="space-y-4">
         {/* Search and Filters */}
-        <div className="space-y-4">
+        <div className="space-y-4 p-4 rounded-xl bg-muted/30 border border-border/50">
           {/* Search Bar */}
           <Input
             placeholder="Search transactions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
+            className="w-full bg-background"
           />
 
           {/* Filters */}
