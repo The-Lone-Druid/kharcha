@@ -184,11 +184,12 @@ describe("Accounts API", () => {
           name: "No Budget Account",
           type: "Cash",
           colorHex: "#10b981",
-          budget: undefined,
           isArchived: false,
           clerkId: "user_123",
         }),
       ]);
+      // Budget should not be present in the document when not provided
+      expect(accounts[0]).not.toHaveProperty("budget");
     });
   });
 
@@ -291,7 +292,7 @@ describe("Accounts API", () => {
 
       const accounts = await asUser.query(api.accounts.listAccounts);
       expect(accounts).not.toBeNull();
-      expect(accounts![0].budget).toBeUndefined();
+      expect(accounts![0]).not.toHaveProperty("budget");
     });
   });
 

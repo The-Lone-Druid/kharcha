@@ -103,7 +103,16 @@ export const updateAccount = mutation({
       throw new ConvexError("Account not found or access denied");
     }
 
-    await ctx.db.patch(id, updates);
+    // Handle budget removal explicitly
+    if (updates.budget === undefined) {
+      // Remove the budget field by replacing the document without it
+      const { budget, ...updatesWithoutBudget } = updates;
+      const newAccount = { ...account, ...updatesWithoutBudget };
+      delete newAccount.budget; // Explicitly remove the budget field
+      await ctx.db.replace(id, newAccount);
+    } else {
+      await ctx.db.patch(id, updates);
+    }
   },
 });
 
