@@ -85,7 +85,9 @@ function InsightsPage() {
     api.insights.getProjectedSubscriptionSpend,
     { monthsAhead: 12 }
   );
-  const accountBudgets = useQuery(api.insights.getAccountBudgetsAndSpending);
+  const accountBudgets = useQuery(api.insights.getAccountBudgetsAndSpending, {
+    month: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`,
+  });
 
   const [projectionMonths, setProjectionMonths] = useState<string>("12");
   const [historicalMonths, setHistoricalMonths] = useState<string>("12");
@@ -359,36 +361,40 @@ function InsightsPage() {
                           className="flex items-center justify-between rounded-lg border p-4"
                         >
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="mb-2 flex items-center gap-2">
                               <h4 className="font-medium">{account.name}</h4>
                               <Badge variant="outline">{account.type}</Badge>
                             </div>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <span>Budget: ₹{account.budget.toLocaleString()}</span>
-                              <span>Spent: ₹{account.spent.toLocaleString()}</span>
+                            <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                              <span>
+                                Budget: ₹{account.budget.toLocaleString()}
+                              </span>
+                              <span>
+                                Spent: ₹{account.spent.toLocaleString()}
+                              </span>
                               <span
                                 className={
                                   account.remaining < 0
-                                    ? "text-red-500 font-medium"
-                                    : "text-green-500 font-medium"
+                                    ? "font-medium text-red-500"
+                                    : "font-medium text-green-500"
                                 }
                               >
                                 Remaining: ₹{account.remaining.toLocaleString()}
                               </span>
                             </div>
                             <div className="mt-2">
-                              <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                              <div className="text-muted-foreground mb-1 flex items-center justify-between text-xs">
                                 <span>Usage</span>
                                 <span>{account.percentage}%</span>
                               </div>
-                              <div className="w-full bg-muted rounded-full h-2">
+                              <div className="bg-muted h-2 w-full rounded-full">
                                 <div
                                   className={`h-2 rounded-full transition-all ${
                                     account.percentage > 100
                                       ? "bg-red-500"
                                       : account.percentage > 80
-                                      ? "bg-yellow-500"
-                                      : "bg-green-500"
+                                        ? "bg-yellow-500"
+                                        : "bg-green-500"
                                   }`}
                                   style={{
                                     width: `${Math.min(account.percentage, 100)}%`,
@@ -404,7 +410,8 @@ function InsightsPage() {
                     <div className="py-12 text-center">
                       <Target className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
                       <p className="text-muted-foreground mb-4">
-                        No accounts with budgets found. Set budgets for your accounts to track spending limits.
+                        No accounts with budgets found. Set budgets for your
+                        accounts to track spending limits.
                       </p>
                     </div>
                   )
@@ -412,8 +419,8 @@ function InsightsPage() {
                   <div className="space-y-4">
                     {Array.from({ length: 3 }).map((_, i) => (
                       <div key={i} className="rounded-lg border p-4">
-                        <Skeleton className="h-4 w-32 mb-2" />
-                        <Skeleton className="h-3 w-48 mb-2" />
+                        <Skeleton className="mb-2 h-4 w-32" />
+                        <Skeleton className="mb-2 h-3 w-48" />
                         <Skeleton className="h-2 w-full" />
                       </div>
                     ))}

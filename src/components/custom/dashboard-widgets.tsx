@@ -83,7 +83,9 @@ export function DashboardWidgets() {
     month: currentMonth,
   });
   const upcomingEvents = useQuery(api.insights.getUpcomingEvents);
-  const accountBudgets = useQuery(api.insights.getAccountBudgetsAndSpending);
+  const accountBudgets = useQuery(api.insights.getAccountBudgetsAndSpending, {
+    month: currentMonth,
+  });
   const monthlySpend = useQuery(api.insights.getMonthlySpend);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
@@ -128,7 +130,7 @@ export function DashboardWidgets() {
           </div>
         </CardHeader>
         <CardContent>
-          {accountBudgets !== undefined ? (
+          {accountBudgets ? (
             accountBudgets.length > 0 ? (
               <>
                 <div className="space-y-3">
