@@ -1,8 +1,7 @@
 import { api } from "@convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
-import { format } from "date-fns";
-import { CalendarIcon, Edit } from "lucide-react";
+import { Edit } from "lucide-react";
 import * as React from "react";
 import { useForm, type Path } from "react-hook-form";
 
@@ -10,7 +9,6 @@ import { AddAccountDialog } from "@/components/custom/add-account-sheet";
 import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-sheet";
 import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -20,11 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -42,11 +35,11 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import type { ExtraField, OutflowType, TransactionFormData } from "@/types";
 import { transactionFormSchema } from "@/types";
 import type { Doc } from "@convex/_generated/dataModel";
 import { toast } from "sonner";
+import DatePickerWithNaturalLanguage from "../ui/natural-language-datepicker";
 
 interface AddTransactionSheetProps {
   trigger: React.ReactNode;
@@ -63,8 +56,10 @@ export function AddTransactionSheet({
   const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false);
   const [showAddCategoryDialog, setShowAddCategoryDialog] =
     React.useState(false);
-  const [editingAccount, setEditingAccount] = React.useState<Doc<"accounts"> | null>(null);
-  const [editingCategory, setEditingCategory] = React.useState<Doc<"outflowTypes"> | null>(null);
+  const [editingAccount, setEditingAccount] =
+    React.useState<Doc<"accounts"> | null>(null);
+  const [editingCategory, setEditingCategory] =
+    React.useState<Doc<"outflowTypes"> | null>(null);
   const [selectedOutflowType, setSelectedOutflowType] =
     React.useState<OutflowType | null>(null);
 
@@ -185,37 +180,12 @@ export function AddTransactionSheet({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>{label}</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(new Date(field.value), "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.getTime())}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <FormControl>
+                  <DatePickerWithNaturalLanguage
+                    initialValue={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -329,37 +299,12 @@ export function AddTransactionSheet({
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Date</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "h-10 w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <FormControl>
+                        <DatePickerWithNaturalLanguage
+                          initialValue={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -403,7 +348,10 @@ export function AddTransactionSheet({
                                 name: string;
                                 type: string;
                               }) => (
-                                <SelectItem key={account._id} value={account._id}>
+                                <SelectItem
+                                  key={account._id}
+                                  value={account._id}
+                                >
                                   {account.name} ({account.type})
                                 </SelectItem>
                               )
@@ -418,7 +366,9 @@ export function AddTransactionSheet({
                         </Select>
                         {field.value && (
                           <AddAccountDialog
-                            account={accounts?.find(a => a._id === field.value)}
+                            account={accounts?.find(
+                              (a) => a._id === field.value
+                            )}
                             onSuccess={() => {
                               // Account updated, form will re-render with new data
                             }}
@@ -485,24 +435,28 @@ export function AddTransactionSheet({
                             </SelectItem>
                           </SelectContent>
                         </Select>
-                        {field.value && outflowTypes?.find(t => t._id === field.value)?.isCustom && (
-                          <AddOutflowTypeDialog
-                            outflowType={outflowTypes?.find(t => t._id === field.value)}
-                            onSuccess={() => {
-                              // Category updated, form will re-render with new data
-                            }}
-                            trigger={
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                className="h-10 px-3"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            }
-                          />
-                        )}
+                        {field.value &&
+                          outflowTypes?.find((t) => t._id === field.value)
+                            ?.isCustom && (
+                            <AddOutflowTypeDialog
+                              outflowType={outflowTypes?.find(
+                                (t) => t._id === field.value
+                              )}
+                              onSuccess={() => {
+                                // Category updated, form will re-render with new data
+                              }}
+                              trigger={
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-10 px-3"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              }
+                            />
+                          )}
                       </div>
                       <FormMessage />
                     </FormItem>

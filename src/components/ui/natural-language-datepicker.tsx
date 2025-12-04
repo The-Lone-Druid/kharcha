@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { parseDate } from "chrono-node";
 import { CalendarIcon } from "lucide-react";
@@ -8,11 +8,10 @@ import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 
 function formatDate(date: Date | undefined) {
@@ -27,7 +26,12 @@ function formatDate(date: Date | undefined) {
   });
 }
 
-const DatePickerWithNaturalLanguage = () => {
+interface Props {
+  initialValue?: Date | undefined;
+  onChange?: (value: string) => void;
+}
+
+const DatePickerWithNaturalLanguage = ({ onChange }: Props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("today");
   const [date, setDate] = useState<Date | undefined>(
@@ -35,11 +39,12 @@ const DatePickerWithNaturalLanguage = () => {
   );
   const [month, setMonth] = useState<Date | undefined>(date);
 
+  useEffect(() => {
+    onChange?.(date ? formatDate(date) : "");
+  }, [date]);
+
   return (
-    <div className="w-full max-w-xs space-y-2">
-      <Label htmlFor="date" className="px-1">
-        Date picker with natural language input
-      </Label>
+    <div className="w-full space-y-2">
       <div className="relative flex gap-2">
         <Input
           id="date"
@@ -93,9 +98,8 @@ const DatePickerWithNaturalLanguage = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="text-muted-foreground px-1 text-sm">
-        Your post will be published on{" "}
-        <span className="font-medium">{formatDate(date)}</span>.
+      <div className="text-muted-foreground text-sm">
+        Date Selected: <span className="font-medium">{formatDate(date)}</span>.
       </div>
     </div>
   );

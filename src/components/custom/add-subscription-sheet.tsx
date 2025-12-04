@@ -1,8 +1,7 @@
 import { api } from "@convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
-import { format } from "date-fns";
-import { CalendarIcon, CreditCard, Edit } from "lucide-react";
+import { CreditCard, Edit } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,7 +9,6 @@ import { z } from "zod";
 import { AddAccountDialog } from "@/components/custom/add-account-sheet";
 import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -20,11 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -41,9 +34,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
 import type { Doc } from "@convex/_generated/dataModel";
 import { toast } from "sonner";
+import DatePickerWithNaturalLanguage from "../ui/natural-language-datepicker";
 
 const subscriptionFormSchema = z.object({
   amount: z.number().positive("Amount must be greater than 0"),
@@ -333,7 +326,7 @@ export function AddSubscriptionDialog({
                     </Select>
                     {field.value && (
                       <AddAccountDialog
-                        account={accounts?.find(a => a._id === field.value)}
+                        account={accounts?.find((a) => a._id === field.value)}
                         onSuccess={() => {
                           // Account updated, form will re-render with new data
                         }}
@@ -364,37 +357,12 @@ export function AddSubscriptionDialog({
                     <FormLabel className="text-sm font-medium">
                       Payment Date
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "h-11 pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick payment date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <DatePickerWithNaturalLanguage
+                        initialValue={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -408,35 +376,12 @@ export function AddSubscriptionDialog({
                     <FormLabel className="text-sm font-medium">
                       Next Renewal
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "h-11 pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick renewal date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date("1900-01-01")}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <DatePickerWithNaturalLanguage
+                        initialValue={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
