@@ -1,7 +1,7 @@
 import { api } from "@convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
-import { Edit } from "lucide-react";
+import { Check, ChevronsUpDown, Edit, Plus } from "lucide-react";
 import * as React from "react";
 import { useForm, type Path } from "react-hook-form";
 
@@ -9,6 +9,14 @@ import { AddAccountDialog } from "@/components/custom/add-account-sheet";
 import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-sheet";
 import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
@@ -19,12 +27,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Sheet,
   SheetContent,
@@ -35,6 +41,7 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type { ExtraField, OutflowType, TransactionFormData } from "@/types";
 import { transactionFormSchema } from "@/types";
 import type { Doc } from "@convex/_generated/dataModel";
@@ -62,6 +69,8 @@ export function AddTransactionSheet({
     React.useState<Doc<"outflowTypes"> | null>(null);
   const [selectedOutflowType, setSelectedOutflowType] =
     React.useState<OutflowType | null>(null);
+  const [accountPopoverOpen, setAccountPopoverOpen] = React.useState(false);
+  const [categoryPopoverOpen, setCategoryPopoverOpen] = React.useState(false);
 
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
@@ -323,47 +332,71 @@ export function AddTransactionSheet({
                     <FormItem>
                       <FormLabel>Account</FormLabel>
                       <div className="flex gap-2">
-                        <Select
-                          onValueChange={(value) => {
-                            if (value === "__add_new_account__") {
-                              setShowAddAccountDialog(true);
-                              setTimeout(() => {
-                                field.onChange("");
-                              }, 0);
-                            } else {
-                              field.onChange(value);
-                            }
-                          }}
-                          value={field.value}
+                        <Popover
+                          open={accountPopoverOpen}
+                          onOpenChange={setAccountPopoverOpen}
                         >
-                          <FormControl className="flex-1">
-                            <SelectTrigger className="h-10">
-                              <SelectValue placeholder="Select an account" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {accounts?.map(
-                              (account: {
-                                _id: string;
-                                name: string;
-                                type: string;
-                              }) => (
-                                <SelectItem
-                                  key={account._id}
-                                  value={account._id}
-                                >
-                                  {account.name} ({account.type})
-                                </SelectItem>
-                              )
-                            )}
-                            <SelectItem
-                              value="__add_new_account__"
-                              className="text-primary font-medium"
-                            >
-                              ➕ Add New Account
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className="h-10 flex-1 justify-between"
+                              >
+                                {field.value
+                                  ? accounts?.find(
+                                      (account) => account._id === field.value
+                                    )?.name +
+                                    " (" +
+                                    accounts?.find(
+                                      (account) => account._id === field.value
+                                    )?.type +
+                                    ")"
+                                  : "Select an account"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0" align="start">
+                            <Command>
+                              <CommandInput placeholder="Search accounts..." />
+                              <CommandList>
+                                <CommandEmpty>No account found.</CommandEmpty>
+                                <CommandGroup>
+                                  {accounts?.map((account) => (
+                                    <CommandItem
+                                      key={account._id}
+                                      value={account.name + " " + account.type}
+                                      onSelect={() => {
+                                        field.onChange(account._id);
+                                        setAccountPopoverOpen(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          field.value === account._id
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {account.name} ({account.type})
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="h-10 px-3"
+                          onClick={() => setShowAddAccountDialog(true)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
                         {field.value && (
                           <AddAccountDialog
                             account={accounts?.find(
@@ -397,44 +430,70 @@ export function AddTransactionSheet({
                     <FormItem>
                       <FormLabel>Category</FormLabel>
                       <div className="flex gap-2">
-                        <Select
-                          onValueChange={(value) => {
-                            if (value === "__add_new_category__") {
-                              setShowAddCategoryDialog(true);
-                              setTimeout(() => {
-                                field.onChange("");
-                              }, 0);
-                            } else {
-                              field.onChange(value);
-                            }
-                          }}
-                          value={field.value}
+                        <Popover
+                          open={categoryPopoverOpen}
+                          onOpenChange={setCategoryPopoverOpen}
                         >
-                          <FormControl className="flex-1">
-                            <SelectTrigger className="h-10">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {outflowTypes?.map(
-                              (type: {
-                                _id: string;
-                                name: string;
-                                emoji: string;
-                              }) => (
-                                <SelectItem key={type._id} value={type._id}>
-                                  {type.emoji} {type.name}
-                                </SelectItem>
-                              )
-                            )}
-                            <SelectItem
-                              value="__add_new_category__"
-                              className="text-primary font-medium"
-                            >
-                              ➕ Add New Category
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className="h-10 flex-1 justify-between"
+                              >
+                                {field.value
+                                  ? outflowTypes?.find(
+                                      (type) => type._id === field.value
+                                    )?.emoji +
+                                    " " +
+                                    outflowTypes?.find(
+                                      (type) => type._id === field.value
+                                    )?.name
+                                  : "Select category"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0" align="start">
+                            <Command>
+                              <CommandInput placeholder="Search categories..." />
+                              <CommandList>
+                                <CommandEmpty>No category found.</CommandEmpty>
+                                <CommandGroup>
+                                  {outflowTypes?.map((type) => (
+                                    <CommandItem
+                                      key={type._id}
+                                      value={type.name}
+                                      onSelect={() => {
+                                        field.onChange(type._id);
+                                        setCategoryPopoverOpen(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          field.value === type._id
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {type.emoji} {type.name}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="h-10 px-3"
+                          onClick={() => setShowAddCategoryDialog(true)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
                         {field.value &&
                           outflowTypes?.find((t) => t._id === field.value)
                             ?.isCustom && (

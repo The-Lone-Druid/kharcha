@@ -1,7 +1,7 @@
 import { api } from "@convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
-import { CreditCard, Edit } from "lucide-react";
+import { Check, ChevronsUpDown, CreditCard, Edit, Plus } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,6 +9,14 @@ import { z } from "zod";
 import { AddAccountDialog } from "@/components/custom/add-account-sheet";
 import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
@@ -19,12 +27,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Sheet,
   SheetContent,
@@ -34,9 +40,17 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import type { Doc } from "@convex/_generated/dataModel";
 import { toast } from "sonner";
 import DatePickerWithNaturalLanguage from "../ui/natural-language-datepicker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const subscriptionFormSchema = z.object({
   amount: z.number().positive("Amount must be greater than 0"),
@@ -83,6 +97,7 @@ export function AddSubscriptionDialog({
 }: AddSubscriptionDialogProps) {
   const [isOpen, setIsOpen] = React.useState(open || false);
   const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false);
+  const [accountPopoverOpen, setAccountPopoverOpen] = React.useState(false);
   const accounts = useQuery(api.accounts.listAccounts);
   const outflowTypes = useQuery(api.outflowTypes.listOutflowTypes);
   const currentUser = useQuery(api.users.getCurrentUser);
@@ -291,39 +306,71 @@ export function AddSubscriptionDialog({
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Account</FormLabel>
                   <div className="flex gap-2">
-                    <Select
-                      onValueChange={(value) => {
-                        if (value === "__add_new_account__") {
-                          setShowAddAccountDialog(true);
-                          // Reset the select value to prevent it from being selected
-                          setTimeout(() => {
-                            field.onChange("");
-                          }, 0);
-                        } else {
-                          field.onChange(value);
-                        }
-                      }}
-                      value={field.value}
+                    <Popover
+                      open={accountPopoverOpen}
+                      onOpenChange={setAccountPopoverOpen}
                     >
-                      <FormControl className="flex-1">
-                        <SelectTrigger className="h-11">
-                          <SelectValue placeholder="Select account" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {accounts?.map((account) => (
-                          <SelectItem key={account._id} value={account._id}>
-                            {account.name} ({account.type})
-                          </SelectItem>
-                        ))}
-                        <SelectItem
-                          value="__add_new_account__"
-                          className="text-primary font-medium"
-                        >
-                          ➕ Add New Account
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="h-11 flex-1 justify-between"
+                          >
+                            {field.value
+                              ? accounts?.find(
+                                  (account) => account._id === field.value
+                                )?.name +
+                                " (" +
+                                accounts?.find(
+                                  (account) => account._id === field.value
+                                )?.type +
+                                ")"
+                              : "Select account"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Search accounts..." />
+                          <CommandList>
+                            <CommandEmpty>No account found.</CommandEmpty>
+                            <CommandGroup>
+                              {accounts?.map((account) => (
+                                <CommandItem
+                                  key={account._id}
+                                  value={account.name + " " + account.type}
+                                  onSelect={() => {
+                                    field.onChange(account._id);
+                                    setAccountPopoverOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      field.value === account._id
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {account.name} ({account.type})
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-11 px-3"
+                      onClick={() => setShowAddAccountDialog(true)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
                     {field.value && (
                       <AddAccountDialog
                         account={accounts?.find((a) => a._id === field.value)}
