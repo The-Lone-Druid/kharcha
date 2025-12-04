@@ -189,7 +189,8 @@ describe("Accounts API", () => {
         }),
       ]);
       // Budget should not be present in the document when not provided
-      expect(accounts[0]).not.toHaveProperty("budget");
+      expect(accounts).not.toBeNull();
+      expect(accounts![0]).not.toHaveProperty("budget");
     });
   });
 
