@@ -1,4 +1,4 @@
-import { AddSubscriptionDialog } from "@/components/custom/add-subscription-dialog";
+import { AddSubscriptionDialog } from "@/components/custom/add-subscription-sheet";
 import { AddTransactionSheet } from "@/components/custom/add-transaction-sheet";
 import {
   AlertDialog,

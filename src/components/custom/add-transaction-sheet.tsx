@@ -6,8 +6,8 @@ import { CalendarIcon, Edit } from "lucide-react";
 import * as React from "react";
 import { useForm, type Path } from "react-hook-form";
 
-import { AddAccountDialog } from "@/components/custom/add-account-dialog";
-import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-dialog";
+import { AddAccountDialog } from "@/components/custom/add-account-sheet";
+import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-sheet";
 import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";

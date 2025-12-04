@@ -1,4 +1,4 @@
-import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-dialog";
+import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
