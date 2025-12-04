@@ -7,7 +7,6 @@ import { useForm, type Path } from "react-hook-form";
 
 import { AddAccountDialog } from "@/components/custom/add-account-sheet";
 import { AddOutflowTypeDialog } from "@/components/custom/add-outflow-type-sheet";
-import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -26,6 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import MoneyInput from "@/components/ui/money-input";
 import {
   Popover,
   PopoverContent,
@@ -161,23 +161,13 @@ export function AddTransactionSheet({
         );
       case "number":
         return (
-          <FormField
+          <MoneyInput
             key={key}
-            control={form.control}
-            name={fieldName as Path<TransactionFormData>}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{label}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            form={form}
+            name={fieldName}
+            label={label}
+            placeholder={`Enter ${label.toLowerCase()}`}
+            currency={preferredCurrency}
           />
         );
       case "date":
@@ -284,22 +274,12 @@ export function AddTransactionSheet({
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Basic Information</h3>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <FormField
-                  control={form.control}
+                <MoneyInput
+                  form={form}
                   name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Amount ({preferredCurrency})</FormLabel>
-                      <FormControl>
-                        <CurrencyInput
-                          value={field.value}
-                          onChange={field.onChange}
-                          preferredCurrency={preferredCurrency}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label={`Amount (${preferredCurrency})`}
+                  placeholder="Enter amount"
+                  currency={preferredCurrency}
                 />
 
                 <FormField

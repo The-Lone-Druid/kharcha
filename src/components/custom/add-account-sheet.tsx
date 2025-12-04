@@ -8,6 +8,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import MoneyInput from "@/components/ui/money-input";
 import {
     Select,
     SelectContent,
@@ -257,30 +258,12 @@ export function AddAccountDialog({
               )}
             />
 
-            <FormField
-              control={form.control}
+            <MoneyInput
+              form={form}
               name="budget"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    Budget (Optional)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="e.g., 50000"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value === "" ? undefined : Number(value));
-                      }}
-                      className="h-11 text-base"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Budget (Optional)"
+              placeholder="e.g., 50000"
+              currency="INR"
             />
 
             <div className="flex flex-col-reverse space-y-2 space-y-reverse border-t pt-4 sm:flex-row sm:justify-end sm:space-y-0 sm:space-x-2">

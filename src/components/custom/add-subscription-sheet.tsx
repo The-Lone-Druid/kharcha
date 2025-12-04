@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { AddAccountDialog } from "@/components/custom/add-account-sheet";
-import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -26,6 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import MoneyInput from "@/components/ui/money-input";
 import {
   Popover,
   PopoverContent,
@@ -278,24 +278,12 @@ export function AddSubscriptionDialog({
                 )}
               />
 
-              <FormField
-                control={form.control}
+              <MoneyInput
+                form={form}
                 name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">
-                      Amount ({preferredCurrency})
-                    </FormLabel>
-                    <FormControl>
-                      <CurrencyInput
-                        value={field.value}
-                        onChange={field.onChange}
-                        preferredCurrency={preferredCurrency}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label={`Amount (${preferredCurrency})`}
+                placeholder="Enter amount"
+                currency={preferredCurrency}
               />
             </div>
 
