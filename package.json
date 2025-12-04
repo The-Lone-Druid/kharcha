@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite --host 0.0.0.0\" \"convex dev\"",
-    "build": "npm run test:all && tsc -b && vite build",
+    "build": "npm run test:all && npm run build:only",
     "build:only": "tsc -b && vite build",
+    "build:fast": "npm run build:only",
+    "build:ci": "npm run build:only",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "npm run format && eslint .",

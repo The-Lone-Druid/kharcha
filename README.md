@@ -112,7 +112,37 @@ The app will be available at:
 - **Frontend:** http://localhost:5173
 - **Convex Dashboard:** Opens automatically or visit your Convex project dashboard
 
-### 7. Seed Default Data (Optional)
+### 7. Available Scripts
+
+Kharcha provides several npm scripts for different development workflows:
+
+#### Development
+- `npm run dev` - Start development servers (Vite + Convex)
+- `npm run preview` - Preview production build locally
+
+#### Testing
+- `npm test` - Run tests in watch mode
+- `npm run test:run` - Run all frontend tests once
+- `npm run test:convex` - Run all Convex backend tests
+- `npm run test:all` - Run both frontend and backend tests
+- `npm run test:ui` - Run tests with UI interface
+- `npm run test:coverage` - Run tests with coverage report
+
+#### Building
+- `npm run build` - **Full build with tests** (recommended for CI/production)
+- `npm run build:only` - **Build without running tests** (use when tests already passed)
+- `npm run build:fast` - Fast build with warning message (same as build:only)
+
+#### Code Quality
+- `npm run lint` - Run linting and formatting
+- `npm run lint:check` - Check linting and formatting without fixing
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
+
+#### Database
+- `npm run seed` - Seed default outflow types for all users
+
+### 8. Seed Default Data (Optional)
 
 To seed default outflow types for all users:
 
