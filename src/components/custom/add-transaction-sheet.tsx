@@ -2,7 +2,7 @@ import { api } from "@convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Edit } from "lucide-react";
 import * as React from "react";
 import { useForm, type Path } from "react-hook-form";
 
@@ -63,6 +63,8 @@ export function AddTransactionSheet({
   const [showAddAccountDialog, setShowAddAccountDialog] = React.useState(false);
   const [showAddCategoryDialog, setShowAddCategoryDialog] =
     React.useState(false);
+  const [editingAccount, setEditingAccount] = React.useState<Doc<"accounts"> | null>(null);
+  const [editingCategory, setEditingCategory] = React.useState<Doc<"outflowTypes"> | null>(null);
   const [selectedOutflowType, setSelectedOutflowType] =
     React.useState<OutflowType | null>(null);
 
@@ -87,6 +89,8 @@ export function AddTransactionSheet({
   });
 
   const watchedOutflowTypeId = form.watch("outflowTypeId");
+  const watchedAccountId = form.watch("accountId");
+  const watchedAmount = form.watch("amount");
 
   React.useEffect(() => {
     if (watchedOutflowTypeId && outflowTypes) {
@@ -96,6 +100,24 @@ export function AddTransactionSheet({
       setSelectedOutflowType(type || null);
     }
   }, [watchedOutflowTypeId, outflowTypes]);
+
+  // Check budget vs transaction amount
+  React.useEffect(() => {
+    if (watchedAccountId && watchedAmount > 0 && accounts) {
+      const selectedAccount = accounts.find(
+        (account) => account._id === watchedAccountId
+      );
+
+      if (selectedAccount?.budget && watchedAmount > selectedAccount.budget) {
+        toast.warning(
+          `Transaction amount (₹${watchedAmount.toLocaleString()}) exceeds account budget (₹${selectedAccount.budget.toLocaleString()})`,
+          {
+            duration: 5000,
+          }
+        );
+      }
+    }
+  }, [watchedAccountId, watchedAmount, accounts]);
 
   const handleAccountCreated = (accountId?: string) => {
     if (accountId) {
@@ -355,45 +377,64 @@ export function AddTransactionSheet({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Account</FormLabel>
-                      <Select
-                        onValueChange={(value) => {
-                          if (value === "__add_new_account__") {
-                            setShowAddAccountDialog(true);
-                            // Reset the select value to prevent it from being selected
-                            setTimeout(() => {
-                              field.onChange("");
-                            }, 0);
-                          } else {
-                            field.onChange(value);
-                          }
-                        }}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="h-10">
-                            <SelectValue placeholder="Select an account" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {accounts?.map(
-                            (account: {
-                              _id: string;
-                              name: string;
-                              type: string;
-                            }) => (
-                              <SelectItem key={account._id} value={account._id}>
-                                {account.name} ({account.type})
-                              </SelectItem>
-                            )
-                          )}
-                          <SelectItem
-                            value="__add_new_account__"
-                            className="text-primary font-medium"
-                          >
-                            ➕ Add New Account
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex gap-2">
+                        <Select
+                          onValueChange={(value) => {
+                            if (value === "__add_new_account__") {
+                              setShowAddAccountDialog(true);
+                              setTimeout(() => {
+                                field.onChange("");
+                              }, 0);
+                            } else {
+                              field.onChange(value);
+                            }
+                          }}
+                          value={field.value}
+                        >
+                          <FormControl className="flex-1">
+                            <SelectTrigger className="h-10">
+                              <SelectValue placeholder="Select an account" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {accounts?.map(
+                              (account: {
+                                _id: string;
+                                name: string;
+                                type: string;
+                              }) => (
+                                <SelectItem key={account._id} value={account._id}>
+                                  {account.name} ({account.type})
+                                </SelectItem>
+                              )
+                            )}
+                            <SelectItem
+                              value="__add_new_account__"
+                              className="text-primary font-medium"
+                            >
+                              ➕ Add New Account
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {field.value && (
+                          <AddAccountDialog
+                            account={accounts?.find(a => a._id === field.value)}
+                            onSuccess={() => {
+                              // Account updated, form will re-render with new data
+                            }}
+                            trigger={
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-10 px-3"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            }
+                          />
+                        )}
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -405,45 +446,64 @@ export function AddTransactionSheet({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category</FormLabel>
-                      <Select
-                        onValueChange={(value) => {
-                          if (value === "__add_new_category__") {
-                            setShowAddCategoryDialog(true);
-                            // Reset the select value to prevent it from being selected
-                            setTimeout(() => {
-                              field.onChange("");
-                            }, 0);
-                          } else {
-                            field.onChange(value);
-                          }
-                        }}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="h-10">
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {outflowTypes?.map(
-                            (type: {
-                              _id: string;
-                              name: string;
-                              emoji: string;
-                            }) => (
-                              <SelectItem key={type._id} value={type._id}>
-                                {type.emoji} {type.name}
-                              </SelectItem>
-                            )
-                          )}
-                          <SelectItem
-                            value="__add_new_category__"
-                            className="text-primary font-medium"
-                          >
-                            ➕ Add New Category
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex gap-2">
+                        <Select
+                          onValueChange={(value) => {
+                            if (value === "__add_new_category__") {
+                              setShowAddCategoryDialog(true);
+                              setTimeout(() => {
+                                field.onChange("");
+                              }, 0);
+                            } else {
+                              field.onChange(value);
+                            }
+                          }}
+                          value={field.value}
+                        >
+                          <FormControl className="flex-1">
+                            <SelectTrigger className="h-10">
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {outflowTypes?.map(
+                              (type: {
+                                _id: string;
+                                name: string;
+                                emoji: string;
+                              }) => (
+                                <SelectItem key={type._id} value={type._id}>
+                                  {type.emoji} {type.name}
+                                </SelectItem>
+                              )
+                            )}
+                            <SelectItem
+                              value="__add_new_category__"
+                              className="text-primary font-medium"
+                            >
+                              ➕ Add New Category
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {field.value && outflowTypes?.find(t => t._id === field.value)?.isCustom && (
+                          <AddOutflowTypeDialog
+                            outflowType={outflowTypes?.find(t => t._id === field.value)}
+                            onSuccess={() => {
+                              // Category updated, form will re-render with new data
+                            }}
+                            trigger={
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-10 px-3"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            }
+                          />
+                        )}
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -513,16 +573,30 @@ export function AddTransactionSheet({
 
       {/* Add Account Dialog */}
       <AddAccountDialog
-        open={showAddAccountDialog}
-        onOpenChange={setShowAddAccountDialog}
-        onSuccess={handleAccountCreated}
+        open={showAddAccountDialog || !!editingAccount}
+        onOpenChange={(open) => {
+          setShowAddAccountDialog(open);
+          if (!open) setEditingAccount(null);
+        }}
+        account={editingAccount}
+        onSuccess={(accountId) => {
+          handleAccountCreated(accountId);
+          setEditingAccount(null);
+        }}
       />
 
       {/* Add Category Dialog */}
       <AddOutflowTypeDialog
-        open={showAddCategoryDialog}
-        onOpenChange={setShowAddCategoryDialog}
-        onSuccess={handleCategoryCreated}
+        open={showAddCategoryDialog || !!editingCategory}
+        onOpenChange={(open) => {
+          setShowAddCategoryDialog(open);
+          if (!open) setEditingCategory(null);
+        }}
+        outflowType={editingCategory}
+        onSuccess={(categoryId) => {
+          handleCategoryCreated(categoryId);
+          setEditingCategory(null);
+        }}
       />
     </Sheet>
   );

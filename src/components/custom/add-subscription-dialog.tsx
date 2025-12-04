@@ -2,7 +2,7 @@ import { api } from "@convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
 import { format } from "date-fns";
-import { CalendarIcon, CreditCard } from "lucide-react";
+import { CalendarIcon, CreditCard, Edit } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,33 +12,33 @@ import { CurrencyInput } from "@/components/custom/currency-input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
@@ -121,6 +121,27 @@ export function AddSubscriptionDialog({
       note: subscription?.note ?? "",
     },
   });
+
+  const watchedAccountId = form.watch("accountId");
+  const watchedAmount = form.watch("amount");
+
+  // Check budget vs subscription amount
+  React.useEffect(() => {
+    if (watchedAccountId && watchedAmount > 0 && accounts) {
+      const selectedAccount = accounts.find(
+        (account) => account._id === watchedAccountId
+      );
+
+      if (selectedAccount?.budget && watchedAmount > selectedAccount.budget) {
+        toast.warning(
+          `Subscription amount (₹${watchedAmount.toLocaleString()}) exceeds account budget (₹${selectedAccount.budget.toLocaleString()})`,
+          {
+            duration: 5000,
+          }
+        );
+      }
+    }
+  }, [watchedAccountId, watchedAmount, accounts]);
 
   React.useEffect(() => {
     if (open !== undefined) {
@@ -276,39 +297,59 @@ export function AddSubscriptionDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Account</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      if (value === "__add_new_account__") {
-                        setShowAddAccountDialog(true);
-                        // Reset the select value to prevent it from being selected
-                        setTimeout(() => {
-                          field.onChange("");
-                        }, 0);
-                      } else {
-                        field.onChange(value);
-                      }
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="h-11">
-                        <SelectValue placeholder="Select account" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {accounts?.map((account) => (
-                        <SelectItem key={account._id} value={account._id}>
-                          {account.name} ({account.type})
+                  <div className="flex gap-2">
+                    <Select
+                      onValueChange={(value) => {
+                        if (value === "__add_new_account__") {
+                          setShowAddAccountDialog(true);
+                          // Reset the select value to prevent it from being selected
+                          setTimeout(() => {
+                            field.onChange("");
+                          }, 0);
+                        } else {
+                          field.onChange(value);
+                        }
+                      }}
+                      value={field.value}
+                    >
+                      <FormControl className="flex-1">
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Select account" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {accounts?.map((account) => (
+                          <SelectItem key={account._id} value={account._id}>
+                            {account.name} ({account.type})
+                          </SelectItem>
+                        ))}
+                        <SelectItem
+                          value="__add_new_account__"
+                          className="text-primary font-medium"
+                        >
+                          ➕ Add New Account
                         </SelectItem>
-                      ))}
-                      <SelectItem
-                        value="__add_new_account__"
-                        className="text-primary font-medium"
-                      >
-                        ➕ Add New Account
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                      </SelectContent>
+                    </Select>
+                    {field.value && (
+                      <AddAccountDialog
+                        account={accounts?.find(a => a._id === field.value)}
+                        onSuccess={() => {
+                          // Account updated, form will re-render with new data
+                        }}
+                        trigger={
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-11 px-3"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        }
+                      />
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

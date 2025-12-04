@@ -162,7 +162,7 @@ function AccountsPage() {
                   />
                   <span className="font-semibold">{account.name}</span>
                 </CardTitle>
-                <div className="flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="flex items-center space-x-1">
                   <AddAccountDialog
                     open={editingAccount?._id === account._id}
                     onOpenChange={(open) => {
@@ -203,6 +203,14 @@ function AccountsPage() {
                 >
                   {account.type}
                 </Badge>
+                {account.budget && (
+                  <div className="mt-3">
+                    <p className="text-xs text-muted-foreground">Budget</p>
+                    <p className="text-sm font-medium">
+                      ₹{account.budget.toLocaleString()}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))

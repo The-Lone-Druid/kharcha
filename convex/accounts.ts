@@ -1,6 +1,5 @@
-import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
-import { ConvexError } from "convex/values";
+import { ConvexError, v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 // List accounts
 export const listAccounts = query({
@@ -56,6 +55,7 @@ export const createAccount = mutation({
       v.literal("Other")
     ),
     colorHex: v.string(),
+    budget: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -89,6 +89,7 @@ export const updateAccount = mutation({
     ),
     colorHex: v.optional(v.string()),
     isArchived: v.optional(v.boolean()),
+    budget: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

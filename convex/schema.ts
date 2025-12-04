@@ -54,6 +54,7 @@ export default defineSchema({
       v.literal("Other")
     ),
     colorHex: v.string(),
+    budget: v.optional(v.number()), // Monthly budget limit for the account
     clerkId: v.string(),
     isArchived: v.boolean(),
   })

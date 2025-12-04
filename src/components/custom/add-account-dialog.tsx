@@ -1,36 +1,36 @@
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useMutation } from "convex/react";
-import { api } from "@convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
+import { api } from "@convex/_generated/api";
 import type { Doc } from "@convex/_generated/dataModel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "convex/react";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const accountFormSchema = z.object({
   name: z.string().min(1, "Account name is required"),
@@ -44,6 +44,7 @@ const accountFormSchema = z.object({
     "Other",
   ]),
   colorHex: z.string(),
+  budget: z.number().min(0, "Budget must be a positive number").optional(),
 });
 
 type AccountFormData = z.infer<typeof accountFormSchema>;
@@ -103,6 +104,7 @@ export function AddAccountDialog({
       name: account?.name || "",
       type: (account?.type as AccountFormData["type"]) || "Bank",
       colorHex: account?.colorHex || colors[0],
+      budget: account?.budget || undefined,
     },
   });
 
@@ -112,12 +114,14 @@ export function AddAccountDialog({
         name: account.name,
         type: account.type as AccountFormData["type"],
         colorHex: account.colorHex,
+        budget: account.budget,
       });
     } else {
       form.reset({
         name: "",
         type: "Bank",
         colorHex: colors[0],
+        budget: undefined,
       });
     }
   }, [account, form]);
@@ -248,6 +252,32 @@ export function AddAccountDialog({
                       />
                     ))}
                   </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="budget"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">
+                    Budget (Optional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="e.g., 50000"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value === "" ? undefined : Number(value));
+                      }}
+                      className="h-11 text-base"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

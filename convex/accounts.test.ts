@@ -119,6 +119,7 @@ describe("Accounts API", () => {
         name: "New Account",
         type: "Credit Card",
         colorHex: "#f59e0b",
+        budget: 50000,
       });
 
       expect(accountId).toBeDefined();
@@ -130,6 +131,7 @@ describe("Accounts API", () => {
           name: "New Account",
           type: "Credit Card",
           colorHex: "#f59e0b",
+          budget: 50000,
           isArchived: false,
           clerkId: "user_123",
         }),
@@ -161,6 +163,32 @@ describe("Accounts API", () => {
 
       const accounts = await asUser.query(api.accounts.listAccounts);
       expect(accounts).toHaveLength(types.length);
+    });
+
+    it("should create account without budget when not provided", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+
+      const accountId = await asUser.mutation(api.accounts.createAccount, {
+        name: "No Budget Account",
+        type: "Cash",
+        colorHex: "#10b981",
+      });
+
+      expect(accountId).toBeDefined();
+
+      const accounts = await asUser.query(api.accounts.listAccounts);
+      expect(accounts).toEqual([
+        expect.objectContaining({
+          _id: accountId,
+          name: "No Budget Account",
+          type: "Cash",
+          colorHex: "#10b981",
+          budget: undefined,
+          isArchived: false,
+          clerkId: "user_123",
+        }),
+      ]);
     });
   });
 
@@ -222,6 +250,48 @@ describe("Accounts API", () => {
           name: "Hacked",
         })
       ).rejects.toThrow();
+    });
+
+    it("should update account budget", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+
+      const accountId = await asUser.mutation(api.accounts.createAccount, {
+        name: "Budget Test",
+        type: "Bank",
+        colorHex: "#10b981",
+        budget: 10000,
+      });
+
+      await asUser.mutation(api.accounts.updateAccount, {
+        id: accountId,
+        budget: 25000,
+      });
+
+      const accounts = await asUser.query(api.accounts.listAccounts);
+      expect(accounts).not.toBeNull();
+      expect(accounts![0].budget).toBe(25000);
+    });
+
+    it("should remove account budget when set to undefined", async () => {
+      const t = convexTest(schema);
+      const asUser = t.withIdentity({ subject: "user_123" });
+
+      const accountId = await asUser.mutation(api.accounts.createAccount, {
+        name: "Budget Remove Test",
+        type: "Bank",
+        colorHex: "#10b981",
+        budget: 50000,
+      });
+
+      await asUser.mutation(api.accounts.updateAccount, {
+        id: accountId,
+        budget: undefined,
+      });
+
+      const accounts = await asUser.query(api.accounts.listAccounts);
+      expect(accounts).not.toBeNull();
+      expect(accounts![0].budget).toBeUndefined();
     });
   });
 

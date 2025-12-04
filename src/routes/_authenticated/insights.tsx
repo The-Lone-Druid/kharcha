@@ -3,11 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,19 +15,19 @@ import { useTheme } from "@/hooks/use-theme";
 import { api } from "@convex/_generated/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { Calendar, CreditCard, TrendingUp } from "lucide-react";
+import { Calendar, CreditCard, Target, TrendingUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  type TooltipProps,
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Line,
+    LineChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+    type TooltipProps,
 } from "recharts";
 
 // Custom tooltip component that adapts to theme
@@ -85,6 +85,7 @@ function InsightsPage() {
     api.insights.getProjectedSubscriptionSpend,
     { monthsAhead: 12 }
   );
+  const accountBudgets = useQuery(api.insights.getAccountBudgetsAndSpending);
 
   const [projectionMonths, setProjectionMonths] = useState<string>("12");
   const [historicalMonths, setHistoricalMonths] = useState<string>("12");
@@ -144,6 +145,12 @@ function InsightsPage() {
             className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
           >
             Overview
+          </TabsTrigger>
+          <TabsTrigger
+            value="budget"
+            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+          >
+            Budget
           </TabsTrigger>
           <TabsTrigger
             value="subscriptions"
@@ -318,6 +325,96 @@ function InsightsPage() {
                           <Skeleton className="h-3 w-48" />
                         </div>
                         <Skeleton className="h-6 w-20" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="budget" className="space-y-4">
+          <div className="grid grid-cols-12 gap-4">
+            {/* Budget vs Spending */}
+            <Card className="col-span-12">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="rounded-lg bg-blue-500/10 p-2">
+                    <Target className="h-4 w-4 text-blue-500" />
+                  </div>
+                  Budget vs Spending (This Month)
+                </CardTitle>
+                <p className="text-muted-foreground text-sm">
+                  Track how your spending compares to your account budgets
+                </p>
+              </CardHeader>
+              <CardContent>
+                {accountBudgets ? (
+                  accountBudgets.length > 0 ? (
+                    <div className="space-y-4">
+                      {accountBudgets.map((account) => (
+                        <div
+                          key={account.id}
+                          className="flex items-center justify-between rounded-lg border p-4"
+                        >
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-medium">{account.name}</h4>
+                              <Badge variant="outline">{account.type}</Badge>
+                            </div>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span>Budget: ₹{account.budget.toLocaleString()}</span>
+                              <span>Spent: ₹{account.spent.toLocaleString()}</span>
+                              <span
+                                className={
+                                  account.remaining < 0
+                                    ? "text-red-500 font-medium"
+                                    : "text-green-500 font-medium"
+                                }
+                              >
+                                Remaining: ₹{account.remaining.toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="mt-2">
+                              <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                                <span>Usage</span>
+                                <span>{account.percentage}%</span>
+                              </div>
+                              <div className="w-full bg-muted rounded-full h-2">
+                                <div
+                                  className={`h-2 rounded-full transition-all ${
+                                    account.percentage > 100
+                                      ? "bg-red-500"
+                                      : account.percentage > 80
+                                      ? "bg-yellow-500"
+                                      : "bg-green-500"
+                                  }`}
+                                  style={{
+                                    width: `${Math.min(account.percentage, 100)}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-12 text-center">
+                      <Target className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+                      <p className="text-muted-foreground mb-4">
+                        No accounts with budgets found. Set budgets for your accounts to track spending limits.
+                      </p>
+                    </div>
+                  )
+                ) : (
+                  <div className="space-y-4">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i} className="rounded-lg border p-4">
+                        <Skeleton className="h-4 w-32 mb-2" />
+                        <Skeleton className="h-3 w-48 mb-2" />
+                        <Skeleton className="h-2 w-full" />
                       </div>
                     ))}
                   </div>

@@ -1,24 +1,24 @@
-import { useQuery } from "convex/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  type TooltipProps,
-} from "recharts";
-import { TrendingUp, Calendar, Target } from "lucide-react";
-import { format } from "date-fns";
-import { api } from "@convex/_generated/api";
 import { useTheme } from "@/hooks/use-theme";
+import { api } from "@convex/_generated/api";
+import { useQuery } from "convex/react";
+import { format } from "date-fns";
+import { Calendar, Target, TrendingUp } from "lucide-react";
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+    type TooltipProps,
+} from "recharts";
 
 // Custom tooltip component that adapts to theme
 const CustomTooltip = ({
@@ -83,7 +83,7 @@ export function DashboardWidgets() {
     month: currentMonth,
   });
   const upcomingEvents = useQuery(api.insights.getUpcomingEvents);
-  const trackingStreak = useQuery(api.insights.getTrackingStreak);
+  const accountBudgets = useQuery(api.insights.getAccountBudgetsAndSpending);
   const monthlySpend = useQuery(api.insights.getMonthlySpend);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
@@ -119,26 +119,78 @@ export function DashboardWidgets() {
         </CardContent>
       </Card>
 
-      {/* Tracking Streak */}
+      {/* Budget Health */}
       <Card className="col-span-12 border-green-500/20 bg-linear-to-br from-green-500/10 via-emerald-500/5 to-transparent transition-colors hover:border-green-500/40 md:col-span-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Tracking Streak</CardTitle>
+          <CardTitle className="text-sm font-medium">Budget Health</CardTitle>
           <div className="rounded-lg bg-green-500/10 p-2">
             <Target className="h-4 w-4 text-green-500" />
           </div>
         </CardHeader>
         <CardContent>
-          {trackingStreak !== undefined ? (
-            <>
-              <div className="bg-linear-to-r from-green-500 to-emerald-500 bg-clip-text text-2xl font-bold text-transparent">
-                {trackingStreak}
+          {accountBudgets !== undefined ? (
+            accountBudgets.length > 0 ? (
+              <>
+                <div className="space-y-3">
+                  {accountBudgets.slice(0, 3).map((account) => {
+                    const isOverBudget = account.percentage > 100;
+                    const isNearBudget = account.percentage > 80 && account.percentage <= 100;
+                    const colorClass = isOverBudget
+                      ? "text-red-600 dark:text-red-400"
+                      : isNearBudget
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-green-600 dark:text-green-400";
+
+                    return (
+                      <div key={account.id} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="truncate font-medium">
+                            {account.name}
+                          </span>
+                          <span className={`font-semibold ${colorClass}`}>
+                            {account.percentage}%
+                          </span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-muted">
+                          <div
+                            className={`h-2 rounded-full transition-all ${
+                              isOverBudget
+                                ? "bg-red-500"
+                                : isNearBudget
+                                ? "bg-amber-500"
+                                : "bg-green-500"
+                            }`}
+                            style={{
+                              width: `${Math.min(account.percentage, 100)}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {accountBudgets.length > 3 && (
+                  <p className="text-muted-foreground mt-3 text-xs">
+                    +{accountBudgets.length - 3} more accounts
+                  </p>
+                )}
+              </>
+            ) : (
+              <div className="text-center">
+                <p className="text-muted-foreground text-sm">
+                  No budgets set
+                </p>
+                <p className="text-muted-foreground text-xs mt-1">
+                  Set budgets in account settings
+                </p>
               </div>
-              <p className="text-muted-foreground text-xs">consecutive days</p>
-            </>
+            )
           ) : (
             <div className="space-y-2">
-              <Skeleton className="h-8 w-16" />
-              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-2 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-2 w-3/4" />
             </div>
           )}
         </CardContent>

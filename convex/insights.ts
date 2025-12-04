@@ -557,3 +557,57 @@ export const getSubscriptionSpendOverTime = query({
     return months;
   },
 });
+
+// Account budgets and spending
+export const getAccountBudgetsAndSpending = query({
+  args: { month: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const clerkId = identity.subject;
+
+    // Get current month if not provided
+    const targetMonth = args.month || `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
+
+    const [year, month] = targetMonth.split("-").map(Number);
+    const startDate = new Date(year, month - 1, 1).getTime();
+    const endDate = new Date(year, month, 1).getTime();
+
+    // Get all accounts with budgets
+    const accounts = await ctx.db
+      .query("accounts")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .filter((q) => q.neq(q.field("isArchived"), true))
+      .collect();
+
+    // Get transactions for the month
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_clerk_id_date", (q) =>
+        q.eq("clerkId", clerkId).gte("date", startDate).lt("date", endDate)
+      )
+      .collect();
+
+    // Calculate spending per account
+    const spendingByAccount = transactions.reduce((acc, transaction) => {
+      const accountId = transaction.accountId;
+      acc[accountId] = (acc[accountId] || 0) + transaction.amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Return accounts with budgets and their spending
+    return accounts
+      .filter((account) => account.budget) // Only accounts with budgets
+      .map((account) => ({
+        id: account._id,
+        name: account.name,
+        type: account.type,
+        budget: account.budget!,
+        spent: spendingByAccount[account._id] || 0,
+        remaining: account.budget! - (spendingByAccount[account._id] || 0),
+        percentage: Math.round(((spendingByAccount[account._id] || 0) / account.budget!) * 100),
+      }))
+      .sort((a, b) => b.percentage - a.percentage); // Sort by usage percentage
+  },
+});
