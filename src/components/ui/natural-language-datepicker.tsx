@@ -28,20 +28,28 @@ function formatDate(date: Date | undefined) {
 
 interface Props {
   initialValue?: Date | undefined;
-  onChange?: (value: string) => void;
+  onChange?: (value: Date | undefined) => void;
 }
 
-const DatePickerWithNaturalLanguage = ({ onChange }: Props) => {
+const DatePickerWithNaturalLanguage = ({ initialValue, onChange }: Props) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("today");
-  const [date, setDate] = useState<Date | undefined>(
-    parseDate(value) || undefined
-  );
+  const [value, setValue] = useState(() => {
+    if (initialValue) {
+      return formatDate(initialValue);
+    }
+    return "today";
+  });
+  const [date, setDate] = useState<Date | undefined>(() => {
+    if (initialValue) {
+      return initialValue;
+    }
+    return parseDate("today") || undefined;
+  });
   const [month, setMonth] = useState<Date | undefined>(date);
 
   useEffect(() => {
-    onChange?.(date ? formatDate(date) : "");
-  }, [date]);
+    onChange?.(date);
+  }, [date, onChange]);
 
   return (
     <div className="w-full space-y-2">
@@ -94,6 +102,7 @@ const DatePickerWithNaturalLanguage = ({ onChange }: Props) => {
                 setValue(formatDate(date));
                 setOpen(false);
               }}
+              captionLayout="dropdown"
             />
           </PopoverContent>
         </Popover>
