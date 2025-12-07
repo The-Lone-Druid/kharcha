@@ -1,6 +1,3 @@
-import * as React from "react";
-import { Check, ChevronsUpDown, ExternalLink, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -10,23 +7,27 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
 import {
+  calculateConvertedAmount,
   CURRENCIES,
   getExchangeRateLookupUrl,
-  calculateConvertedAmount,
 } from "@/lib/currency";
+import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown, ExternalLink, X } from "lucide-react";
+import * as React from "react";
 
 interface CurrencyInputProps {
   value: number | undefined;
   onChange: (value: number) => void;
   preferredCurrency: string;
   disabled?: boolean;
+  locale?: string;
 }
 
 export function CurrencyInput({
@@ -34,14 +35,48 @@ export function CurrencyInput({
   onChange,
   preferredCurrency,
   disabled,
+  locale = "en-IN",
 }: CurrencyInputProps) {
   const actualValue = value ?? 0;
+
+  // Money formatter similar to MoneyInput
+  const moneyFormatter = React.useMemo(() => {
+    return new Intl.NumberFormat(locale, {
+      currency: preferredCurrency,
+      currencyDisplay: "symbol",
+      currencySign: "standard",
+      style: "currency",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }, [locale, preferredCurrency]);
+
+  // State for formatted display value
+  const [displayValue, setDisplayValue] = React.useState(() =>
+    actualValue ? moneyFormatter.format(actualValue) : ""
+  );
+
   const [showCurrencyConverter, setShowCurrencyConverter] =
     React.useState(false);
   const [selectedCurrency, setSelectedCurrency] = React.useState<string>("");
   const [foreignAmount, setForeignAmount] = React.useState<string>("");
   const [exchangeRate, setExchangeRate] = React.useState<string>("");
   const [open, setOpen] = React.useState(false);
+
+  // Update display value when actual value changes
+  React.useEffect(() => {
+    setDisplayValue(actualValue ? moneyFormatter.format(actualValue) : "");
+  }, [actualValue, moneyFormatter]);
+
+  // Handle input changes with formatting
+  const handleDisplayChange = (inputValue: string) => {
+    setDisplayValue(inputValue);
+
+    // Convert formatted input back to number
+    const digits = inputValue.replace(/\D/g, "");
+    const realValue = Number(digits) / 100;
+    onChange(realValue);
+  };
 
   // Calculate converted amount when inputs change
   React.useEffect(() => {
@@ -77,13 +112,13 @@ export function CurrencyInput({
 
   return (
     <div className="space-y-3">
-      {/* Main amount input */}
+      {/* Main amount input with money formatting */}
       <div className="relative">
         <Input
-          type="number"
-          placeholder="0.00"
-          value={actualValue || ""}
-          onChange={(e) => onChange(Number(e.target.value))}
+          type="text"
+          placeholder="Enter amount"
+          value={displayValue}
+          onChange={(e) => handleDisplayChange(e.target.value)}
           disabled={disabled}
           className="pr-16"
         />
@@ -230,11 +265,7 @@ export function CurrencyInput({
                       {parseFloat(exchangeRate).toFixed(4)} ={" "}
                     </span>
                     <span className="text-primary font-semibold">
-                      {actualValue.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
-                      {preferredCurrency}
+                      {moneyFormatter.format(actualValue)}
                     </span>
                   </div>
                 )}

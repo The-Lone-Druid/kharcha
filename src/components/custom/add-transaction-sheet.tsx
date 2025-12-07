@@ -47,6 +47,7 @@ import { transactionFormSchema } from "@/types";
 import type { Doc } from "@convex/_generated/dataModel";
 import { toast } from "sonner";
 import DatePickerWithNaturalLanguage from "../ui/natural-language-datepicker";
+import { CurrencyInput } from "./currency-input";
 
 interface AddTransactionSheetProps {
   trigger: React.ReactNode;
@@ -274,12 +275,22 @@ export function AddTransactionSheet({
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Basic Information</h3>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <MoneyInput
-                  form={form}
+                <FormField
+                  control={form.control}
                   name="amount"
-                  label={`Amount (${preferredCurrency})`}
-                  placeholder="Enter amount"
-                  currency={preferredCurrency}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Amount</FormLabel>
+                      <FormControl>
+                        <CurrencyInput
+                          value={field.value}
+                          onChange={field.onChange}
+                          preferredCurrency={preferredCurrency}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
                 <FormField

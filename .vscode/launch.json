@@ -1,0 +1,108 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Frontend (Vite)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npx vite --host 0.0.0.0",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "Local:\\s+(https?://localhost:\\d+)",
+        "uriFormat": "http://localhost:5173",
+        "webRoot": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Debug Backend (Convex)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npx convex dev",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "Debug Frontend + Backend (Concurrent)",
+      "type": "node",
+      "request": "launch",
+      "program": "npm",
+      "args": ["run", "dev"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "ready in [0-9.]+ms|Local:\\s+https?://localhost:[0-9]+",
+        "uriFormat": "http://localhost:5173",
+        "webRoot": "${workspaceFolder}/src"
+      }
+    },
+    {
+      "name": "Debug Client-side Only (Attach to Running)",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Debug Client-side (Launch Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Debug Convex Functions (Attach)",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "Run Tests (Frontend)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npx vitest run",
+      "env": {
+        "NODE_ENV": "test"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "Run Tests (Backend)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npx vitest run --config convex/vitest.config.ts",
+      "env": {
+        "NODE_ENV": "test"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full Stack",
+      "configurations": ["Debug Frontend (Vite)", "Debug Backend (Convex)"]
+    }
+  ]
+}

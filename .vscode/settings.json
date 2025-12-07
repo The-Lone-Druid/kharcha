@@ -1,0 +1,8 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  },
+  "debug.javascript.usePreview": true,
+  "debug.node.autoAttach": "on",
+  "typescript.preferences.includePackageJsonAutoImports": "auto"
+}
