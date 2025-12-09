@@ -7,17 +7,17 @@ import { useQuery } from "convex/react";
 import { format } from "date-fns";
 import { Calendar, Target, TrendingUp } from "lucide-react";
 import {
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Cell,
-    Pie,
-    PieChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-    type TooltipProps,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  type TooltipProps,
 } from "recharts";
 
 // Custom tooltip component that adapts to theme
@@ -136,12 +136,13 @@ export function DashboardWidgets() {
                 <div className="space-y-3">
                   {accountBudgets.slice(0, 3).map((account) => {
                     const isOverBudget = account.percentage > 100;
-                    const isNearBudget = account.percentage > 80 && account.percentage <= 100;
+                    const isNearBudget =
+                      account.percentage > 80 && account.percentage <= 100;
                     const colorClass = isOverBudget
                       ? "text-red-600 dark:text-red-400"
                       : isNearBudget
-                      ? "text-amber-600 dark:text-amber-400"
-                      : "text-green-600 dark:text-green-400";
+                        ? "text-amber-600 dark:text-amber-400"
+                        : "text-green-600 dark:text-green-400";
 
                     return (
                       <div key={account.id} className="space-y-1">
@@ -153,14 +154,14 @@ export function DashboardWidgets() {
                             {account.percentage}%
                           </span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-muted">
+                        <div className="bg-muted h-2 w-full rounded-full">
                           <div
                             className={`h-2 rounded-full transition-all ${
                               isOverBudget
                                 ? "bg-red-500"
                                 : isNearBudget
-                                ? "bg-amber-500"
-                                : "bg-green-500"
+                                  ? "bg-amber-500"
+                                  : "bg-green-500"
                             }`}
                             style={{
                               width: `${Math.min(account.percentage, 100)}%`,
@@ -179,10 +180,8 @@ export function DashboardWidgets() {
               </>
             ) : (
               <div className="text-center">
-                <p className="text-muted-foreground text-sm">
-                  No budgets set
-                </p>
-                <p className="text-muted-foreground text-xs mt-1">
+                <p className="text-muted-foreground text-sm">No budgets set</p>
+                <p className="text-muted-foreground mt-1 text-xs">
                   Set budgets in account settings
                 </p>
               </div>

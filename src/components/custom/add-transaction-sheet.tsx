@@ -219,6 +219,24 @@ export function AddTransactionSheet({
 
   const onSubmit = async (data: TransactionFormData) => {
     try {
+      // Helper function to convert Dates to timestamps in metadata
+      const convertDatesToTimestamps = (obj: any): any => {
+        if (obj instanceof Date) {
+          return obj.getTime();
+        }
+        if (Array.isArray(obj)) {
+          return obj.map(convertDatesToTimestamps);
+        }
+        if (obj !== null && typeof obj === "object") {
+          const result: any = {};
+          for (const [key, value] of Object.entries(obj)) {
+            result[key] = convertDatesToTimestamps(value);
+          }
+          return result;
+        }
+        return obj;
+      };
+
       // Transform form data to match mutation expectations
       const transformedData = {
         amount: data.amount,
@@ -227,7 +245,7 @@ export function AddTransactionSheet({
         outflowTypeId: data.outflowTypeId as any, // Cast to Convex ID type
         note: data.note,
         receiptImageId: data.receiptImageId as any, // Cast to Convex storage ID type
-        metadata: data.metadata,
+        metadata: convertDatesToTimestamps(data.metadata),
       };
 
       if (transaction) {

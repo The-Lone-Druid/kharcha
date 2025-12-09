@@ -7,12 +7,14 @@ Kharcha maintains high code quality with a comprehensive testing strategy and au
 ## 🧪 Testing Overview
 
 ### Test Coverage
+
 - **Frontend Tests:** 150+ React component and utility tests
 - **Backend Tests:** 142+ Convex function tests
 - **Total Tests:** 290+ automated tests
 - **Coverage Target:** 90%+ codebase coverage
 
 ### Testing Tools
+
 - **Vitest** - Fast testing framework
 - **React Testing Library** - Component testing utilities
 - **jsdom** - Browser environment simulation
@@ -54,6 +56,7 @@ npm run test:coverage:all
 ### CI/CD Testing
 
 Tests run automatically on:
+
 - Every push to main branch
 - Every pull request
 - Before deployments
@@ -116,25 +119,25 @@ describe('Button', () => {
 ### Convex Function Testing Example
 
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { convexTest } from 'convex-test'
-import schema from './schema'
+import { describe, it, expect } from "vitest";
+import { convexTest } from "convex-test";
+import schema from "./schema";
 
-describe('accounts', () => {
-  it('should create account', async () => {
-    const t = convexTest(schema)
+describe("accounts", () => {
+  it("should create account", async () => {
+    const t = convexTest(schema);
 
     await t.run(async ({ db }) => {
-      const account = await db.insert('accounts', {
-        name: 'Test Account',
-        type: 'bank',
-        clerkId: 'test-user'
-      })
+      const account = await db.insert("accounts", {
+        name: "Test Account",
+        type: "bank",
+        clerkId: "test-user",
+      });
 
-      expect(account).toBeDefined()
-    })
-  })
-})
+      expect(account).toBeDefined();
+    });
+  });
+});
 ```
 
 ---
@@ -144,30 +147,30 @@ describe('accounts', () => {
 ### Vitest Config (`vitest.config.ts`)
 
 ```typescript
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["./src/test/setup.ts"],
     globals: true,
   },
-})
+});
 ```
 
 ### Convex Test Config (`convex/vitest.config.ts`)
 
 ```typescript
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: 'node',
+    environment: "node",
     globals: true,
   },
-})
+});
 ```
 
 ---
@@ -234,29 +237,32 @@ Code Push → Tests Run → Quality Checks → Deploy
 ### Common Issues
 
 **Test Timeout**
+
 ```typescript
-it('slow test', async () => {
+it("slow test", async () => {
   // Increase timeout for slow operations
-}, 10000)
+}, 10000);
 ```
 
 **Async Operations**
+
 ```typescript
-it('handles async', async () => {
+it("handles async", async () => {
   await waitFor(() => {
-    expect(element).toBeInTheDocument()
-  })
-})
+    expect(element).toBeInTheDocument();
+  });
+});
 ```
 
 **Mocking Dependencies**
-```typescript
-import { vi } from 'vitest'
 
-const mockFunction = vi.fn()
-vi.mock('./module', () => ({
-  functionToMock: mockFunction
-}))
+```typescript
+import { vi } from "vitest";
+
+const mockFunction = vi.fn();
+vi.mock("./module", () => ({
+  functionToMock: mockFunction,
+}));
 ```
 
 ### Debugging Tools
@@ -286,6 +292,7 @@ vi.mock('./module', () => ({
 ### Excluded Files
 
 Some files are excluded from coverage:
+
 - UI components (auto-generated)
 - Test utilities
 - Configuration files

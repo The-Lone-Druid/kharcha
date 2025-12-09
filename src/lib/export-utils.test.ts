@@ -1,9 +1,9 @@
 import type { Transaction } from "@/types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-    exportSummaryToCSV,
-    exportToCSV,
-    formatTransactionForExport,
+  exportSummaryToCSV,
+  exportToCSV,
+  formatTransactionForExport,
 } from "./export-utils";
 
 describe("export-utils", () => {

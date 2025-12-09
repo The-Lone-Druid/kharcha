@@ -118,6 +118,7 @@ Stay on top of your finances with automated notifications.
 - ✅ Email notification support (planned)
 
 **Daily Automation:**
+
 - Cron jobs run automatically every day
 - Checks for subscriptions renewing tomorrow
 - Sends timely reminders to keep you informed

@@ -254,8 +254,8 @@ function OutflowTypesPage() {
               {builtInTypes.length === 0 ? (
                 <Card className="animate-fade-in border-dashed">
                   <CardContent className="flex flex-col items-center justify-center py-12">
-                    <div className="mb-4 rounded-full bg-muted p-4">
-                      <Lock className="h-10 w-10 text-muted-foreground" />
+                    <div className="bg-muted mb-4 rounded-full p-4">
+                      <Lock className="text-muted-foreground h-10 w-10" />
                     </div>
                     <h3 className="mb-2 text-lg font-semibold">
                       No built-in categories
@@ -280,7 +280,10 @@ function OutflowTypesPage() {
                           </span>
                           <span className="font-semibold">{type.name}</span>
                         </CardTitle>
-                        <Badge variant="outline" className="bg-background text-xs">
+                        <Badge
+                          variant="outline"
+                          className="bg-background text-xs"
+                        >
                           <Lock className="mr-1 h-3 w-3" />
                           Built-in
                         </Badge>

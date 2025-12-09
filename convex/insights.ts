@@ -568,7 +568,9 @@ export const getAccountBudgetsAndSpending = query({
     const clerkId = identity.subject;
 
     // Get current month if not provided
-    const targetMonth = args.month || `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
+    const targetMonth =
+      args.month ||
+      `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
 
     const [year, month] = targetMonth.split("-").map(Number);
     const startDate = new Date(year, month - 1, 1).getTime();
@@ -590,11 +592,14 @@ export const getAccountBudgetsAndSpending = query({
       .collect();
 
     // Calculate spending per account
-    const spendingByAccount = transactions.reduce((acc, transaction) => {
-      const accountId = transaction.accountId;
-      acc[accountId] = (acc[accountId] || 0) + transaction.amount;
-      return acc;
-    }, {} as Record<string, number>);
+    const spendingByAccount = transactions.reduce(
+      (acc, transaction) => {
+        const accountId = transaction.accountId;
+        acc[accountId] = (acc[accountId] || 0) + transaction.amount;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     // Return accounts with budgets and their spending
     return accounts
@@ -606,7 +611,9 @@ export const getAccountBudgetsAndSpending = query({
         budget: account.budget!,
         spent: spendingByAccount[account._id] || 0,
         remaining: account.budget! - (spendingByAccount[account._id] || 0),
-        percentage: Math.round(((spendingByAccount[account._id] || 0) / account.budget!) * 100),
+        percentage: Math.round(
+          ((spendingByAccount[account._id] || 0) / account.budget!) * 100
+        ),
       }))
       .sort((a, b) => b.percentage - a.percentage); // Sort by usage percentage
   },

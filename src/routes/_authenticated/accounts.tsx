@@ -205,7 +205,7 @@ function AccountsPage() {
                 </Badge>
                 {account.budget && (
                   <div className="mt-3">
-                    <p className="text-xs text-muted-foreground">Budget</p>
+                    <p className="text-muted-foreground text-xs">Budget</p>
                     <p className="text-sm font-medium">
                       ₹{account.budget.toLocaleString()}
                     </p>

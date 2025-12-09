@@ -117,10 +117,12 @@ The app will be available at:
 Kharcha provides several npm scripts for different development workflows:
 
 #### Development
+
 - `npm run dev` - Start development servers (Vite + Convex)
 - `npm run preview` - Preview production build locally
 
 #### Testing
+
 - `npm test` - Run tests in watch mode
 - `npm run test:run` - Run all frontend tests once
 - `npm run test:convex` - Run all Convex backend tests
@@ -129,17 +131,20 @@ Kharcha provides several npm scripts for different development workflows:
 - `npm run test:coverage` - Run tests with coverage report
 
 #### Building
+
 - `npm run build` - **Full build with tests** (recommended for CI/production)
 - `npm run build:only` - **Build without running tests** (use when tests already passed)
 - `npm run build:fast` - Fast build with warning message (same as build:only)
 
 #### Code Quality
+
 - `npm run lint` - Run linting and formatting
 - `npm run lint:check` - Check linting and formatting without fixing
 - `npm run format` - Format code with Prettier
 - `npm run format:check` - Check code formatting
 
 #### Database
+
 - `npm run seed` - Seed default outflow types for all users
 
 ### 8. Seed Default Data (Optional)
@@ -182,18 +187,21 @@ kharcha/
 Kharcha maintains high code quality with comprehensive testing and automated checks.
 
 ### Testing Suite
+
 - **Frontend Tests:** 150+ React component and utility tests
-- **Backend Tests:** 142+ Convex function tests  
+- **Backend Tests:** 142+ Convex function tests
 - **Coverage:** 90%+ codebase coverage
 - **Tools:** Vitest, React Testing Library, jsdom
 
 ### Code Quality
+
 - **Linting:** ESLint with React and TypeScript rules
 - **Formatting:** Prettier with Tailwind CSS plugin
 - **Type Checking:** TypeScript strict mode
 - **Automated:** Pre-commit hooks and CI/CD checks
 
 ### CI/CD Pipeline
+
 - **GitHub Actions:** Automated testing on every push/PR
 - **Quality Gates:** Tests must pass before deployment
 - **Deployment:** Automatic Vercel + Convex deployment on main branch

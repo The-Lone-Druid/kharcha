@@ -7,20 +7,25 @@ Kharcha keeps you informed about important financial events with a comprehensive
 ## 🔔 Notification Types
 
 ### Subscription Renewals
+
 Get reminded before your subscriptions automatically renew.
 
 **When you'll be notified:**
+
 - 24 hours before a subscription renewal date
 - Only for subscriptions you've marked for reminders
 
 **Example notifications:**
+
 - "Reminder: Netflix subscription renewal tomorrow for ₹499"
 - "Reminder: Adobe Creative Cloud renewal tomorrow for ₹1,899"
 
 ### Due Date Reminders
+
 Stay on top of upcoming payments and financial obligations.
 
 **Currently planned:**
+
 - Loan payment due dates
 - Bill payment reminders
 - Custom financial reminders
@@ -32,10 +37,12 @@ Stay on top of upcoming payments and financial obligations.
 Control what notifications you receive and how.
 
 ### Global Settings
+
 - **Global Notifications** - Enable/disable all notifications
 - **Email Notifications** - Receive notifications via email (planned)
 
 ### Specific Preferences
+
 - **Subscription Reminders** - Control renewal notifications
 - **Due Date Reminders** - Control payment deadline notifications
 
@@ -52,12 +59,14 @@ Control what notifications you receive and how.
 Kharcha uses automated cron jobs to check for upcoming events.
 
 ### Daily Checks
+
 - Runs every day at 9:00 AM UTC
 - Checks all user subscriptions
 - Sends notifications for renewals in the next 24 hours
 - Processes in background without user intervention
 
 ### Smart Filtering
+
 - Only notifies for active subscriptions
 - Respects user notification preferences
 - Avoids duplicate notifications
@@ -69,12 +78,14 @@ Kharcha uses automated cron jobs to check for upcoming events.
 View and manage all your notifications in one place.
 
 ### Features
+
 - **Unread Indicators** - See how many new notifications you have
 - **Mark as Read** - Clear notifications you've seen
 - **Notification History** - View past notifications
 - **Real-time Updates** - New notifications appear instantly
 
 ### Accessing Notifications
+
 - Click the bell icon in the top navigation
 - View notification count badge
 - Access from mobile bottom navigation
@@ -86,11 +97,13 @@ View and manage all your notifications in one place.
 For the best experience, enable browser notifications.
 
 ### How to Enable
+
 1. Click the notification bell icon
 2. Grant permission when prompted
 3. Receive instant notifications in your browser
 
 ### Permission States
+
 - **Granted** - You'll receive browser notifications
 - **Denied** - No browser notifications (check in-app only)
 - **Default** - Permission not requested yet
@@ -102,6 +115,7 @@ For the best experience, enable browser notifications.
 Email notifications are planned for future releases.
 
 **Planned features:**
+
 - Daily spending summaries
 - Weekly financial reports
 - Budget alerts via email

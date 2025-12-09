@@ -2,11 +2,11 @@
 import { useReducer } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "../ui/form"; // Shadcn UI import
 import { Input } from "../ui/input"; // Shandcn UI Input
 
@@ -22,7 +22,7 @@ type TextInputProps = {
 export default function MoneyInput(props: TextInputProps) {
   const currency = props.currency || "INR";
   const locale = props.locale || "en-IN";
-  
+
   const moneyFormatter = Intl.NumberFormat(locale, {
     currency: currency,
     currencyDisplay: "symbol",

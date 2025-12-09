@@ -68,12 +68,14 @@ Control what notifications you receive.
 ### Global Notifications
 
 **Master Switch**
+
 - Enable/disable all notifications
 - When disabled, no notifications are sent
 
 ### Subscription Reminders
 
 **What it controls:**
+
 - Reminders for subscription renewals
 - Sent 24 hours before renewal date
 
@@ -82,6 +84,7 @@ Control what notifications you receive.
 ### Due Date Reminders
 
 **What it controls:**
+
 - Reminders for upcoming payments
 - Loan due dates, bill payments
 
@@ -92,10 +95,12 @@ Control what notifications you receive.
 ### Browser Notifications
 
 **Permission Required**
+
 - Click "Enable Notifications" to allow browser alerts
 - You'll see a permission prompt from your browser
 
 **Benefits:**
+
 - Instant notifications without opening the app
 - Works even when Kharcha isn't active
 
@@ -120,11 +125,13 @@ Export your financial data for backup, analysis, or tax purposes.
 ### Export Options
 
 **CSV Export**
+
 - Compatible with Excel, Google Sheets, and accounting software
 - Includes all transaction details
 - Ready for import into other financial tools
 
 **What's Included in CSV:**
+
 - Date and time
 - Amount (with currency symbol)
 - Category (outflow type)
@@ -147,12 +154,14 @@ Export your financial data for backup, analysis, or tax purposes.
 - **Migration** - Move data to other financial apps
 
 ---
-  "outflowTypes": [...],
-  "transactions": [...],
-  "budgets": [...],
-  "preferences": {...},
-  "exportedAt": "2024-01-15T10:30:00Z"
+
+"outflowTypes": [...],
+"transactions": [...],
+"budgets": [...],
+"preferences": {...},
+"exportedAt": "2024-01-15T10:30:00Z"
 }
+
 ```
 
 ### Use Cases for Export
@@ -267,3 +276,4 @@ Planned additions:
 <p align="center">
   <a href="../README.md">← Back to Wiki Home</a>
 </p>
+```

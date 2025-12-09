@@ -37,7 +37,7 @@ const DatePickerWithNaturalLanguage = ({ initialValue, onChange }: Props) => {
     if (initialValue) {
       return formatDate(initialValue);
     }
-    return "today";
+    return formatDate(new Date());
   });
   const [date, setDate] = useState<Date | undefined>(() => {
     if (initialValue) {

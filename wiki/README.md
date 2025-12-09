@@ -40,8 +40,8 @@ Welcome to the Kharcha documentation! This wiki provides comprehensive guides, f
 | Add my first transaction | [First Steps](./first-steps.md)                                    |
 | Understand my spending   | [Insights](./features/insights.md)                                 |
 | Track subscriptions      | [Use Cases - Subscriptions](./use-cases.md#tracking-subscriptions) |
-| Manage notifications     | [Notifications](./features/notifications.md)                      |
-| Export my data           | [Settings - Data Export](./features/settings.md#data-export)      |
+| Manage notifications     | [Notifications](./features/notifications.md)                       |
+| Export my data           | [Settings - Data Export](./features/settings.md#data-export)       |
 | Run tests                | [Testing Guide](./testing.md)                                      |
 
 ---
