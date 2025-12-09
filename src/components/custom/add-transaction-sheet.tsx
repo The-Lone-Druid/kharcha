@@ -182,7 +182,7 @@ export function AddTransactionSheet({
                 <FormLabel>{label}</FormLabel>
                 <FormControl>
                   <DatePickerWithNaturalLanguage
-                    initialValue={field.value}
+                    initialValue={typeof field.value === 'number' ? new Date(field.value) : field.value}
                     onChange={field.onChange}
                   />
                 </FormControl>
