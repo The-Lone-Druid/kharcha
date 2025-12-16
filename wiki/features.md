@@ -39,8 +39,7 @@ Track all your financial accounts in one place.
 - ✅ Create unlimited accounts
 - ✅ Color-code accounts for easy identification
 - ✅ View balance per account
-- ✅ Archive accounts you no longer use
-- ✅ Edit account details anytime
+- ✅ Archive or delete accounts
 
 [Learn more about Accounts →](./features/accounts.md)
 

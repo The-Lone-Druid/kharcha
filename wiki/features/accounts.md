@@ -117,7 +117,7 @@ Archived accounts:
 
 ### Deleting an Account
 
-**⚠️ Warning:** You can only delete an account if it has no transactions.
+**⚠️ Important:** You can only delete an account if it has **zero associated transactions**. This is a safety measure to prevent accidental loss of your financial history. If an account has transactions, you should **Archive** it instead.
 
 To delete:
 

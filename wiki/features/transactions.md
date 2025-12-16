@@ -75,34 +75,18 @@ Each transaction displays:
 
 ---
 
-## Filtering Transactions
+## Searching and Filtering
 
-Use filters to find specific transactions:
+Kharcha offers powerful tools to find exactly what you're looking for.
 
-### By Date
+### Advanced Filtering
 
-| Filter     | Shows             |
-| ---------- | ----------------- |
-| All        | Everything        |
-| Today      | Today only        |
-| This Week  | Last 7 days       |
-| This Month | Current month     |
-| Custom     | Select date range |
+You can filter your transaction list by:
 
-### By Account
-
-Select a specific account to see only its transactions.
-
-### By Category
-
-Filter to see all transactions of a specific type (e.g., all "Food & Dining").
-
-### By Search
-
-Type in the search box to filter by:
-
-- Note content
-- Partial matches work
+- **Date Range**: Select a start and end date.
+- **Account**: Show transactions from one or more specific accounts.
+- **Category**: Narrow down by one or more expense categories.
+- **Text Search**: A free-text search that scans the **Note** field of your transactions.
 
 ---
 
