@@ -12,14 +12,16 @@
 - 💸 **Transaction Tracking** - Log income and expenses with detailed categorization
 - 📊 **Visual Insights** - Charts and analytics to understand your spending patterns
 - 📂 **Custom Categories** - Create personalized outflow types with custom colors and emojis
-- 💳 **Subscription Tracking** - Manage recurring payments with renewal reminders
+- 💳 **Subscription Tracking** - Manage recurring payments with renewal reminders (manual subscription entries supported)
 - 🎯 **Budget Management** - Set monthly budgets for different expense categories
 - 🔔 **Smart Notifications** - Automated reminders for subscriptions and due dates
 - 🌙 **Dark/Light Mode** - Beautiful UI with theme support
 - 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
+- 🪙 **Multiple Currencies** - Support for currency formatting and conversions across the app
+- ⚙️ **Installable PWA** - Install on any device and add to your home screen
 - 🔐 **Secure Authentication** - Powered by Clerk authentication
 - ⚡ **Real-time Updates** - Powered by Convex backend
-- 📤 **Data Export** - Export transactions to CSV format
+- 📤 **Data Export** - Export transactions to CSV or Excel (XLSX) format
 - 🧪 **Comprehensive Testing** - 290+ tests with CI/CD pipeline
 - 🎨 **Code Quality** - Prettier formatting and ESLint integration
 

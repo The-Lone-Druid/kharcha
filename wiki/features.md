@@ -191,10 +191,10 @@ Personalize Kharcha to your preferences.
 
 **Available Settings:**
 
-- **Currency** - Set your preferred currency (INR, USD, EUR, etc.)
+- **Currency** - Set your preferred currency (INR, USD, EUR, etc.); multiple currencies and localized formatting are supported
 - **Theme** - Light mode, Dark mode, or System
 - **Language** - Interface language preference
-- **Data Export** - Export your transaction data as CSV
+- **Data Export** - Export your transaction data as CSV or Excel (XLSX)
 - **Notification Preferences** - Control reminder settings
 
 **Account Settings:**
@@ -213,7 +213,7 @@ Export your financial data for backup, analysis, or tax purposes.
 
 **Export Options:**
 
-- **CSV Format** - Compatible with Excel, Google Sheets
+- **CSV or Excel (XLSX)** - Compatible with Excel, Google Sheets
 - **Complete Transaction History** - All your financial records
 - **Structured Data** - Includes dates, amounts, categories, accounts
 - **Ready for Analysis** - Perfect for budgeting software or accountants
@@ -250,7 +250,7 @@ Your data is protected.
 
 ## 📱 Responsive Design
 
-Kharcha works beautifully on all devices.
+Kharcha works beautifully on all devices and is installable as a PWA.
 
 **Supported Platforms:**
 
@@ -264,6 +264,7 @@ Kharcha works beautifully on all devices.
 - Touch-friendly interfaces
 - Optimized layouts
 - Swipe gestures (where applicable)
+- Installable PWA: add to your home screen on supported devices
 
 ---
 
@@ -274,9 +275,9 @@ Changes sync instantly.
 **How it works:**
 
 - Powered by Convex's real-time subscriptions
-- Changes appear immediately across tabs
+- Changes appear immediately across tabs and devices
 - No manual refresh needed
-- Offline-friendly (queues updates)
+- Requires network connectivity (no offline queuing)
 
 ---
 
