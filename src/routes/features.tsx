@@ -38,12 +38,12 @@ export const Route = createFileRoute("/features")({
       {
         name: "description",
         content:
-          "Track expenses, manage subscriptions, and gain financial insights with Kharcha. Beautiful, fast, and works offline. Your personal finance companion.",
+          "Track expenses, manage subscriptions, and gain financial insights with Kharcha. Beautiful, fast, and installable as a PWA — your personal finance companion.",
       },
       {
         name: "keywords",
         content:
-          "expense tracker, budget app, subscription manager, personal finance, money management, PWA, offline app",
+          "expense tracker, budget app, subscription manager, personal finance, money management, PWA",
       },
       // Open Graph
       { property: "og:type", content: "website" },
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/features")({
       {
         property: "og:description",
         content:
-          "Track expenses, manage subscriptions, and gain financial insights. Beautiful, fast, and works offline.",
+          "Track expenses, manage subscriptions, and gain financial insights. Beautiful, fast, installable as a PWA, and syncs across devices.",
       },
       { property: "og:image", content: "/og-image.png" },
       { property: "og:url", content: "https://kharcha.space/features" },
@@ -67,7 +67,7 @@ export const Route = createFileRoute("/features")({
       {
         name: "twitter:description",
         content:
-          "Track expenses, manage subscriptions, and gain financial insights. Beautiful, fast, and works offline.",
+          "Track expenses, manage subscriptions, and gain financial insights. Beautiful, fast, installable as a PWA, and syncs across devices.",
       },
       { name: "twitter:image", content: "/og-image.png" },
     ],
@@ -107,7 +107,7 @@ function FeaturesPage() {
       icon: RefreshCw,
       title: "Subscription Tracking",
       description:
-        "Automatically track recurring expenses and get projections for future costs.",
+        "Track recurring expenses and get projections for future costs (manual subscription entries supported).",
       color: "from-green-500 to-emerald-500",
     },
     {
@@ -121,28 +121,44 @@ function FeaturesPage() {
       icon: Download,
       title: "Export Data",
       description:
-        "Export your transactions to CSV or Excel for detailed analysis.",
+        "Export your transactions to CSV or Excel (XLSX) for detailed analysis.",
       color: "from-indigo-500 to-violet-500",
+    },
+    {
+      icon: TrendingUp,
+      title: "Budgets & Progress Tracking",
+      description:
+        "Create monthly budgets, track progress, and get alerts when you're close to limits.",
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      icon: Wallet,
+      title: "Multiple Currencies",
+      description:
+        "Support for currency formatting and conversions in inputs and reports.",
+      color: "from-amber-500 to-orange-500",
     },
   ];
 
   const stats = [
     { value: "100%", label: "Free Forever" },
-    { value: "Offline", label: "Works Anywhere" },
+    { value: "Responsive", label: "Mobile & Desktop" },
     { value: "Real-time", label: "Sync Across Devices" },
-    { value: "Secure", label: "Bank-grade Security" },
+    { value: "Secure", label: "Secure by design" },
   ];
 
   const capabilities = [
     "Track unlimited transactions",
     "Multiple account support",
+    "Multiple currencies & localized formats",
     "Subscription management",
+    "Budgeting & alerts",
     "Smart notifications",
     "Beautiful dark & light themes",
     "Export to CSV/Excel",
     "Visual spending insights",
-    "Progressive Web App",
-    "Works offline",
+    "Responsive & mobile-first design",
+    "Installable PWA",
     "No ads ever",
   ];
 
@@ -213,7 +229,7 @@ function FeaturesPage() {
               className="bg-primary/10 text-primary border-primary/20 mb-6 px-4 py-2 text-sm font-medium"
             >
               <Zap className="mr-2 inline h-4 w-4" />
-              100% Free • No Ads • Works Offline
+              100% Free • No Ads
             </Badge>
 
             <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-7xl">
@@ -227,9 +243,9 @@ function FeaturesPage() {
             </h1>
 
             <p className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg sm:text-xl">
-              The most beautiful expense tracker that works everywhere. Manage
-              your money, track subscriptions, and gain insights — all in one
-              elegant app.
+              The most beautiful expense tracker that syncs across devices.
+              Manage your money, track subscriptions, and gain insights — all in
+              one elegant app.
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -486,9 +502,11 @@ function FeaturesPage() {
                       <Smartphone className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold">Progressive Web App</h3>
+                      <h3 className="text-xl font-bold">
+                        Responsive & Mobile-first
+                      </h3>
                       <p className="text-muted-foreground">
-                        Install on any device
+                        Works great on both mobile and desktop
                       </p>
                     </div>
                   </div>
